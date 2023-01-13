@@ -40,6 +40,6 @@ window.addEventListener("load", function()
     var result = new URLSearchParams(new URL(this.window.location).search);
     if (result.get("lang"))
     {
-        this.localStorage.setItem("lang", result.getItem("lang"))
+        this.localStorage.setItem("lang", result.get("lang"))
     }
 })
