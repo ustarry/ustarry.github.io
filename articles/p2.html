@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/style_article.css">
+    <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <!-- <link rel="stylesheet" href="/css/prism.css"> -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/base16/atelier-cave-light.min.css" integrity="sha512-mb7hVnqouaHmHLJYLhdY+kUld4843IHJuRbVbhLXD41EJreUz0AeYU9t0XhwDFtnRVRvnLkbT/Xbjl1sajvpFQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/stackoverflow-light.min.css" integrity="sha512-RDtnAhiPytLVV3AwzHkGVMVI4szjtSjxxyhDaH3gqdHPIw5qwQld1MVGuMu1EYoof+CaEccrO3zUVb13hQFU/A==" crossorigin="anonymous" referrerpolicy="no-referrer" /> -->
+    <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/vs.min.css" integrity="sha512-AVoZ71dJLtHRlsgWwujPT1hk2zxtFWsPlpTPCc/1g0WgpbmlzkqlDFduAvnOV4JJWKUquPc1ZyMc5eq4fRnKOQ==" crossorigin="anonymous" referrerpolicy="no-referrer" /> -->
+    <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/base16/atelier-seaside-light.min.css" integrity="sha512-J5t2mexco5S5vcGjc7YrpvNRMDagzugT63xPBD7K0akivXak8RmAybotoqxYVd5hzJwDNuT4wYafB/28+gfkuQ==" crossorigin="anonymous" referrerpolicy="no-referrer" /> -->
+    <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/base16/atelier-heath-light.min.css" integrity="sha512-I/3mEZulKtgwkADaDJyUX1uXKSkDdTXAgwjfjRk9sPG0d9DaRc5i3zMR71PRTpHK26E11V+Q4MuAWJyGdw0qXQ==" crossorigin="anonymous" referrerpolicy="no-referrer" /> -->
+    <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/base16/summerfruit-light.min.css" integrity="sha512-T0azUsUGTrFc3/mCP/9olMBW7lc/QvE9YwlCRSh+3P+0FfrbwFtPOeuuplYYNTHgfAHn99se/rCyvS8jgvadLg==" crossorigin="anonymous" referrerpolicy="no-referrer" /> -->
+    <script src="/js/main.js"></script>
+    <script src="/js/articles.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+    <script src="/js/line-numbers.js"></script>
+    <script>
+        window.addEventListener("load", function()
+        {
+            hljs.highlightAll();
+            hljs.initLineNumbersOnLoad();
+            LoadArticleInfo(document.getElementById("info"), articles[articles.length - 10])
+        });
+    </script>
+    <title>Example | Starlight Zone</title>
+</head>
+<body>
+    <!-- navigation bar -->
+    <nav>
+        <ul>        
+            <li>
+                <a href="/index.html" id="logo"><img src="https://s1.ax1x.com/2023/01/13/pSKE2kT.png"/></a>
+            </li>
+            <div id="menu_list" class="hidden_menu">
+                <li><a href="/index.html">
+                    HOME
+                    <!--{zh}首页-->
+                </a></li>
+                <li><a href="/zone.html">
+                    ZONE
+                    <!--{zh}领地-->
+                </a></li>
+                <li><a href="/tools.html">
+                    TOOLS
+                    <!--{zh}工具-->
+                </a></li>
+                <li><a href="/blog.html">
+                    BLOG
+                    <!--{zh}博客-->
+                </a></li>
+                <li><a href="/about.html">
+                    ABOUT
+                    <!--{zh}关于-->
+                </a></li>
+            </div>
+            <div class="function_list">
+                <li class="menu_toggle" onclick="show_menu()"></li>
+                <!-- Unavailable Function -->
+                <!-- <li class="search_box">
+                    <input type="text" placeholder="search...">
+                    <div class="search_toggle" onclick="on_search(self)">search</div>
+                </li> -->
+            </div>
+        </ul>
+    </nav>
+    <div class="container rough">
+        <!-- <script src="/js/prism.js"></script> -->
+        <div id="info">
+        </div>
+        <div class="make_clear"></div>
+        <div class="content">
+            <!-- here is the content -->
+            <p>作为星光工作室的副团长，安安对星光的孩纸操碎了心。下面是安安的奋斗日记，让我们一起感受一下她的努力。</p>
+
+            <h2>好久没人发贴哎，今日份活跃气氛~  6/5/2021</h2>
+            <p>如何礼貌的怼的老师一句话说不出来呢</p>
+            <p>老师：哎那谁，我让你母亲给咱买盆竹子养着玩呗，是不是挺好的 <br>我：老师，你养不活，谢谢 <br>老师：我是夸你有礼貌还是说你和你和你母亲一模一样，来我给你看看聊天记录 <br>聊天记录：我母亲：老师，你养不活，别浪费钱，谢谢 ⸜(๑'ᵕ'๑)⸝⋆* <br>老师沉默了一会质问我：哎你们家人凭啥觉得我养不活竹子 <br>我：老师你忘了七年级那十七盆多肉了么 </p>
+            <p>（我们老师在七年级用时一个星期养不活了十七盆多肉，请注意：用时一星期；十七盆；多肉） 而且我们老师还特别喜欢教我如何养花，然后我用她的方法把我家的花养的一盆不剩，现在我姥爷看到我走进花盆就…… 然后我们老师说他要养竹子……怪我么，虽然竹子还是买了 不过老师一天莫理我就是了，嘤~</p>
+            
+            <h2>星光工作室打卡第一百七十天 2/11/2022</h2>
+            <p>那么今天就是打卡的第170/200天啦啦</p>
+            <p>这个日期正常来说是在盒子打的，但是盒子死活不给过审，内容也没必要了，所以今天就当重打叭，作为第一张打卡贴的仪式感</p>
+            <p>首先感谢各位加入星光工作室迷你基地的圈子，在盒子停止运营下架的情况下，也会有越来越多的成员选择来到基地，愿我们也能再次与彼此相遇，星光也会继续和大家一起努力滴
+                那么开始咱今日滴话题叭</p>
+            <p>有时候我发现，老师的套路你永远也摸不透，今天物理课的时候，数学老师微信私聊我就说，练习册195和196有没有留作业，她忘了，其实我觉得有点奇怪，因为我也不是数学课代表，但是我也没多想，就回答她了，半分钟后，我收到了物理老师的私信“你竟然敢在我课上回数学老师的话，你到底有没有认真听课”那一刻，我好像明白了什么，私信……</p>
+            <p>想起之前有一件很类似的事情，我喜欢和语文老师聊天，刚开始是在学校么，后来网课的时候一开始就周末或者晚上下课之后，后来大课间偶尔也聊，那是一次课间休息，就半个小时么，我看挺长的，就寻思着和她聊会，大概还有六七分钟上课的时候，他问我，你下节啥课，我告诉她英语课，然后她就马上岔开了话题，聊到了大概英语课上课四五分钟，我收到了英语老师的私信……“听说你和语文老师玩挺好呗，胆子大了，昂？”</p>
+            <p>打那以后，我和语文老师的话题上课就截止，没想到，栽在了物理数学老师手里……</p>
+
+            <h2>星光工作室打卡第一百七十一天</h2>
+            <p>那么今天就是打卡的第171/200天啦啦</p>
+            <p>给各位带来一个小故事~记得不要吃饭的时候看呦，容易，嗯，懂的，搞笑么</p>
+            <img src="https://rc-minichat.mini1.cn/community/cpic/mini_img_776943306_1644641688498.jpeg" alt="Image Not Found">
+
+            <h2>星光工作室打卡第一百七十二天</h2>
+            <p>那么今天就是打卡的第172/200天啦啦</p>
+            <p>对于你来说，颜色是代码，快乐是代码，生活中的万物都是代码</p>
+            <pre>
+                <code>#define zero 0
+bool init(){
+    static unsigned long long 快乐 = zero / zero;
+    return true; 
+}
+                </code>
+            </pre>
+            <p>所以，有让人长高的代码吗？</p>
+
+            <h2>星光工作室打卡第一百七十三天</h2>
+            <p>那么今天就是打卡的第173/200天啦啦</p>
+            <p>第400天了，能用代码让人长高高的你</p>
+            <pre>
+                <code>unsigned long long 身高=150;
+void 长高( unsinged long long 长高厘米数 ){
+    身高+=长高厘米数;
+    return; 
+}
+                </code>
+            </pre>
+            <img src="https://rc-minichat.mini1.cn/community/cpic/mini_img_776943306_1645101259857.jpg" alt="Image Not Found">
+            <p>另外</p>
+            <img src="https://rc-minichat.mini1.cn/community/cpic/mini_img_776943306_1645101271525.jpg" alt="Image Not Found">
+
+            <h2>星光工作室打卡第一百七十五天</h2>
+            <p>那么今天就是打卡的第175/200天啦啦</p>
+            <p>①嗯众所周知啊，我们总能从故事中学到很多道理，就像我打卡贴经常就写“这个故事告诉我们”，嗯是的没错今天的打卡贴是我们一周的快乐</p>
+            <p>②嗯众所周知啊，我们语文老师是经常性的不想批作业，通常呢，就是我替她来，毕竟是语文课代表么，然后以前我都批“阅”，然后这次她装备升级了，告诉我你检查合格一个就给那个卡个戳，嗯卡个戳好像有点东北味，就是，按个印章的意思，然后因为作业是正反两面的，于是我就问他我是应该在正面卡个戳还是在背面卡个戳，没等他回答，杰哥抢答了，他告诉我，你检查合格一个就往自己脸上卡个戳，不出意外，啊不对，出意外的话作业检查完我脸上能有三十多个戳，有时候，啊不对，经常会想，杰哥好歹是个正经大学毕业的初中物理老师，咋就这么喜欢逗小孩子，啊不对用他的话说，他在逗dog，dog没急眼你怎么急眼了呢</p>
+            <p>③嗯众所周知啊，中考是要考体育的，所以不出意外的话今年的体育课是没老师占用，基本老师都不生病，啊这不是重点啊，体育课我们以前都溜达玩，啊溜达好像也有点东北味，就是到处乱逛的意思，但是今年要备考中考么，虽然就5分，但体育老师还是心血来潮正经上体育课，他说孩子们咱们先跑三圈热热身然后练跳绳，然后当时我们班体委是排头，然后他觉得跑太快后面跟不上而且一会跳绳就没力气了，于是他就跑的比较慢，在他后面的那个孩纸，就和体委说“你怎么跑的这么慢，我走都比你跑得快”然后他就超过了我们体委跑到了排头，两秒之后，他踩到了一个水坑，哐的一生摔倒了，嗯注意我的语气词“哐”，就拿物理说一个中学生的质量为50kg是比较接近实际的，他的体重可能有230斤那样，等于两个多中学生了，而且因为肥胖，他本身就骨质疏松，这一摔倒大概率就骨折了，当时学校给打的120，然后来了俩三个医生，发现无法将他转移到担架上，因为他当时骨折就起不来，得抬，那个体重叭……后来来了五六个体育老师围了一圈。。因为他骨折你就不能抬四肢，本来就沉还不能太使劲，就挺难为他们的，半个小时之后他稍微缓了一下他们想到了一个方法就是让他先侧着躺，把担架放身底下，在翻个身，一推，就上去了，最后给那堆体育老师累的直踹气才给抬到救护车上，啊至于他到医院怎么下来的就不知道了，应该有轱辘（轮胎那类的东西）对叭，至于现在反正他骨折折的挺彻底的，而且他本身肥胖骨质疏松，恢复期就比别人长，中国有句古话叫“伤筋动骨一百天”，我们3.11百日誓师也就是说他回来上学就差不多中考了，嗯对就基本与中考无缘了</p>
+            <p>④这个故事告诉我们
+                <br>脚踏实地走路，不要没什么事跑着不看路踩水坑，你会摔倒的
+
+                <br>脚踏实地做人，不要觉得自己比谁都厉害，你一定会跌倒吃亏的，骄兵必败对叭
+                
+                <br>没必要太瘦但是说真的。不要摄入过多油脂，每天50-60g即可，长期摄入过多油脂会引起肥胖和心脑血管疾病，并且，你社死啊，真到了那个时候，想救你的人都心有余而力不足
+                
+                <br>我们这中考是不能复读的，就算你因病休学，你第二年再考，你只能考普通高中或者职高，即便你的分数比省市重点高你也去不了，你考全省第一都没用，在哈尔滨这种二线城市，就是，你如果上普高基本上就是与一本大学也就无缘了，那你说，虽然不一定叭，你这一辈子就因为一次摔倒而毁了的话，要后悔多久鸭，对叭</p>
+            <p>⑤给大家带来一个新鲜的快落，我们刚才讲考试卷子，就是记叙文，大概是说主人公在荒山野岭里捡树叶，被陌生男子尾随，他觉得陌生人不怀好意，后来到了人多安全的地方，才知道他只是怕我像他的孩子一样被那个地方的藏獒吓到，然后尼，有一个情节就是我发现他跟踪我之后假装打电话想把他吓走，原文大概是，我想到了，然后拿出手机什么的，具体的不记得了，因为我没给自己发卷子，然后题目问，我想到了什么，有个别的班的答案是，我认为他要把我拐卖，卖到山区去，从此过不上好日子，饥一顿饱一顿，还要被当成苦力被别人榨干自己的价值，或者，他没有女儿，他就把我当成他的女儿，拿我出气，每天过着提心吊胆的生活，笑不活了就，他那答案我和老师都背下来了，关键那道题的标准答案是，我想到了通过假装打电话来吓跑他的这个方法，八竿子打不着啊，就是很有意思，情节都十分的具体，再说，作者少说得二三十了叭。。那个陌生男子也就三四十。。女儿。。，卖到山区就认了，他越写越离谱。</p>
+            <p>⑥最后我们来个互动环节叭，是否可以用代码将那个孩纸抬到担架上尼</p>
+        </div>
+    </div>
+
+    <!-- footer -->
+    <footer>
+        <!-- studio view -->
+        <div class="studio_view">
+            <a href="/index.html" id="logo"><img src="https://s1.ax1x.com/2023/01/13/pSKE2kT.png"/></a>
+            <h4>For an encounter with stars!
+                <!--{zh}期待与漫天繁星的相遇！-->
+            </h4>
+        </div>
+        <!-- link view -->
+        <div class="link_view">
+            <dl>
+                <dt>Studio<!--{zh}关于星光--></dt>
+                <dd><a href="/about.html">About Us<!--{zh}关于我们--></a></dd>
+                <dd><a href="/about.html#careers">Careers<!--{zh}生涯--></a></dd>
+                <dd><a href="/about.html#contact">Contact Us<!--{zh}联系我们--></a></dd>
+                <dd><a href="/about.html#recruitment">Recruitment<!--{zh}招贤纳士--></a></dd>
+                <dd><a href="/about.html#sustainability">Sustainability<!--{zh}可持续发展--></a></dd>
+            </dl>
+            <dl>
+                <dt>Products<!--{zh}星光产品--></dt>
+                <dd><a href="https://github.com/Dev-Mini/cli">Dev Mini Cli</a></dd>
+                <dd><a href="https://github.com/Starlight-Dev-Team/mnLua">MNLUA</a></dd>
+                <dd><a href="#">Starlight Map Studio</a></dd>
+                <dd><a href="#">Starlight Function Module</a></dd>
+                <dd><a href="#">Starlight Utility</a></dd>
+            </dl>
+            <dl>
+                <dt>Features<!--{zh}星光特色--></dt>
+                <dd><a href="/zone.html">Zones<!--{zh}领域--></a></dd>
+                <dd><a href="/tools.html">Tools<!--{zh}工具--></a></dd>
+                <dd><a href="#">Blogs<!--{zh}博客--></a></dd>
+                <dd><a href="#">Media<!--{zh}媒体--></a></dd>
+                <dd><a href="https://pd.qq.com/s/9xlc1hut2">Community<!--{zh}社区--></a></dd>
+            </dl>
+            <dl>
+                <dt>Links<!--{zh}友情链接--></dt>
+                <dd><a target="_blank" href="https://www.github.com/">GitHub</a></dd>
+                <dd><a target="_blank" href="https://0-0000.github.io/MiniExtend/">MiniExtend</a></dd>
+                <dd><a target="_blank" href="https://kaikaibenkai.github.io/MiniExtendDoc/">Featured MiniExtend Document<!--{zh}特色MiniExtend文档--></a></dd>
+                <dd><a target="_blank" href="https://tatsukimengchen.github.io/devToolbox/">Dev-Tool Box<!--{zh}迷你开发者工具箱--></a></dd>
+                <dd><a target="_blank" href="https://www.geeksforgeeks.org/">GeeksforGeeks</a></dd>
+                <dd><a target="_blank" href="https://i.qq.com/?s_url=http%3A%2F%2Fuser.qzone.qq.com%2F3260922891">Anran's QQ Zone<!--{zh}安安的空间--></a></dd>
+            </dl>
+        </div>
+        <!-- media view -->
+        <div class="media_view make_clear">
+            <ul>
+                <li><a target="_blank" href="https://www.ixigua.com/home/1874031348815676/?source=pgc_author_profile&list_entrance=anyVideo"><img src="//sf1-cdn-tos.douyinstatic.com/obj/eden-cn/lpqpflo/ixigua_favicon.ico"/></a></li>
+                <li><a target="_blank" href="https://www.douyin.com/user/MS4wLjABAAAAl0WwP-4TG_uhKRX1Z0q2OllnQ3FU3cB1RpOLG-T2j2o"><img src="/image/tiktok.svg"/></a></li>
+                <li><a target="_blank" href="https://pd.qq.com/s/9xlc1hut2"><img src="/image/tencent-qq.svg"/></a></li>
+                <li><a target="_blank" href="https://github.com/Starlight-Dev-Team"><img src="/image/github.svg"/></a></li>
+            </ul>
+            <p class="make_clear">
+                &copy 2023 The Starlight Studio - For an encounter with stars!
+                <!--{zh}© 2023 星光工作室 - 期待与漫天繁星的相遇！-->
+            </p>
+        </div>
+    </footer>
+
+    <script src="https://cdn.bootcdn.net/ajax/libs/translater.js/1.0.12/translater.min.js"></script>
+    <script>
+        var translater = new Translater({
+            lang: GetCurLanguage()
+        })
+    </script>
+</body>
+</html>

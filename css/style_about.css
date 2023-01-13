@@ -1,0 +1,54 @@
+.container
+{
+    margin: 0 auto;
+    margin-top: 80px;
+    width: 92%;
+    max-width: 950px;
+    text-align: center;
+}
+
+.container a, .container a:visited
+{
+    color: var(--link-color);
+}
+
+.container .full_width_img
+{
+    margin: 9px 0;
+    width: 100%;
+}
+
+.container .exhibition img
+{
+    float: left;
+    width: 22%;
+    margin: 1.5% 1.5%;
+}
+
+
+.container .code_showed img
+{
+    float: left;
+    width: 50%;
+}
+
+@media screen and (max-width: 520px) 
+{
+    .container .exhibition img
+    {
+        float: left;
+        width: 47%;
+        margin: 1.5% 1.5%;
+    }
+
+    .container .code_showed img
+    {
+        width: 100%;
+    }
+}
+
+.colorful_background
+{
+    padding: 2%;
+    background-image: linear-gradient(to right, #CCFBFF, #EF96C5);
+}

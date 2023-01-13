@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/style_article.css">
+    <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <!-- <link rel="stylesheet" href="/css/prism.css"> -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/base16/atelier-cave-light.min.css" integrity="sha512-mb7hVnqouaHmHLJYLhdY+kUld4843IHJuRbVbhLXD41EJreUz0AeYU9t0XhwDFtnRVRvnLkbT/Xbjl1sajvpFQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/stackoverflow-light.min.css" integrity="sha512-RDtnAhiPytLVV3AwzHkGVMVI4szjtSjxxyhDaH3gqdHPIw5qwQld1MVGuMu1EYoof+CaEccrO3zUVb13hQFU/A==" crossorigin="anonymous" referrerpolicy="no-referrer" /> -->
+    <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/vs.min.css" integrity="sha512-AVoZ71dJLtHRlsgWwujPT1hk2zxtFWsPlpTPCc/1g0WgpbmlzkqlDFduAvnOV4JJWKUquPc1ZyMc5eq4fRnKOQ==" crossorigin="anonymous" referrerpolicy="no-referrer" /> -->
+    <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/base16/atelier-seaside-light.min.css" integrity="sha512-J5t2mexco5S5vcGjc7YrpvNRMDagzugT63xPBD7K0akivXak8RmAybotoqxYVd5hzJwDNuT4wYafB/28+gfkuQ==" crossorigin="anonymous" referrerpolicy="no-referrer" /> -->
+    <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/base16/atelier-heath-light.min.css" integrity="sha512-I/3mEZulKtgwkADaDJyUX1uXKSkDdTXAgwjfjRk9sPG0d9DaRc5i3zMR71PRTpHK26E11V+Q4MuAWJyGdw0qXQ==" crossorigin="anonymous" referrerpolicy="no-referrer" /> -->
+    <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/base16/summerfruit-light.min.css" integrity="sha512-T0azUsUGTrFc3/mCP/9olMBW7lc/QvE9YwlCRSh+3P+0FfrbwFtPOeuuplYYNTHgfAHn99se/rCyvS8jgvadLg==" crossorigin="anonymous" referrerpolicy="no-referrer" /> -->
+    <script src="/js/main.js"></script>
+    <script src="/js/articles.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+    <script src="/js/line-numbers.js"></script>
+    <script>
+        window.addEventListener("load", function()
+        {
+            hljs.highlightAll();
+            hljs.initLineNumbersOnLoad();
+            // LoadArticleInfo(document.getElementById("info"), articles[articles.length - 0])
+        });
+    </script>
+    <title>Example | Starlight Zone</title>
+</head>
+<body>
+    <!-- navigation bar -->
+    <nav>
+        <ul>        
+            <li>
+                <a href="/index.html" id="logo"><img src="https://s1.ax1x.com/2023/01/13/pSKE2kT.png"/></a>
+            </li>
+            <div id="menu_list" class="hidden_menu">
+                <li><a href="/index.html">
+                    HOME
+                    <!--{zh}首页-->
+                </a></li>
+                <li><a href="/zone.html">
+                    ZONE
+                    <!--{zh}领地-->
+                </a></li>
+                <li><a href="/tools.html">
+                    TOOLS
+                    <!--{zh}工具-->
+                </a></li>
+                <li><a href="/blog.html">
+                    BLOG
+                    <!--{zh}博客-->
+                </a></li>
+                <li><a href="/about.html">
+                    ABOUT
+                    <!--{zh}关于-->
+                </a></li>
+            </div>
+            <div class="function_list">
+                <li class="menu_toggle" onclick="show_menu()"></li>
+                <!-- Unavailable Function -->
+                <!-- <li class="search_box">
+                    <input type="text" placeholder="search...">
+                    <div class="search_toggle" onclick="on_search(self)">search</div>
+                </li> -->
+            </div>
+        </ul>
+    </nav>
+    <div class="container rough">
+        <!-- <script src="/js/prism.js"></script> -->
+        <div id="info">
+        </div>
+        <div class="make_clear"></div>
+        <div class="content">
+            <!-- here is the content -->
+        </div>
+    </div>
+
+    <!-- footer -->
+    <footer>
+        <!-- studio view -->
+        <div class="studio_view">
+            <a href="/index.html" id="logo"><img src="https://s1.ax1x.com/2023/01/13/pSKE2kT.png"/></a>
+            <h4>For an encounter with stars!
+                <!--{zh}期待与漫天繁星的相遇！-->
+            </h4>
+        </div>
+        <!-- link view -->
+        <div class="link_view">
+            <dl>
+                <dt>Studio<!--{zh}关于星光--></dt>
+                <dd><a href="/about.html">About Us<!--{zh}关于我们--></a></dd>
+                <dd><a href="/about.html#careers">Careers<!--{zh}生涯--></a></dd>
+                <dd><a href="/about.html#contact">Contact Us<!--{zh}联系我们--></a></dd>
+                <dd><a href="/about.html#recruitment">Recruitment<!--{zh}招贤纳士--></a></dd>
+                <dd><a href="/about.html#sustainability">Sustainability<!--{zh}可持续发展--></a></dd>
+            </dl>
+            <dl>
+                <dt>Products<!--{zh}星光产品--></dt>
+                <dd><a href="https://github.com/Dev-Mini/cli">Dev Mini Cli</a></dd>
+                <dd><a href="https://github.com/Starlight-Dev-Team/mnLua">MNLUA</a></dd>
+                <dd><a href="#">Starlight Map Studio</a></dd>
+                <dd><a href="#">Starlight Function Module</a></dd>
+                <dd><a href="#">Starlight Utility</a></dd>
+            </dl>
+            <dl>
+                <dt>Features<!--{zh}星光特色--></dt>
+                <dd><a href="/zone.html">Zones<!--{zh}领域--></a></dd>
+                <dd><a href="/tools.html">Tools<!--{zh}工具--></a></dd>
+                <dd><a href="#">Blogs<!--{zh}博客--></a></dd>
+                <dd><a href="#">Media<!--{zh}媒体--></a></dd>
+                <dd><a href="https://pd.qq.com/s/9xlc1hut2">Community<!--{zh}社区--></a></dd>
+            </dl>
+            <dl>
+                <dt>Links<!--{zh}友情链接--></dt>
+                <dd><a target="_blank" href="https://www.github.com/">GitHub</a></dd>
+                <dd><a target="_blank" href="https://0-0000.github.io/MiniExtend/">MiniExtend</a></dd>
+                <dd><a target="_blank" href="https://kaikaibenkai.github.io/MiniExtendDoc/">Featured MiniExtend Document<!--{zh}特色MiniExtend文档--></a></dd>
+                <dd><a target="_blank" href="https://tatsukimengchen.github.io/devToolbox/">Dev-Tool Box<!--{zh}迷你开发者工具箱--></a></dd>
+                <dd><a target="_blank" href="https://www.geeksforgeeks.org/">GeeksforGeeks</a></dd>
+                <dd><a target="_blank" href="https://i.qq.com/?s_url=http%3A%2F%2Fuser.qzone.qq.com%2F3260922891">Anran's QQ Zone<!--{zh}安安的空间--></a></dd>
+            </dl>
+        </div>
+        <!-- media view -->
+        <div class="media_view make_clear">
+            <ul>
+                <li><a target="_blank" href="https://www.ixigua.com/home/1874031348815676/?source=pgc_author_profile&list_entrance=anyVideo"><img src="//sf1-cdn-tos.douyinstatic.com/obj/eden-cn/lpqpflo/ixigua_favicon.ico"/></a></li>
+                <li><a target="_blank" href="https://www.douyin.com/user/MS4wLjABAAAAl0WwP-4TG_uhKRX1Z0q2OllnQ3FU3cB1RpOLG-T2j2o"><img src="/image/tiktok.svg"/></a></li>
+                <li><a target="_blank" href="https://pd.qq.com/s/9xlc1hut2"><img src="/image/tencent-qq.svg"/></a></li>
+                <li><a target="_blank" href="https://github.com/Starlight-Dev-Team"><img src="/image/github.svg"/></a></li>
+            </ul>
+            <p class="make_clear">
+                &copy 2023 The Starlight Studio - For an encounter with stars!
+                <!--{zh}© 2023 星光工作室 - 期待与漫天繁星的相遇！-->
+            </p>
+        </div>
+    </footer>
+
+    <script src="https://cdn.bootcdn.net/ajax/libs/translater.js/1.0.12/translater.min.js"></script>
+    <script>
+        var translater = new Translater({
+            lang: GetCurLanguage()
+        })
+    </script>
+</body>
+</html>
