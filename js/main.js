@@ -30,6 +30,15 @@ function GetCurLanguage()
 }
 
 
+// function make_lantern()
+// {
+//     var lantern = document.createElement("div");
+//     lantern.className = "lantern";
+//     lantern.innerHTML = '<div class="tassel"/>'
+//     document.getElementsByTagName("nav")[0].appendChild(lantern);
+// }
+
+
 
 window.addEventListener("load", function()
 {
@@ -42,4 +51,5 @@ window.addEventListener("load", function()
     {
         this.localStorage.setItem("lang", result.get("lang"))
     }
+    // make_lantern();
 })

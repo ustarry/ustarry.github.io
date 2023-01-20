@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/style_article.css">
+    <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <!-- <link rel="stylesheet" href="/css/prism.css"> -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/base16/atelier-cave-light.min.css" integrity="sha512-mb7hVnqouaHmHLJYLhdY+kUld4843IHJuRbVbhLXD41EJreUz0AeYU9t0XhwDFtnRVRvnLkbT/Xbjl1sajvpFQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/stackoverflow-light.min.css" integrity="sha512-RDtnAhiPytLVV3AwzHkGVMVI4szjtSjxxyhDaH3gqdHPIw5qwQld1MVGuMu1EYoof+CaEccrO3zUVb13hQFU/A==" crossorigin="anonymous" referrerpolicy="no-referrer" /> -->
+    <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/vs.min.css" integrity="sha512-AVoZ71dJLtHRlsgWwujPT1hk2zxtFWsPlpTPCc/1g0WgpbmlzkqlDFduAvnOV4JJWKUquPc1ZyMc5eq4fRnKOQ==" crossorigin="anonymous" referrerpolicy="no-referrer" /> -->
+    <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/base16/atelier-seaside-light.min.css" integrity="sha512-J5t2mexco5S5vcGjc7YrpvNRMDagzugT63xPBD7K0akivXak8RmAybotoqxYVd5hzJwDNuT4wYafB/28+gfkuQ==" crossorigin="anonymous" referrerpolicy="no-referrer" /> -->
+    <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/base16/atelier-heath-light.min.css" integrity="sha512-I/3mEZulKtgwkADaDJyUX1uXKSkDdTXAgwjfjRk9sPG0d9DaRc5i3zMR71PRTpHK26E11V+Q4MuAWJyGdw0qXQ==" crossorigin="anonymous" referrerpolicy="no-referrer" /> -->
+    <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/base16/summerfruit-light.min.css" integrity="sha512-T0azUsUGTrFc3/mCP/9olMBW7lc/QvE9YwlCRSh+3P+0FfrbwFtPOeuuplYYNTHgfAHn99se/rCyvS8jgvadLg==" crossorigin="anonymous" referrerpolicy="no-referrer" /> -->
+    <script src="/js/main.js"></script>
+    <script src="/js/articles.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+    <script src="/js/line-numbers.js"></script>
+    <script>
+        window.addEventListener("load", function()
+        {
+            hljs.highlightAll();
+            hljs.initLineNumbersOnLoad();
+            LoadArticleInfo(document.getElementById("info"), articles[articles.length - 51])
+        });
+    </script>
+    <title>Example | Starlight Zone</title>
+</head>
+<body>
+    <!-- navigation bar -->
+    <nav>
+        <ul>        
+            <li>
+                <a href="/index.html" id="logo"><img src="https://s1.ax1x.com/2023/01/13/pSKE2kT.png"/></a>
+            </li>
+            <div id="menu_list" class="hidden_menu">
+                <li><a href="/index.html">
+                    HOME
+                    <!--{zh}首页-->
+                </a></li>
+                <li><a href="/zone.html">
+                    ZONE
+                    <!--{zh}领地-->
+                </a></li>
+                <li><a href="/tools.html">
+                    TOOLS
+                    <!--{zh}工具-->
+                </a></li>
+                <li><a href="/blog.html">
+                    BLOG
+                    <!--{zh}博客-->
+                </a></li>
+                <li><a href="/about.html">
+                    ABOUT
+                    <!--{zh}关于-->
+                </a></li>
+            </div>
+            <div class="function_list">
+                <li class="menu_toggle" onclick="show_menu()"></li>
+                <!-- Unavailable Function -->
+                <!-- <li class="search_box">
+                    <input type="text" placeholder="search...">
+                    <div class="search_toggle" onclick="on_search(self)">search</div>
+                </li> -->
+            </div>
+        </ul>
+    </nav>
+    <div class="container rough">        
+        <!-- <script src="/js/prism.js"></script> -->
+        <div id="info">
+            <h1 id="title">Loading...</h1>
+            <p>
+                Date: <span id="date">loading</span> Views: <span id="busuanzi_value_page_pv">loading</span>
+            </p>
+            <img src="" alt="Image Not Found" id="avator">
+            <div class="author">
+                <p id="name">unnamed</p>
+                <p id="intro">Hello! Guys!</p>
+            </div>
+            <div class="tags"></div>
+        </div>
+        <div class="make_clear"></div>
+        <div class="content">
+            <p>让我们与星光探索者一起，探索Windows吧!
+                <br>
+                下发假设您自己的窗口类的窗口过程函数均为WndProc，且您正确的按流程写了自定义的窗口程序
+                <br>
+                下方均是提供的一种处理方式的代码，并不是必须要这么做。</p>
+
+            <h2>处理WM_CLOSE消息</h2>
+            <p>WM_CLOSE消息在窗口即将终止时产生。</p>
+            <p>此消息的附带信息</p>
+            <ul>
+                <li><kbd>wParam</kbd>未使用</li>
+                <li><kbd>lParam</kbd>未使用</li>
+            </ul>
+            <p>处理窗口过程函数一个例子如下：</p>
+            <pre><code>LRESULT CALLBACK WinProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+{
+    switch (uMsg)
+    {
+    case WM_CLOSE:
+        // 应调用此函数，这样会发送WM_QUIT消息
+        // 使GetMessage返回0，这样进程才会正确退出
+        PostQuitMessage(0);  
+        // 不要让默认处理函数处理，否则可能会出错
+        return 0;
+    }
+    return DefWindowProc(hwnd, uMsg, wParam, lParam);
+}</code></pre>
+
+            <p>此外，WM_DESTROY和WM_QUIT也有退出的意思，这三个消息有什么区别呢？</p>
+            <p>WM_DESTROY在窗口销毁时产生，附带的两个信息和WM_CLOSE相同。但在WM_CLOSE可以选择决定是否销毁窗口。WM_QUIT消息在调用PostQuitMessage产生，使得GetMessage返回0。</p>
+            <h2>处理WM_CREATE消息</h2>
+            <p>WM_CREATE消息在窗口被创建时产生，在<strong>CreateWindow函数返回之前且窗口未显示之前</strong>产生。如果这个消息返回0，窗口将会被创建，返回-1将销毁创建的窗口。通常处理此消息时，我们初始化一些数据。</p>
+
+            <p>此消息附带信息</p>
+            <ul>
+                <li><kbd>wParam</kbd>未使用</li>
+                <li><kbd>lParam</kbd>指向<a href="https://learn.microsoft.com/zh-cn/windows/win32/api/winuser/ns-winuser-createstructa">CREATESTRUCT</a>结构体的指针，可以获得调用CreateWindowEx时的全部参数</li>
+            </ul>
+                <p>处理窗口过程函数一个示例如下（运行本示例，您应该能看到先弹出一个消息框，再显示窗口）：</p>
+
+                <pre><code>LRESULT CALLBACK WinProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+{
+    switch (uMsg)
+    {
+    case WM_CLOSE:
+        PostQuitMessage(0);
+        return 0;
+    case WM_CREATE:
+       {
+            // 大部分小伙伴刚掌握时还不太熟练Windows基本数据类型
+            // LPCTSTR = const TCHAR*
+            // CREATESTRUE结构可以获得CreateWindow传的所有参数
+            // lpszClassName是其中之一
+            // reinterpret_cast是C++的类型转换使用的，
+            LPCTSTR lpClassName = reinterpret_cast<CREATESTRUCT*>(lParam)->lpszClass;
+            MessageBox(hwnd, TEXT("窗口创建了！"), lpClassName, MB_OK);
+        }
+        return 0;
+    }
+    return DefWindowProc(hwnd, uMsg, wParam, lParam);
+}</code></pre>
+
+             <h2>处理WM_SIZE消息</h2>
+             <p><a href="https://learn.microsoft.com/zh-cn/windows/win32/winmsg/wm-size">WM_SIZE消息</a>将在窗口被调整大小结束后产生。窗口在第一次创建的时候理所当然会调整大小，所以至少会触发一次</p>
+             <p>此消息附带的两个信息</p>
+             <ul>
+                 <li><kbd>wParam</kbd>调整大小的方式</li>
+                 <li><kbd>lParam</kbd>调整后的新范围。低字节为调整后的新宽度，高字节为调整后的新高度</li>
+             </ul>
+
+             <p>处理此事件的一个示例如下：</p>
+
+             <pre><code>// #include &ltiostream&gt // 使用std::cout包含了这个头文件
+
+LRESULT CALLBACK WinProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+{
+    switch (uMsg)
+    {
+    case WM_CLOSE:
+        PostQuitMessage(0);
+        // 销毁分配的控制台
+        FreeConsole();
+        return 0;
+    case WM_CREATE:
+        // 给此窗口分配控制台，控制台会由系统处理
+        AllocConsole();
+        // 重定向标准输出流，使得printf可以在控制台输出
+        freopen("CONOUT$","w+t", stdout);
+    case WM_SIZE:
+        // 可用 LOWORD 获取低字节内容 HIWORD 获取高字节内容
+        std::cout &lt&lt "宽度" &lt&lt LOWORD(lParam) &lt&lt "高度" &lt&lt HIWORD(lParam) &lt&lt std::endl;
+    }
+    return DefWindowProc(hwnd, uMsg, wParam, lParam);
+}</code></pre>
+
+            <p>运行此程序，可能的结果如下：</p>
+            <img src="https://s1.ax1x.com/2023/01/20/pS8or6O.png" alt="Image Not Found">
+
+            <h2>处理常见鼠标消息</h2>
+
+            <p>鼠标移动，按下，松开，会产生鼠标消息。一般情况下，只有在你自己的窗口产生的鼠标消息，才会接收到，要想鼠标在哪个窗口都能处理到鼠标消息，请使用<a href="https://learn.microsoft.com/zh-cn/windows/win32/api/winuser/nf-winuser-setcapture">SetCapture函数</a></p>
+            <p>鼠标在窗口移动时，产生<a href="https://learn.microsoft.com/zh-cn/windows/win32/inputdev/wm-mousemove">WM_MOUSEMOVE消息</a>，根据移动的快慢，产生WM_MOUSEMOVE的消息频率是不同的</p>
+            <p>鼠标左键按下时，产生<a href="https://learn.microsoft.com/zh-cn/windows/win32/inputdev/wm-lbuttondown">WM_LBUTTONDOWN消息</a>，松开时产生<a href="https://learn.microsoft.com/zh-cn/windows/win32/inputdev/wm-lbuttonup">WM_LBUTTONUP消息</a>。鼠标右键按下时，产生<a href="https://learn.microsoft.com/zh-cn/windows/win32/inputdev/wm-rbuttondown">WM_RBUTTONDOWN消息</a>，鼠标右键松开时产生<a href="https://learn.microsoft.com/zh-cn/windows/win32/inputdev/wm-rbuttonup">WM_RBUTTONUP消息</a></p>
+
+            <p>消息产生均附带的两个信息</p>
+            <ul>
+                <li><kbd>wParam</kbd>产生消息时，其他按键的情况（例如Ctrl,Shift键有没有按下）</li>
+                <li><kbd>lParam</kbd>产生消息时，低字节为鼠标的x坐标，高字节为鼠标的y坐标，是相对窗口而言的</li>
+            </ul>
+            <p>处理消息的一种示例：</p>
+            <pre><code>LRESULT CALLBACK WinProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+{
+    switch (uMsg)
+    {
+    case WM_CLOSE:
+        PostQuitMessage(0);
+        FreeConsole();
+        return 0;
+    case WM_CREATE:
+        AllocConsole();
+        freopen("CONOUT$","w+t", stdout);
+    case WM_LBUTTONDOWN:
+        printf("鼠标左键按下 x:%d y: %d\n", LOWORD(lParam), HIWORD(lParam));
+        return 0;
+    case WM_LBUTTONUP:
+        printf("鼠标左键松开 x:%d y: %d\n", LOWORD(lParam), HIWORD(lParam));
+        return 0;
+    case WM_MOUSEMOVE:
+        printf("鼠标移动消息 x:%d y: %d\n", LOWORD(lParam), HIWORD(lParam));
+        return 0;
+    }
+    return DefWindowProc(hwnd, uMsg, wParam, lParam);
+}</code></pre>
+
+            <h2>处理鼠标双击消息</h2>
+            <p>当鼠标左键或右键或中键双击时，并且创建窗口时使用CS_DBCLICK风格，才会产生产生鼠标双击消息。很多小伙伴可能疑惑鼠标中键在哪。实际上鼠标的那个滚轮是可以按下去的，那个就是鼠标中键了。并不是鼠标双击消息产生时，就不会产生鼠标单击消息。</p>
+            <p>以鼠标左键双击消息<a href="https://learn.microsoft.com/zh-cn/windows/win32/inputdev/wm-lbuttondblclk">WM_LBUTTONDBLCLK消息</a>为例，产生消息的顺序为：WM_LBUTTONDOWN, WM_LBUTTONUP, WM_LBUTTONDBLCLK, WM_LBUTTONUP</p>
+
+            <p>消息产生均附带的两个信息</p>
+            <ul>
+                <li><kbd>wParam</kbd>产生消息时，其他按键的情况（例如Ctrl,Shift键有没有按下）</li>
+                <li><kbd>lParam</kbd>产生消息时，低字节为鼠标的x坐标，高字节为鼠标的y坐标，是相对窗口而言的</li>
+            </ul>
+
+            <h2>键盘消息</h2>
+            <p>当键盘的案件被按下或松开时，产生键盘事件。如<a href="https://learn.microsoft.com/zh-cn/windows/win32/inputdev/wm-keydown">WM_KEYDOWN消息（键盘按键按下消息）</a>， <a href="https://learn.microsoft.com/zh-cn/windows/win32/inputdev/wm-keyup">WM_KEYUP消息（键盘按键松开消息）</a></p>
+            
+            <p>消息产生均附带的两个信息</p>
+            <ul>
+                <li><kbd>wParam</kbd>按下按键的VirtualKey（虚拟键代码）</li>
+                <li><kbd>lParam</kbd>按键的参数（如点击了几次）</li>
+            </ul>
+
+            <p>按下按键只会表明按下的是哪个按键，例如在输入大写字母A和小写字母a时，都是按下了a键，产生WM_KEYDOWN或WM_KEYUP等时没法区分。如果要得到按下按键时的ASCII值，使用 <a href="https://learn.microsoft.com/zh-cn/windows/win32/inputdev/wm-char">WM_CHAR消息</a>更加方便我们处理</p>
+
+            <h2>自定义消息</h2>
+            <p>有的时候，我们想有自定义消息，那么我们可以使用<a href="https://learn.microsoft.com/zh-CN/windows/win32/winmsg/wm-user">WM_USER宏</a>自定义消息的格式为WM_USER + x。自定义消息取值范围是 WM_USER 到 0x7FFF</p>
+
+            <p>示例创建自定义消息代码</p>
+            <pre><code>#include &ltwindows.h>
+#include &ltiostream>
+
+#pragma comment(lib, "user32.lib")
+#pragma comment(lib, "gdi32.lib")
+// 定义自己的消息，用 WM_USER + x 的形式，只要不超过0x7FFF就可以
+#define MY_MESSAGE WM_USER + 2
+
+LRESULT CALLBACK WinProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+
+
+INT APIENTRY WinMain(
+    HINSTANCE hInstance,
+    HINSTANCE hPrevInstance,
+    LPSTR lpCmdLine,
+    int nCmdShow
+)
+{
+    static const TCHAR TITLE[] = TEXT("window");
+    static const TCHAR CLASSNAME[] = TEXT("MyStruct");
+
+    WNDCLASS wc{0};
+    wc.hbrBackground = (HBRUSH)GetStockObject(DKGRAY_BRUSH); // background color
+    wc.hIcon = LoadIcon(NULL, IDI_APPLICATION);              // window's icon
+    wc.hCursor = LoadCursor(NULL, IDC_ARROW);                // window's cursor
+    wc.hInstance = hInstance;                                // window's instance
+    wc.lpfnWndProc = WinProc;                                // window process callback
+    wc.lpszClassName = CLASSNAME;                            // name of the window class
+    wc.lpszMenuName = NULL;                                  // name of the menu
+    wc.style = CS_HREDRAW | CS_VREDRAW;                      // window style
+
+    RegisterClass(&wc);
+
+    HWND hwnd = CreateWindowEx(
+        0,                   // optional window style
+        CLASSNAME,           // window class
+        TITLE,               // window title
+        WS_OVERLAPPEDWINDOW, //window style
+
+        // width and height
+        CW_USEDEFAULT, CW_USEDEFAULT, 
+        // x y
+        CW_USEDEFAULT, CW_USEDEFAULT,
+
+        NULL,                // parent window
+        NULL,                // menu
+        hInstance,           // instance handle
+        NULL                 // additional application data
+    );
+    if (hwnd == NULL)
+    {
+        return 0;
+    }
+
+    ShowWindow(hwnd, nCmdShow);
+    UpdateWindow(hwnd);
+
+    MSG msg{0};
+    while(GetMessage(&msg, NULL, 0, 0))
+    {
+        TranslateMessage(&msg);
+        DispatchMessage(&msg);
+    }
+
+    return 0;
+}
+
+LRESULT CALLBACK WinProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+{
+    switch (uMsg)
+    {
+    case WM_CLOSE:
+        PostQuitMessage(0);
+        return 0;
+    case WM_LBUTTONDOWN:
+    {
+        // 在鼠标左键时发送消息处理，并获得处理结果
+        LRESULT nRet = SendMessage(hwnd, MY_MESSAGE, 0, 100);
+        if (nRet == 114514)
+        {
+            MessageBox(hwnd, TEXT("好臭的处理方式!"), TEXT("差评"), MB_ICONWARNING);
+        }
+        return 0;
+    }
+    // 处理自定义消息
+    case MY_MESSAGE:
+        MessageBox(hwnd, TEXT("处理我自己的消息！"), TEXT("MY_MESSAGE"), MB_OK);
+        return 114514; // 返回处理结果
+    }
+    return DefWindowProc(hwnd, uMsg, wParam, lParam);
+}</code></pre>
+        <p>运行此代码，应该在鼠标左键时弹出一个消息框显示"处理我自己的消息！"，然后显示"好臭的处理方式!"。</p>
+        <p>本期到此结束，下期看星光探索者探索使用计时器和菜单，图标，光标等资源文件</p>
+        <p><a href="p13.html">上一篇：探索Windows:如何创建自己的窗口和探索消息机制</a></p>
+        <p><a href="p15.html">下一篇：探索Windows:使用计时器和菜单，图标，光标等资源文件</a></p>
+        </div>
+    </div>
+
+    <!-- footer -->
+    <footer>
+        <!-- studio view -->
+        <div class="studio_view">
+            <a href="/index.html" id="logo"><img src="https://s1.ax1x.com/2023/01/13/pSKE2kT.png"/></a>
+            <h4>For an encounter with stars!
+                <!--{zh}期待与漫天繁星的相遇！-->
+            </h4>
+        </div>
+        <!-- link view -->
+        <div class="link_view">
+            <dl>
+                <dt>Studio<!--{zh}关于星光--></dt>
+                <dd><a href="/about.html">About Us<!--{zh}关于我们--></a></dd>
+                <dd><a href="/about.html#careers">Careers<!--{zh}生涯--></a></dd>
+                <dd><a href="/about.html#contact">Contact Us<!--{zh}联系我们--></a></dd>
+                <dd><a href="/about.html#recruitment">Recruitment<!--{zh}招贤纳士--></a></dd>
+                <dd><a href="/about.html#sustainability">Sustainability<!--{zh}可持续发展--></a></dd>
+            </dl>
+            <dl>
+                <dt>Products<!--{zh}星光产品--></dt>
+                <dd><a href="https://github.com/Dev-Mini/cli">Dev Mini Cli</a></dd>
+                <dd><a href="https://github.com/Starlight-Dev-Team/mnLua">MNLUA</a></dd>
+                <dd><a href="#">Starlight Map Studio</a></dd>
+                <dd><a href="#">Starlight Function Module</a></dd>
+                <dd><a href="#">Starlight Utility</a></dd>
+            </dl>
+            <dl>
+                <dt>Features<!--{zh}星光特色--></dt>
+                <dd><a href="/zone.html">Zones<!--{zh}领域--></a></dd>
+                <dd><a href="/tools.html">Tools<!--{zh}工具--></a></dd>
+                <dd><a href="#">Blogs<!--{zh}博客--></a></dd>
+                <dd><a href="#">Media<!--{zh}媒体--></a></dd>
+                <dd><a href="https://pd.qq.com/s/9xlc1hut2">Community<!--{zh}社区--></a></dd>
+            </dl>
+            <dl>
+                <dt>Links<!--{zh}友情链接--></dt>
+                <dd><a target="_blank" href="https://www.github.com/">GitHub</a></dd>
+                <dd><a target="_blank" href="https://0-0000.github.io/MiniExtend/">MiniExtend</a></dd>
+                <dd><a target="_blank" href="https://kaikaibenkai.github.io/MiniExtendDoc/">Featured MiniExtend Document<!--{zh}特色MiniExtend文档--></a></dd>
+                <dd><a target="_blank" href="https://tatsukimengchen.github.io/devToolbox/">Dev-Tool Box<!--{zh}迷你开发者工具箱--></a></dd>
+                <dd><a target="_blank" href="https://www.geeksforgeeks.org/">GeeksforGeeks</a></dd>
+                <dd><a target="_blank" href="https://i.qq.com/?s_url=http%3A%2F%2Fuser.qzone.qq.com%2F3260922891">Anran's QQ Zone<!--{zh}安安的空间--></a></dd>
+            </dl>
+        </div>
+        <!-- media view -->
+        <div class="media_view make_clear">
+            <ul>
+                <li><a target="_blank" href="https://www.ixigua.com/home/1874031348815676/?source=pgc_author_profile&list_entrance=anyVideo"><img src="//sf1-cdn-tos.douyinstatic.com/obj/eden-cn/lpqpflo/ixigua_favicon.ico"/></a></li>
+                <li><a target="_blank" href="https://www.douyin.com/user/MS4wLjABAAAAl0WwP-4TG_uhKRX1Z0q2OllnQ3FU3cB1RpOLG-T2j2o"><img src="/image/tiktok.svg"/></a></li>
+                <li><a target="_blank" href="https://pd.qq.com/s/9xlc1hut2"><img src="/image/tencent-qq.svg"/></a></li>
+                <li><a target="_blank" href="https://github.com/Starlight-Dev-Team"><img src="/image/github.svg"/></a></li>
+            </ul>
+            <p class="make_clear">
+                &copy 2023 The Starlight Studio - For an encounter with stars!
+                <!--{zh}© 2023 星光工作室 - 期待与漫天繁星的相遇！-->
+            </p>
+        </div>
+    </footer>
+
+    <script src="https://cdn.bootcdn.net/ajax/libs/translater.js/1.0.12/translater.min.js"></script>
+    <script>
+        var translater = new Translater({
+            lang: GetCurLanguage()
+        })
+    </script>
+</body>
+</html>

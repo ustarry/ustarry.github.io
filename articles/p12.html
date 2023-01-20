@@ -23,7 +23,7 @@
         {
             hljs.highlightAll();
             hljs.initLineNumbersOnLoad();
-            LoadArticleInfo(document.getElementById("info"), articles[articles.length - 11])
+            LoadArticleInfo(document.getElementById("info"), articles[articles.length - 49])
         });
     </script>
     <title>Example | Starlight Zone</title>
@@ -67,7 +67,7 @@
             </div>
         </ul>
     </nav>
-    <div class="container rough">
+    <div class="container rough">        
         <!-- <script src="/js/prism.js"></script> -->
         <div id="info">
             <h1 id="title">Loading...</h1>
@@ -83,18 +83,123 @@
         </div>
         <div class="make_clear"></div>
         <div class="content">
-            <!-- here is the content -->
-            <p>中考是人生关键的转折点，安安小姐姐教你如何备战中考！</p>
-            <iframe width="720" height="405" frameborder="0" src="https://www.ixigua.com/iframe/6983541888011895335?autoplay=0" referrerpolicy="unsafe-url" allowfullscreen></iframe>
+            <p>让我们与星光探索者一起，探索Windows吧!</p>
 
-            <p>你为你热爱的游戏做过什么？</p>
-            <iframe width="720" height="405" frameborder="0" src="https://www.ixigua.com/iframe/6973142045183443467?autoplay=0" referrerpolicy="unsafe-url" allowfullscreen></iframe>
+            <h2>常用基本数据类型</h2>
+            <p>windows定义了很多基本数据类型，常用的有下列等效定义</p>
 
-            <p>香坊区搞笑故事</p>
-            <iframe width="720" height="405" frameborder="0" src="https://www.ixigua.com/iframe/6962340571885240872?autoplay=0" referrerpolicy="unsafe-url" allowfullscreen></iframe>
+            <pre><code>#define CONST const
+#define VOID void
+typedef char CHAR;
+typedef short SHORT;
+typedef long LONG;
+typedef int INT;
+typedef wchar_t WCHAR;
+typedef SHORT *PSHORT;  
+typedef LONG *PLONG;    
 
-            <p>远足拉练趣事</p>
-            <iframe width="720" height="405" frameborder="0" src="https://www.ixigua.com/iframe/6957518230281781763?autoplay=0" referrerpolicy="unsafe-url" allowfullscreen></iframe>
+// 字节的定义
+typedef unsigned long       DWORD;
+typedef int                 BOOL;
+typedef unsigned char       BYTE;
+typedef unsigned short      WORD;
+typedef float               FLOAT;
+
+// 原子类型
+typedef WORD                ATOM;
+
+#ifdef UNICODE // 如果定义了UNICODE宏
+typedef WCHAR TCHAR, *PTCHAR;
+#else
+typedef CHAR TCHAR, *PTCHAR;
+#endif
+
+// CHAR类型字符串
+typedef CHAR *LPSTR, *PSTR;
+// CONST CHAR类型字符串
+typedef CONST CHAR *LPCSTR, *PCSTR;
+// WCHAR类型字符串
+typedef WCHAR *LPWSTR, *PWSTR;
+// COSNT WCHAR类型字符串
+typedef CONST WCHAR *LPCWSTR, *PCWSTR;
+
+
+// TCHAR类型的字符串
+typedef TCHAR *PTSTR, *LPTSTR;
+// CONST TCHAR类型字符串
+typedef CONST TCHAR *PCTSTR, *LPCTSTR;
+            </code></pre>
+
+            <p>这些是主要的类型，各位小伙伴初次看到时都会感到比较难以下手，我们只需要大概了解就可以了，毕竟有文档在，况且我们可以随时查看这些函数的定义。</p>
+
+            <p>这些基本数据类型的定义是有规律的，例如带有<kbd>p</kbd>的表明这个类型是指针类型，例如LPSTR(char*), PVOID(void*)，带有<kbd>STR</kbd>的表明这是一个字符串，例如PSTR(char*), PTSTR(TCHAR*)，带有<kbd>C</kbd>表示具有const属性例如PCWSTR(const wchar_t *)，非常好记。
+<br>
+                还有BOOL定义为int，并不是bool，返回BOOL类型时应该返回TRUE(1)或FALSE(0)</p>
+
+            <h2>字符编码</h2>
+            <p>字符(character)是各位文字和符号的总称，字符集（Character set）是多个字符的集合，字符集种类较多，每个字符集包含的字符个数不同，常见字符集名称：ASCII字符集、GB2312字符集、BIG5字符集、 GB18030字符集、Unicode字符集等。计算机要准确的处理各类字符集，需要进行字符编码。实际上字符都是通过数值表示的。</p>
+            <p>下面来探索部分字符集：</p>
+
+            <h3>ASCII 字符集</h3>
+
+            <p>ASCII (American Standard Code for Information Interchange，美国信息互换标准编码）是基于罗马字母表的一套电脑编码系统，主要用于显示英语和其他西欧语言。ASCII字符集用7位表示一个字符，共128个字符，字符值从0到127，其中32到126是可打印字符。7位编码的字符集只能表示128个字符，为了表示更多的字符，ASCII扩展字符集使用8位（bits）表示一个字符，共256字符。</p>
+
+            <h3>GB2313字符集</h3>
+
+            <p>GB2312又称为GB2312-80字符集，全称为《信息交换用汉字编码字符集·基本集》，由原中国国家标准总局发布，1981年5月1日实施。是中国国家标准的简体中文字符集，他收录的汉字已经覆盖99.75%的使用评率，基本满足了汉字的计算机处理需要。</p>
+
+            <h3>Unicode字符集</h3>
+            <p>Unicode字符集是Universal Multiple-Octet Coded Character Set 通用多八位编码字符集的简称，支持现今世界各种不同语言的书面文本的交换、处理及显示。
+                <br>
+                因此Win32程序使用不同的字符集，将调用不同的API函数。</p>
+
+            <p>下列代码展示如何处理各种字符集的打印方式：</p>
+
+            <pre><code>#include &ltstdio.h&gt
+
+int main()
+{
+    printf("打印多字节字符集使用这个\n");
+    wprintf(L"%ls\n", L"打印Unicode字符集使用这个");
+    getchar();
+    return 0;
+}</code></pre>
+
+            <p>编译并运行这段代码，看到printf正常打印，wprintf打印不出正确内容的运行结果(各位可以尝试一下，wprintf打印宽字符集，也就是Unicode字符，目前大多都是不成功的)</p>
+
+            <img src="https://s1.ax1x.com/2023/01/20/pS8oBp6.png" alt="Image Not Found">
+
+            <p>为什么会这样呢？因为wprintf目前对Unicode的支持还不是很好，为了能正常打印，在Windows我们可以使用<a href="https://learn.microsoft.com/zh-cn/windows/console/writeconsole">WriteConsole函数</a>，看下列代码：</p>
+
+            <pre><code>#include &ltwindows.h&gt
+#include &ltstdio.h&gt
+
+int main()
+{
+    const wchar_t content[] = L"打印Unicode字符集的解决方案";
+
+    // 获得标准输出句柄 STD_OUTPUT_HANDLE
+    // 还可以获得标准输入句柄，标准错误句柄等
+    // HANDLE是句柄类型
+    HANDLE hOut = GetStdHandle(STD_OUTPUT_HANDLE);
+
+    // 控制台输出信息
+    WriteConsole(hOut, content, wcslen(content), NULL, NULL);
+
+    // 对于TCHAR类型的字符串，计算长度因使用lstrlen
+    TCHAR szText = TEXT("好！");
+    WriteConsole(hOut, szText, lstrlen(szText), NULL, NULL);
+
+    return 0;
+}
+            </code></pre>
+
+            <p>这样一编译，可以看到程序正确打印，非常好。</p>
+
+            <p>本期到此结束，下期看星光探索者探索Windows如何创建自己的窗口和探索消息机制</p>
+
+            <p><a href="p11.html">上一篇：探索Windows:第一个Win32程序</a></p>
+            <p><a href="p13.html">下一篇：探索Windows:如何创建自己的窗口和探索消息机制</a></p>
         </div>
     </div>
 

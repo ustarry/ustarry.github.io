@@ -70,6 +70,16 @@
     <div class="container rough">        
         <!-- <script src="/js/prism.js"></script> -->
         <div id="info">
+            <h1 id="title">Loading...</h1>
+            <p>
+                Date: <span id="date">loading</span> Views: <span id="busuanzi_value_page_pv">loading</span>
+            </p>
+            <img src="" alt="Image Not Found" id="avator">
+            <div class="author">
+                <p id="name">unnamed</p>
+                <p id="intro">Hello! Guys!</p>
+            </div>
+            <div class="tags"></div>
         </div>
         <div class="make_clear"></div>
         <div class="content">
@@ -126,8 +136,8 @@ __declspec(dllexport) int func(int a)
             </code></pre>
 
             <p>这样，在进行动态库生成，就可以了。此次生成了动态库文件mylib.dll，以及导入库mylib.lib。导入库是用来提供导出函数信息的，动态库提供机器指令。而静态库整个文件都是机器指令</p>
-            <p>此外，对于Visual C++生成的动态库.dll文件，还有一个可选的DLLMain函数，DLLMain函数是动态库的入口，就像main函数是程序的入口一样
-                DLLMain函数长这样：
+            <p>此外，对于Visual C++生成的动态库.dll文件，还有一个可选的DllMain函数，DllMain函数是动态库的入口，就像main函数是程序的入口一样
+                DllMain函数长这样：
             </p>
             <pre><code class="language-cpp">BOOL APIENTRY DllMain(
     HANDLE hModule,           // 指向自身的句柄
@@ -174,7 +184,7 @@ __declspec(dllexport) int func(int a)
                 <br>然后使用 -shared 指令生成动态库， -fPIC指令用于生成位置无关代码
                 <br>（眩晕时间）位置无关代码，这样的代码本身就能被放到线性地址空间的任意位置，无需修改就能正确执行，而不生成位置无关的，加载时地址需要重定向。
                 <br>此外，如果不生产位置无关的代码，源文件有一定的要求。在这里就不细说了。
-                <br>例如 ：gcc -shared -fPIC libmylib.so -o mylib
+                <br>例如 ：gcc -shared -fPIC libmylib.so mylib.o
                 <p>这样就生成好了</p>
             </p>
 

@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/style_article.css">
+    <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <!-- <link rel="stylesheet" href="/css/prism.css"> -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/base16/atelier-cave-light.min.css" integrity="sha512-mb7hVnqouaHmHLJYLhdY+kUld4843IHJuRbVbhLXD41EJreUz0AeYU9t0XhwDFtnRVRvnLkbT/Xbjl1sajvpFQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/stackoverflow-light.min.css" integrity="sha512-RDtnAhiPytLVV3AwzHkGVMVI4szjtSjxxyhDaH3gqdHPIw5qwQld1MVGuMu1EYoof+CaEccrO3zUVb13hQFU/A==" crossorigin="anonymous" referrerpolicy="no-referrer" /> -->
+    <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/vs.min.css" integrity="sha512-AVoZ71dJLtHRlsgWwujPT1hk2zxtFWsPlpTPCc/1g0WgpbmlzkqlDFduAvnOV4JJWKUquPc1ZyMc5eq4fRnKOQ==" crossorigin="anonymous" referrerpolicy="no-referrer" /> -->
+    <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/base16/atelier-seaside-light.min.css" integrity="sha512-J5t2mexco5S5vcGjc7YrpvNRMDagzugT63xPBD7K0akivXak8RmAybotoqxYVd5hzJwDNuT4wYafB/28+gfkuQ==" crossorigin="anonymous" referrerpolicy="no-referrer" /> -->
+    <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/base16/atelier-heath-light.min.css" integrity="sha512-I/3mEZulKtgwkADaDJyUX1uXKSkDdTXAgwjfjRk9sPG0d9DaRc5i3zMR71PRTpHK26E11V+Q4MuAWJyGdw0qXQ==" crossorigin="anonymous" referrerpolicy="no-referrer" /> -->
+    <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/base16/summerfruit-light.min.css" integrity="sha512-T0azUsUGTrFc3/mCP/9olMBW7lc/QvE9YwlCRSh+3P+0FfrbwFtPOeuuplYYNTHgfAHn99se/rCyvS8jgvadLg==" crossorigin="anonymous" referrerpolicy="no-referrer" /> -->
+    <script src="/js/main.js"></script>
+    <script src="/js/articles.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+    <script src="/js/line-numbers.js"></script>
+    <script>
+        window.addEventListener("load", function()
+        {
+            hljs.highlightAll();
+            hljs.initLineNumbersOnLoad();
+            LoadArticleInfo(document.getElementById("info"), articles[articles.length - 53])
+        });
+    </script>
+    <title>Example | Starlight Zone</title>
+</head>
+<body>
+    <!-- navigation bar -->
+    <nav>
+        <ul>        
+            <li>
+                <a href="/index.html" id="logo"><img src="https://s1.ax1x.com/2023/01/13/pSKE2kT.png"/></a>
+            </li>
+            <div id="menu_list" class="hidden_menu">
+                <li><a href="/index.html">
+                    HOME
+                    <!--{zh}首页-->
+                </a></li>
+                <li><a href="/zone.html">
+                    ZONE
+                    <!--{zh}领地-->
+                </a></li>
+                <li><a href="/tools.html">
+                    TOOLS
+                    <!--{zh}工具-->
+                </a></li>
+                <li><a href="/blog.html">
+                    BLOG
+                    <!--{zh}博客-->
+                </a></li>
+                <li><a href="/about.html">
+                    ABOUT
+                    <!--{zh}关于-->
+                </a></li>
+            </div>
+            <div class="function_list">
+                <li class="menu_toggle" onclick="show_menu()"></li>
+                <!-- Unavailable Function -->
+                <!-- <li class="search_box">
+                    <input type="text" placeholder="search...">
+                    <div class="search_toggle" onclick="on_search(self)">search</div>
+                </li> -->
+            </div>
+        </ul>
+    </nav>
+    <div class="container rough">        
+        <!-- <script src="/js/prism.js"></script> -->
+        <div id="info">
+            <h1 id="title">Loading...</h1>
+            <p>
+                Date: <span id="date">loading</span> Views: <span id="busuanzi_value_page_pv">loading</span>
+            </p>
+            <img src="" alt="Image Not Found" id="avator">
+            <div class="author">
+                <p id="name">unnamed</p>
+                <p id="intro">Hello! Guys!</p>
+            </div>
+            <div class="tags"></div>
+        </div>
+        <div class="make_clear"></div>
+        <div class="content">
+            <p>让我们与星光探索者一起，探索Windows吧!</p>
+
+            <h2>绘图编程</h2>
+            <p>GDI,Graphic Device Interface，Windows提供了大量API供我们绘制各种各样的图形。</p>
+            <p>Windows每个窗口都是绘制出来的，当窗口需要绘制的时候，产生<a href="https://learn.microsoft.com/zh-cn/windows/win32/gdi/wm-paint">WM_PAINT消息</a>，进而我们可以绘制窗口</p>
+            <p>HDC，即为设备上下文句柄，DC是设备windows特有的一个概念，我们需要使用他来绘图。下面是简单的绘图代码：</p>
+            <pre><code>#define _CRT_SECURE_NO_WARNINGS
+#include "resource.h"
+#include &ltwindows.h>
+
+#pragma comment(lib, "user32.lib")
+#pragma comment(lib, "gdi32.lib")
+#pragma comment(lib, "kernel32.lib")
+
+LRESULT CALLBACK WinProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+
+
+INT APIENTRY WinMain(
+    HINSTANCE hInstance,
+    HINSTANCE hPrevInstance,
+    LPSTR lpCmdLine,
+    int nCmdShow
+)
+{
+    static const TCHAR TITLE[] = TEXT("星光探索者");
+    static const TCHAR CLASSNAME[] = TEXT("MyStruct");
+
+    WNDCLASS wc{0};
+    wc.hInstance = hInstance; 
+    wc.lpfnWndProc = WinProc; 
+    wc.lpszClassName = CLASSNAME; 
+
+    RegisterClass(&wc);
+
+    HWND hwnd = CreateWindowEx(
+        0, CLASSNAME, TITLE,WS_OVERLAPPEDWINDOW, 
+        CW_USEDEFAULT, CW_USEDEFAULT,  CW_USEDEFAULT, CW_USEDEFAULT,
+        NULL,  NULL,  hInstance, NULL 
+    );
+
+    ShowWindow(hwnd, nCmdShow);
+    UpdateWindow(hwnd);
+
+    MSG msg{0};
+    while(GetMessage(&msg, NULL, 0, 0))
+    {
+        TranslateMessage(&msg);
+        DispatchMessage(&msg);
+    }
+
+    return 0;
+}
+
+LRESULT CALLBACK WinProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+{
+    switch (uMsg)
+    {
+    case WM_CLOSE:
+        PostQuitMessage(0);
+        return 0;
+    case WM_PAINT:
+        {
+        // 定义绘图结构体，用来绘图
+        PAINTSTRUCT ps;
+
+        // 开始绘画，得到DC
+        HDC hdc = BeginPaint(hwnd, &ps);
+
+        // 绘制图标
+        DrawIcon(hdc, 50, 50, LoadIcon(NULL, LPCTSTR(IDI_MYICON)));
+        for (int i = 10; i != 40; ++i)
+        {
+            for (int j = 10; j != 40; ++j)
+            {
+                // 绘制一个点
+                SetPixel(hdc, i, j, RGB(255, 0, 255));
+            }
+        }
+        // 结束绘画
+        EndPaint(hwnd, &ps);
+        return 0;
+        }
+    }
+    return DefWindowProc(hwnd, uMsg, wParam, lParam);
+}</code></pre>
+            <p>这样就可以简单的绘图了。只需BeginPaint获得HDC，然后调用相关的API（API直接查<a href="https://learn.microsoft.com/zh-cn/windows/win32/gdi/windows-gdi">官网相关资源</a>，然后再EndPaint，就可以了。但是并不是什么时候都可以绘图的，<strong>只有绘图消息和计时器消息发生时，绘图才会成功</strong></p>
+
+            <h2>使用对话框</h2>
+            <p>对话框是一种窗口，他主要用于向用户显示信息或等待用户输入时的一个小弹窗。如果我们快速制作一个Win32程序，使用对话框是一种便捷方法。</p>
+            <p>同样是这个熟悉的界面，右键项目，添加(Add)，资源(Resource)</p>
+            <img src="https://s1.ax1x.com/2023/01/20/pS8odt1.png" alt="Image Not Found">
+            <p>点击对话框(Dialog)，之后VS显示了一个可视化的设计器。我们可以直接拖拽控件快速布局。大部分小伙伴都对很喜欢这种形式吧！</p>
+            <img src="https://s1.ax1x.com/2023/01/20/pS8og7d.png" alt="Image Not Found">
+            <p>为了示范，星光探索者之后就直接写代码了。
+
+                对话框根据显示后是否阻止与其他窗口交互，可分为模态对话框和非模态对话框。</p>
+            <ul>
+                <li>模态对话框：显示后阻止你创建的其他窗口交互</li>
+                <li>非模态对话框：显示后不阻止你创建的其他窗口交互</li>
+            </ul>
+
+            <p>模态对话框的创建方式，调用<a href="https://learn.microsoft.com/zh-cn/windows/win32/api/winuser/nf-winuser-dialogboxw">DialogBox函数</a>。这个函数是阻塞函数，返回值为对话框销毁时的返回值。参数如下：</p>
+            <pre><code>INT_PTR DialogBox(
+    HINSTANCE hInstance,   // 实例句柄，如果传NULL将使用当前的
+    LPCTSTR lpTemplate,    // 创建的资源模板，在资源文件
+    HWND hWndParent,       // 对话框的父窗口
+    DLGPROC lpDialogFunc   // 对话框消息过程处理函数
+);</code></pre>
+            <p>非模态对话框创建方式，调用<a href="https://learn.microsoft.com/zh-cn/windows/win32/api/winuser/nf-winuser-createdialogw">CreateDialog函数</a>，参数如下，意义和上方相同，不多叙述。这个函数不是阻塞函数。</p>
+            <pre><code>void CreateDialog(
+    HINSTANCE  hInstance,     
+    LPCTSTR    lpName,
+    HWND       hWndParent,
+    DLGPROC    lpDialogFunc
+);</code></pre>
+            <p>DLGPROC是对话框过程函数的类型，为：</p>
+            <pre><code>typedef INT_PTR (CALLBACK* DLGPROC)(HWND, UINT, WPARAM, LPARAM);</code></pre>
+            <p>实际上和窗口消息过程函数是一模一样的。但是这个对话框过程函数的返回值如果为FALSE，表明还需要默认处理函数处理，否则不调用默认处理函数处理。</p>
+            <p>当对话框开始创建未显示时，产生<a href="https://learn.microsoft.com/zh-cn/windows/win32/dlgbox/wm-initdialog">WM_INITDIALOG消息</a>，不产生WM_CREATE消息。因此，对话框过程函数不应该处理WM_CREATE消息。各位感兴趣的小伙伴可验证一下。</p>
+
+            <p>模态对话框和非模态对话框的处理函数写法要求大不同。模态对话框销毁时使用<a href="https://learn.microsoft.com/zh-CN/windows/win32/api/Winuser/nf-winuser-enddialog">EndDialog函数</a>不可以使用DestroyWindow等函数；而非模态对话框销毁时使用<a href="https://learn.microsoft.com/zh-CN/windows/win32/api/winuser/nf-winuser-destroywindow">DestroyWindow函数</a></p>
+            <p>要想处理对话框内部的控件的操作，需要处理<a href="https://learn.microsoft.com/zh-cn/windows/win32/menurc/wm-command">WM_COMMAND消息</a>。控件被点击时，lParam为控制窗口的句柄，wParam的高字节为控件的消息，低字节为控件ID标识符。下面是一个模态对话框的示例：</p>
+            <pre><code>#define _CRT_SECURE_NO_WARNINGS
+#include "resource.h"
+#include &ltwindows.h>
+
+#pragma comment(lib, "user32.lib")
+#pragma comment(lib, "gdi32.lib")
+#pragma comment(lib, "kernel32.lib")
+
+LRESULT CALLBACK WinProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+
+
+INT APIENTRY WinMain(
+    HINSTANCE hInstance,
+    HINSTANCE hPrevInstance,
+    LPSTR lpCmdLine,
+    int nCmdShow
+)
+{
+    static const TCHAR TITLE[] = TEXT("星光探索者");
+    static const TCHAR CLASSNAME[] = TEXT("MyStruct");
+
+    WNDCLASS wc{0};
+    wc.hbrBackground = (HBRUSH)GetStockObject(WHITE_BRUSH);
+    wc.hInstance = hInstance; 
+    wc.lpfnWndProc = WinProc; 
+    wc.lpszClassName = CLASSNAME; 
+    wc.style = CS_HREDRAW | CS_VREDRAW; 
+
+    RegisterClass(&wc);
+
+    HWND hwnd = CreateWindowEx(
+        0,CLASSNAME, TITLE, WS_OVERLAPPEDWINDOW, 
+        CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT,
+        NULL, NULL, hInstance, NULL 
+    );
+
+    ShowWindow(hwnd, nCmdShow);
+    UpdateWindow(hwnd);
+
+    MSG msg{0};
+    while(GetMessage(&msg, NULL, 0, 0))
+    {
+        TranslateMessage(&msg);
+        DispatchMessage(&msg);
+    }
+
+    return 0;
+}
+
+LRESULT CALLBACK DialogProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+{
+    switch (uMsg)
+    {
+    case WM_INITDIALOG:
+        // 处理对话框被创建的消息
+        MessageBox(hwnd, TEXT("对话框被创建"), TEXT("探索对话框"), MB_OK);
+        return TRUE;
+    case WM_COMMAND:
+        // 处理对话框被点击的消息
+        switch (LOWORD(wParam))
+        {
+        // IDOK和IDCANCEL都是定义好的，分别代表OK和CANCEL按钮
+        case IDOK:
+            MessageBox(hwnd, TEXT("我也觉得OK"), TEXT("来自对话框的信息"), MB_OK);
+            return TRUE;
+        case IDCANCEL:
+            EndDialog(hwnd, 0);
+            return FALSE;
+        }
+        return FALSE;
+    }
+    return FALSE;
+}
+
+LRESULT CALLBACK WinProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+{
+    switch (uMsg)
+    {
+    case WM_CLOSE:
+        PostQuitMessage(0);
+        return 0;
+    case WM_RBUTTONDOWN:
+        DialogBox(NULL, (LPCTSTR)IDD_DIALOG1, hwnd, DialogProc);
+        return 0;
+    }
+    return DefWindowProc(hwnd, uMsg, wParam, lParam);
+}</code></pre>
+            <p>运行这个实例，当我们鼠标右键的时候，弹出一个消息框后弹出对话框。点击OK按钮，将显示“我也觉得OK啊“；点击CANCEL按钮，将关闭对话框。</p>
+
+            <h2>使用系统定义好的控件</h2>
+            <p>对话框里能拖出这么多控件，实际上系统已经提前定义好了一些控件。</p>
+            <p>包含头文件<kbd>CommCtrl.h</kbd>这个头文件定义了很多<a href="https://learn.microsoft.com/zh-cn/windows/win32/controls/common-control-window-classes">定义好的窗口类</a>。但是你需要在<kbd>#include &ltwindows.h&gt</kbd>头文件后再<kbd>#include &ltCommCtrl.h&gt</kbd>，因为你微软居然要用windows.h头文件，居然不包含，导致编译的时候提示有很多标识符未定义，不这么做会报错。</p>
+
+            <p>系统已经定义好的控件包括WC_BUTTON(按钮)，WC_EDIT(文本编辑框)，WC_STATIC(不可改文本控件)，WC_TREEVIEW(树状图)，ANIMATE_CLASS(动画)等。</p>
+            <p>窗口控件的消息，是通过<a href="https://learn.microsoft.com/zh-cn/windows/win32/menurc/wm-command">WM_COMMAND消息</a>间接传上来的。<strong>控件被点击时，lParam为控制窗口的句柄，wParam的高字节为控件的消息，低字节为控件ID标识符。</strong>这个在对话框消息过程函数已经提及。</p>
+            <p>看实例代码：</p>
+            <pre><code>#define _CRT_SECURE_NO_WARNINGS
+#include &ltwindows.h&gt
+#include &ltCommCtrl.h&gt
+
+#pragma comment(lib, "user32.lib")
+#pragma comment(lib, "gdi32.lib")
+#pragma comment(lib, "kernel32.lib")
+
+LRESULT CALLBACK WinProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+
+
+INT APIENTRY WinMain(
+    HINSTANCE hInstance,
+    HINSTANCE hPrevInstance,
+    LPSTR lpCmdLine,
+    int nCmdShow
+)
+{
+    static const TCHAR TITLE[] = TEXT("星光探索者");
+    static const TCHAR CLASSNAME[] = TEXT("MyStruct");
+
+    WNDCLASS wc{0};
+    wc.hbrBackground = (HBRUSH)GetStockObject(WHITE_BRUSH);
+    wc.hInstance = hInstance; 
+    wc.lpfnWndProc = WinProc; 
+    wc.lpszClassName = CLASSNAME; 
+
+    RegisterClass(&wc);
+
+    HWND hwnd = CreateWindowEx(
+        0,CLASSNAME, TITLE, WS_OVERLAPPEDWINDOW, 
+        CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT,
+        NULL, NULL, hInstance, NULL 
+    );
+
+    ShowWindow(hwnd, nCmdShow);
+    UpdateWindow(hwnd);
+
+    MSG msg{0};
+    while(GetMessage(&msg, NULL, 0, 0))
+    {
+        TranslateMessage(&msg);
+        DispatchMessage(&msg);
+    }
+
+    return 0;
+}
+
+
+LRESULT CALLBACK WinProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+{
+    switch (uMsg)
+    {
+    case WM_CLOSE:
+        PostQuitMessage(0);
+        return 0;
+    case WM_CREATE:
+    {
+        // GetModuleHandle用于获得程序的hInstance，
+        // 就是WinMain函数那里的hInstnace
+        HINSTANCE hInstance = GetModuleHandle(NULL);
+        // WC_BUTTON是按钮类，BS_PUSHBUTTON是按钮的风格
+        // 下方的代码创建了一个按钮
+        CreateWindowEx(
+            0, WC_BUTTON, TEXT("BUTTON"), 
+             WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON, 
+            5, 5, 100, 100, hwnd, 
+            NULL, hInstance, NULL
+        );
+    }
+    case WM_COMMAND:
+        // 控件的消息通过wParam间接传递
+        // BN_CLICKED是按钮被点击时产生的消息
+        // 点击下方链接查看按钮的部分相关内容 
+        // https://zhuanlan.zhihu.com/p/353558221
+        if (HIWORD(wParam) == BN_CLICKED)
+        {
+            MessageBox(hwnd, TEXT("按钮被点击！"), TEXT("你好！"), MB_OK);
+            return 0;
+        }
+    }
+    return DefWindowProc(hwnd, uMsg, wParam, lParam);
+}</code></pre>
+            <p>运行本程序，可以看到成功创建了一个按钮，并且点击之后会弹出“按钮被点击”的消息框。</p>
+
+            <h2>阶段小结</h2>
+            <p>经过了好几篇文章的探索，想必你对Win32程序设计有了更深一步的了解，可以继续探索Windows了。转眼间春节就要到了，星光探索者祝各位春节快乐！</p>
+            <p>本期到此结束！感谢各位小伙伴的阅读！</p>
+            <p><a href="p15.html">上一篇：探索Windows:使用计时器和菜单，图标，光标等资源文件</a></p>
+            <p><a href="p11.html">下一篇：回顾过去的探索历程</a></p>
+        </div>
+    </div>
+
+    <!-- footer -->
+    <footer>
+        <!-- studio view -->
+        <div class="studio_view">
+            <a href="/index.html" id="logo"><img src="https://s1.ax1x.com/2023/01/13/pSKE2kT.png"/></a>
+            <h4>For an encounter with stars!
+                <!--{zh}期待与漫天繁星的相遇！-->
+            </h4>
+        </div>
+        <!-- link view -->
+        <div class="link_view">
+            <dl>
+                <dt>Studio<!--{zh}关于星光--></dt>
+                <dd><a href="/about.html">About Us<!--{zh}关于我们--></a></dd>
+                <dd><a href="/about.html#careers">Careers<!--{zh}生涯--></a></dd>
+                <dd><a href="/about.html#contact">Contact Us<!--{zh}联系我们--></a></dd>
+                <dd><a href="/about.html#recruitment">Recruitment<!--{zh}招贤纳士--></a></dd>
+                <dd><a href="/about.html#sustainability">Sustainability<!--{zh}可持续发展--></a></dd>
+            </dl>
+            <dl>
+                <dt>Products<!--{zh}星光产品--></dt>
+                <dd><a href="https://github.com/Dev-Mini/cli">Dev Mini Cli</a></dd>
+                <dd><a href="https://github.com/Starlight-Dev-Team/mnLua">MNLUA</a></dd>
+                <dd><a href="#">Starlight Map Studio</a></dd>
+                <dd><a href="#">Starlight Function Module</a></dd>
+                <dd><a href="#">Starlight Utility</a></dd>
+            </dl>
+            <dl>
+                <dt>Features<!--{zh}星光特色--></dt>
+                <dd><a href="/zone.html">Zones<!--{zh}领域--></a></dd>
+                <dd><a href="/tools.html">Tools<!--{zh}工具--></a></dd>
+                <dd><a href="#">Blogs<!--{zh}博客--></a></dd>
+                <dd><a href="#">Media<!--{zh}媒体--></a></dd>
+                <dd><a href="https://pd.qq.com/s/9xlc1hut2">Community<!--{zh}社区--></a></dd>
+            </dl>
+            <dl>
+                <dt>Links<!--{zh}友情链接--></dt>
+                <dd><a target="_blank" href="https://www.github.com/">GitHub</a></dd>
+                <dd><a target="_blank" href="https://0-0000.github.io/MiniExtend/">MiniExtend</a></dd>
+                <dd><a target="_blank" href="https://kaikaibenkai.github.io/MiniExtendDoc/">Featured MiniExtend Document<!--{zh}特色MiniExtend文档--></a></dd>
+                <dd><a target="_blank" href="https://tatsukimengchen.github.io/devToolbox/">Dev-Tool Box<!--{zh}迷你开发者工具箱--></a></dd>
+                <dd><a target="_blank" href="https://www.geeksforgeeks.org/">GeeksforGeeks</a></dd>
+                <dd><a target="_blank" href="https://i.qq.com/?s_url=http%3A%2F%2Fuser.qzone.qq.com%2F3260922891">Anran's QQ Zone<!--{zh}安安的空间--></a></dd>
+            </dl>
+        </div>
+        <!-- media view -->
+        <div class="media_view make_clear">
+            <ul>
+                <li><a target="_blank" href="https://www.ixigua.com/home/1874031348815676/?source=pgc_author_profile&list_entrance=anyVideo"><img src="//sf1-cdn-tos.douyinstatic.com/obj/eden-cn/lpqpflo/ixigua_favicon.ico"/></a></li>
+                <li><a target="_blank" href="https://www.douyin.com/user/MS4wLjABAAAAl0WwP-4TG_uhKRX1Z0q2OllnQ3FU3cB1RpOLG-T2j2o"><img src="/image/tiktok.svg"/></a></li>
+                <li><a target="_blank" href="https://pd.qq.com/s/9xlc1hut2"><img src="/image/tencent-qq.svg"/></a></li>
+                <li><a target="_blank" href="https://github.com/Starlight-Dev-Team"><img src="/image/github.svg"/></a></li>
+            </ul>
+            <p class="make_clear">
+                &copy 2023 The Starlight Studio - For an encounter with stars!
+                <!--{zh}© 2023 星光工作室 - 期待与漫天繁星的相遇！-->
+            </p>
+        </div>
+    </footer>
+
+    <script src="https://cdn.bootcdn.net/ajax/libs/translater.js/1.0.12/translater.min.js"></script>
+    <script>
+        var translater = new Translater({
+            lang: GetCurLanguage()
+        })
+    </script>
+</body>
+</html>

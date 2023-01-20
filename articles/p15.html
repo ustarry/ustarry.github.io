@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/style_article.css">
+    <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <!-- <link rel="stylesheet" href="/css/prism.css"> -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/base16/atelier-cave-light.min.css" integrity="sha512-mb7hVnqouaHmHLJYLhdY+kUld4843IHJuRbVbhLXD41EJreUz0AeYU9t0XhwDFtnRVRvnLkbT/Xbjl1sajvpFQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/stackoverflow-light.min.css" integrity="sha512-RDtnAhiPytLVV3AwzHkGVMVI4szjtSjxxyhDaH3gqdHPIw5qwQld1MVGuMu1EYoof+CaEccrO3zUVb13hQFU/A==" crossorigin="anonymous" referrerpolicy="no-referrer" /> -->
+    <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/vs.min.css" integrity="sha512-AVoZ71dJLtHRlsgWwujPT1hk2zxtFWsPlpTPCc/1g0WgpbmlzkqlDFduAvnOV4JJWKUquPc1ZyMc5eq4fRnKOQ==" crossorigin="anonymous" referrerpolicy="no-referrer" /> -->
+    <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/base16/atelier-seaside-light.min.css" integrity="sha512-J5t2mexco5S5vcGjc7YrpvNRMDagzugT63xPBD7K0akivXak8RmAybotoqxYVd5hzJwDNuT4wYafB/28+gfkuQ==" crossorigin="anonymous" referrerpolicy="no-referrer" /> -->
+    <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/base16/atelier-heath-light.min.css" integrity="sha512-I/3mEZulKtgwkADaDJyUX1uXKSkDdTXAgwjfjRk9sPG0d9DaRc5i3zMR71PRTpHK26E11V+Q4MuAWJyGdw0qXQ==" crossorigin="anonymous" referrerpolicy="no-referrer" /> -->
+    <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/base16/summerfruit-light.min.css" integrity="sha512-T0azUsUGTrFc3/mCP/9olMBW7lc/QvE9YwlCRSh+3P+0FfrbwFtPOeuuplYYNTHgfAHn99se/rCyvS8jgvadLg==" crossorigin="anonymous" referrerpolicy="no-referrer" /> -->
+    <script src="/js/main.js"></script>
+    <script src="/js/articles.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+    <script src="/js/line-numbers.js"></script>
+    <script>
+        window.addEventListener("load", function()
+        {
+            hljs.highlightAll();
+            hljs.initLineNumbersOnLoad();
+            LoadArticleInfo(document.getElementById("info"), articles[articles.length - 52])
+        });
+    </script>
+    <title>Example | Starlight Zone</title>
+</head>
+<body>
+    <!-- navigation bar -->
+    <nav>
+        <ul>        
+            <li>
+                <a href="/index.html" id="logo"><img src="https://s1.ax1x.com/2023/01/13/pSKE2kT.png"/></a>
+            </li>
+            <div id="menu_list" class="hidden_menu">
+                <li><a href="/index.html">
+                    HOME
+                    <!--{zh}首页-->
+                </a></li>
+                <li><a href="/zone.html">
+                    ZONE
+                    <!--{zh}领地-->
+                </a></li>
+                <li><a href="/tools.html">
+                    TOOLS
+                    <!--{zh}工具-->
+                </a></li>
+                <li><a href="/blog.html">
+                    BLOG
+                    <!--{zh}博客-->
+                </a></li>
+                <li><a href="/about.html">
+                    ABOUT
+                    <!--{zh}关于-->
+                </a></li>
+            </div>
+            <div class="function_list">
+                <li class="menu_toggle" onclick="show_menu()"></li>
+                <!-- Unavailable Function -->
+                <!-- <li class="search_box">
+                    <input type="text" placeholder="search...">
+                    <div class="search_toggle" onclick="on_search(self)">search</div>
+                </li> -->
+            </div>
+        </ul>
+    </nav>
+    <div class="container rough">        
+        <!-- <script src="/js/prism.js"></script> -->
+        <div id="info">
+            <h1 id="title">Loading...</h1>
+            <p>
+                Date: <span id="date">loading</span> Views: <span id="busuanzi_value_page_pv">loading</span>
+            </p>
+            <img src="" alt="Image Not Found" id="avator">
+            <div class="author">
+                <p id="name">unnamed</p>
+                <p id="intro">Hello! Guys!</p>
+            </div>
+            <div class="tags"></div>
+        </div>
+        <div class="make_clear"></div>
+        <div class="content">
+            <p>让我们与星光探索者一起，探索Windows吧!</p>
+
+            <h2>使用计时器</h2>
+
+            <p>计时器是Windows的一种资源。定时器每隔一段时间，会产生<a href="https://learn.microsoft.com/zh-cn/windows/win32/winmsg/wm-timer">WM_TIMER消息</a>。WM_TIMER附带的两个信息wParam, lParam分别是计时器的id, 计时器到点的处理函数。定时器的精度是毫秒，但是准确度不好。也就是说如果设置间隔1000ms，不一定会在1000ms后刚好产生消息。但是误差不会这么大，最多也就几毫秒。</p>
+            <p>要使用计时器，需要用<a href="https://learn.microsoft.com/zh-cn/windows/win32/api/winuser/nf-winuser-settimer">SetTimer函数</a>创建定时器。SetTimer的定义如下：</p>
+            <pre><code>UINT_PTR SetTimer(
+    HWND      hWnd,       // 计时器关联的窗口句柄
+    UINT_PTR  nIDEvent,   // 计时器的ID，自己随意定，但不能为0
+    UINT      uElapse,    // 计时器的间隔，单位毫秒
+    TIMERPROC lpTimerFunc // 计时器到点的处理函数
+);</code></pre>
+            <p>这个函数返回创建的计时器ID，如果创建失败了返回0。如果<kbd>lpTimerFunc</kbd>传的是NULL，计时器的时间到了，就将发送WM_TIMER消息通知关联的窗口过程函数处理，否则就不发WM_TIMER消息，直接调用<kbd>lpTimerFunc</kbd>处理。计时器依赖于消息循环，也就是要使用计时器，就需要消息循环。</p>
+
+            <p><a href="https://learn.microsoft.com/zh-CN/windows/win32/api/winuser/nc-winuser-timerproc">TIMERPROC</a>是计时器回调函数的类型，因此计时器回调函数lpTimeProc因定义为：</p>
+            <pre><code>void CALLBACK lpTimerProc(
+    HWND hWnd,         // 与计时器关联
+    UINT nMsg,         // 消息类型(WM_TIMER)
+    UINT_PTR uTImerid, // 计时器ID
+    DWORD dwTime       // 时间延迟
+);</code></pre>
+            <p>计时器是系统资源，销毁计时器使用<a href="https://learn.microsoft.com/zh-cn/windows/win32/api/winuser/nf-winuser-killtimer">KillTimer函数</a></p>
+
+            <pre><code>BOOL KillTimer(
+    HWND     hWnd,    // 销毁计时器的关联窗口
+    UINT_PTR uIDEvent
+);</code></pre>
+            <p>示例代码：创建两个计时器，时间间隔分别为1000毫秒和2000毫秒，每调一次将打印一些字符串。</p>
+            <pre><code>// 各位如果用Visual Studio开发工具，可能会出现某些函数VS觉得不安全不给用
+// 如果还是想用，加上这句语句
+#define _CRT_SECURE_NO_WARNINGS 
+#include &ltwindows.h>
+#include &ltiostream>
+
+
+#pragma comment(lib, "user32.lib")
+#pragma comment(lib, "gdi32.lib")
+#pragma comment(lib, "kernel32.lib")
+
+LRESULT CALLBACK WinProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+
+
+INT APIENTRY WinMain(
+    HINSTANCE hInstance,
+    HINSTANCE hPrevInstance,
+    LPSTR lpCmdLine,
+    int nCmdShow
+)
+{
+    static const TCHAR TITLE[] = TEXT("window");
+    static const TCHAR CLASSNAME[] = TEXT("MyStruct");
+
+    WNDCLASS wc{0};
+    wc.hbrBackground = (HBRUSH)GetStockObject(DKGRAY_BRUSH);
+    wc.hIcon = LoadIcon(NULL, IDI_APPLICATION);
+    wc.hCursor = LoadCursor(NULL, IDC_ARROW);  
+    wc.hInstance = hInstance; 
+    wc.lpfnWndProc = WinProc; 
+    wc.lpszClassName = CLASSNAME; 
+    wc.lpszMenuName = NULL; 
+    wc.style = CS_HREDRAW | CS_VREDRAW; 
+
+    RegisterClass(&wc);
+
+    HWND hwnd = CreateWindowEx(
+        0,CLASSNAME, TITLE, WS_OVERLAPPEDWINDOW, 
+        CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT,
+        NULL, NULL,  hInstance, NULL 
+    );
+
+    ShowWindow(hwnd, nCmdShow);
+    UpdateWindow(hwnd);
+
+    MSG msg{0};
+    while(GetMessage(&msg, NULL, 0, 0))
+    {
+        TranslateMessage(&msg);
+        DispatchMessage(&msg);
+    }
+
+    return 0;
+}
+
+LRESULT CALLBACK WinProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+{
+    static UINT_PTR timer1, timer2;
+    switch (uMsg)
+    {
+    case WM_CLOSE:
+        FreeConsole();
+        // 销毁定时器
+        KillTimer(hwnd, timer1);
+        KillTimer(hwnd, timer2);
+        PostQuitMessage(0);
+        return 0;
+    case WM_CREATE:
+        AllocConsole();
+        freopen("CONOUT$", "w+t", stdout);
+        // 创建定时器
+        timer1 = SetTimer(hwnd, 1,
+ 1000, NULL);
+        timer2 = SetTimer(hwnd, 2, 2000, NULL);
+    case WM_TIMER: 
+        // 处理计时器消息
+        if (wParam == timer1)
+        {
+            printf("timer1\n");
+            return 0;
+        }
+        if (wParam == timer2)
+        {
+            printf("timer2\n");
+            return 0;
+        }
+    }
+    return DefWindowProc(hwnd, uMsg, wParam, lParam);
+}</code></pre>
+            <h2>使用菜单资源</h2>
+            <p>我们创建窗口时很想让这个窗口显示自己的东西，那么我们应该怎么做呢？
+                <br>
+                星光探索者前面的说过有个资源编译器rc.exe，可以编译资源文件。首先我们先探索一下如何添加资源吧！
+                <br>
+                对准想添加资源的项目右键，弹出下面的菜单。依次点击添加(Add)，资源(Resource)即可。</p>
+            <img src="https://s1.ax1x.com/2023/01/20/pS8oN79.png" alt="Image Not Found">
+            <p>然后弹出这样的对话框，选择菜单(Menu)，然后点击新建（New）</p>
+            <img src="https://s1.ax1x.com/2023/01/20/pS8odt1.png" alt="Image Not Found">
+            <p>然后将会在Visual Studio弹出可视化的编辑器。相信不用星光探索者多说，各位小伙伴都会摸索的出来如何添加菜单项吧。</p>
+            <img src="https://s1.ax1x.com/2023/01/20/pS8oc0H.png" alt="Image Not Found">
+            <p>之后在你的项目管理器会添加一个resource.h（可以改名）头文件，和拓展名为.rc的资源文件。资源文件是一种用脚本语言书写的代码文件，当然如果小伙伴乐意，可手写资源文件。在编译过程中，资源文件会被资源编译器(在VC++是rc.exe)编译成.rsc的目标文件，进而通过链接器(在VC++是link.exe)编译成最终文件。</p>
+            <p>资源创建了，如何使用呢？刚才添加的resource.h文件定义了那些ID标识符。在打开的资源管理器(Resource View)中，选中添加的菜单，然后右键，点击(Resource Symbol)即可查看添加的资源的id。星光探索者这里创建的菜单ID为IDC_MENU1。当然也可以直接查看resource.h头文件</p>
+            <img src="https://s1.ax1x.com/2023/01/20/pS8ot0J.png" alt="Image Not Found">
+            <p>还记得创建窗口类时的WNDCLASS结构体吗？那里有一个lpszMenuName属性，给他赋值就可以使用我们添加的菜单资源了。lpszMenuName需要LPCTSTR的类型，资源文件定义的ID都是数值，我们只需进行强制转换即可。或者CreateWindowEx的第10个参数也是叫传菜单句柄的，也可以选择在那里使用菜单资源。</p>
+            <p>既然有了菜单，我们就应该处理菜单的相关消息。处理菜单消息应该处理<a href="https://learn.microsoft.com/zh-cn/windows/win32/menurc/wm-command">WM_COMMAND消息。当窗口内的控件（如按钮，文本等）被点击时，或菜单项被点击时，或窗口标题栏那些按钮（如最小化）被点击时产生此消息。当菜单项被点击时，wParam的高字节为0，低字节为点击的菜单项ID，菜单项ID之前已探索过如何找到。</a></p>
+            <p>于是我们写出像下面这样的代码来使用菜单资源：</p>
+            <pre><code>#define _CRT_SECURE_NO_WARNINGS
+#include "resource.h"
+#include &ltwindows.h>
+
+#pragma comment(lib, "user32.lib")
+#pragma comment(lib, "gdi32.lib")
+#pragma comment(lib, "kernel32.lib")
+
+LRESULT CALLBACK WinProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+
+
+INT APIENTRY WinMain(
+    HINSTANCE hInstance,
+    HINSTANCE hPrevInstance,
+    LPSTR lpCmdLine,
+    int nCmdShow
+)
+{
+    static const TCHAR TITLE[] = TEXT("window");
+    static const TCHAR CLASSNAME[] = TEXT("MyStruct");
+
+    WNDCLASS wc{0};
+    wc.hbrBackground = (HBRUSH)GetStockObject(DKGRAY_BRUSH);
+    wc.hIcon = LoadIcon(NULL, IDI_APPLICATION);
+    wc.hCursor = LoadCursor(NULL, IDC_ARROW);  
+    wc.hInstance = hInstance; 
+    wc.lpfnWndProc = WinProc; 
+    wc.lpszClassName = CLASSNAME; 
+    // 强制转换即可使用，星光探索者这里的菜单资源为 IDR_MENU1
+    wc.lpszMenuName = (LPCWSTR)IDR_MENU1; 
+    wc.style = CS_HREDRAW | CS_VREDRAW; 
+
+    RegisterClass(&wc);
+
+    HWND hwnd = CreateWindowEx(
+        0,CLASSNAME, TITLE, WS_OVERLAPPEDWINDOW, 
+        CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT,
+        NULL,
+        // CreateWindowEx的第10个参数也是叫传菜单句柄的
+        // 也可以使用LoadMenu来加载菜单资源
+        //LoadMenu(NULL, LPCTSTR(IDR_MENU1)), 
+        NULL, 
+        hInstance, NULL 
+    );
+
+    ShowWindow(hwnd, nCmdShow);
+    UpdateWindow(hwnd);
+
+    MSG msg{0};
+    while(GetMessage(&msg, NULL, 0, 0))
+    {
+        TranslateMessage(&msg);
+        DispatchMessage(&msg);
+    }
+
+    return 0;
+}
+
+LRESULT CALLBACK WinProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+{
+    switch (uMsg)
+    {
+    case WM_CLOSE:
+        PostQuitMessage(0);
+        return 0;
+    case WM_COMMAND:
+        // 处理菜单项被点击，需要处理WM_COMMAND消息
+        // wParam的低字节为被点击的菜单项ID，用LOWORD进行获取
+        switch (LOWORD(wParam))
+        {
+        // 星光探索者已经改过这些菜单项的名字了
+        case ID_NEW:
+            MessageBox(hwnd, TEXT("点击新建选项"), TEXT("星光探索者"), MB_OK);
+            break;
+        case ID_OPEN:
+            MessageBox(hwnd, TEXT("点击打开选项"), TEXT("星光探索者"), MB_OK);
+            break;
+        }
+    }
+    return DefWindowProc(hwnd, uMsg, wParam, lParam);
+}</code></pre>
+            <p>运行程序，点击菜单的新建选项，将出现这样的效果：</p>
+            <img src="https://s1.ax1x.com/2023/01/20/pS8oYm4.png" alt="Image Not Found">
+
+            <h2>右键菜单实现</h2>
+            <p>用过办公软件和浏览器的小伙伴都会体验过，鼠标右键会弹出一个菜单。那么我们应该如何实现呢？</p>
+            <p>直接说结论：我们使用<a href="https://learn.microsoft.com/zh-cn/windows/win32/api/winuser/nf-winuser-trackpopupmenu">TrackPopupMenu函数</a>可以弹出一个快捷菜单，这就是我们期望的。TrackPopupMenu是阻塞函数，直到菜单消失才会返回。            </p>
+            <pre><code>BOOL TrackPopupMenu(
+    HMENU      hMenu,        // 菜单句柄
+    UINT       uFlags,       // 菜单弹出方式
+    int        x,            // 菜单的x坐标
+    int        y,            // 菜单的y坐标
+    int        nReserved,    // 预留参数，传NULL即可
+    HWND       hWnd,         // 拥有快捷菜单的窗口句柄
+    const RECT *prcRect      // 此参数被忽略，传NULL
+);</code></pre>
+            <p>然后什么时候弹出呢？我们可以通过处理WM_RBUTTONDOWN（鼠标右键按下）消息来实现，可以是可以。但是事实告诉我们微软提供了<a href="https://learn.microsoft.com/zh-cn/windows/win32/menurc/wm-contextmenu">WM_CONTEXTMENU消息</a>这样更便捷，这是上下文菜单的消息。正好可以使用右键菜单。</p>
+            <p>消息产生均附带的两个信息</p>
+            <ul>
+                <li><kbd>wParam</kbd>用户右键点击鼠标的窗口句柄</li>
+                <li><kbd>lParam</kbd>低字节表示鼠标光标的x坐标，高字节表示y坐标，这是相对屏幕而言的</li>
+            </ul>
+            <h2>添加图标，光标资源</h2>
+            <p>和前面添加菜单资源一样，但是如果我们有现成的，在弹出这个对话框时，就可以点击导入(Import)使用现有资源。这个步骤相信各位摸索都可以摸索出来。然后再调用LoadIcon，LoadCursor即可。</p>
+            <img src="https://s1.ax1x.com/2023/01/20/pS8odt1.png" alt="Image Not Found">
+            <p>本期到此结束，下期看星光探索者探索Windows绘图编程和对话框</p>
+            
+        <p><a href="p14.html">上一篇：探索Windows:处理常用的消息及自定义消息</a></p>
+        <p><a href="p16.html">下一篇：探索Windows:探索Windows绘图编程和对话框</a></p>
+        </div>
+    </div>
+
+    <!-- footer -->
+    <footer>
+        <!-- studio view -->
+        <div class="studio_view">
+            <a href="/index.html" id="logo"><img src="https://s1.ax1x.com/2023/01/13/pSKE2kT.png"/></a>
+            <h4>For an encounter with stars!
+                <!--{zh}期待与漫天繁星的相遇！-->
+            </h4>
+        </div>
+        <!-- link view -->
+        <div class="link_view">
+            <dl>
+                <dt>Studio<!--{zh}关于星光--></dt>
+                <dd><a href="/about.html">About Us<!--{zh}关于我们--></a></dd>
+                <dd><a href="/about.html#careers">Careers<!--{zh}生涯--></a></dd>
+                <dd><a href="/about.html#contact">Contact Us<!--{zh}联系我们--></a></dd>
+                <dd><a href="/about.html#recruitment">Recruitment<!--{zh}招贤纳士--></a></dd>
+                <dd><a href="/about.html#sustainability">Sustainability<!--{zh}可持续发展--></a></dd>
+            </dl>
+            <dl>
+                <dt>Products<!--{zh}星光产品--></dt>
+                <dd><a href="https://github.com/Dev-Mini/cli">Dev Mini Cli</a></dd>
+                <dd><a href="https://github.com/Starlight-Dev-Team/mnLua">MNLUA</a></dd>
+                <dd><a href="#">Starlight Map Studio</a></dd>
+                <dd><a href="#">Starlight Function Module</a></dd>
+                <dd><a href="#">Starlight Utility</a></dd>
+            </dl>
+            <dl>
+                <dt>Features<!--{zh}星光特色--></dt>
+                <dd><a href="/zone.html">Zones<!--{zh}领域--></a></dd>
+                <dd><a href="/tools.html">Tools<!--{zh}工具--></a></dd>
+                <dd><a href="#">Blogs<!--{zh}博客--></a></dd>
+                <dd><a href="#">Media<!--{zh}媒体--></a></dd>
+                <dd><a href="https://pd.qq.com/s/9xlc1hut2">Community<!--{zh}社区--></a></dd>
+            </dl>
+            <dl>
+                <dt>Links<!--{zh}友情链接--></dt>
+                <dd><a target="_blank" href="https://www.github.com/">GitHub</a></dd>
+                <dd><a target="_blank" href="https://0-0000.github.io/MiniExtend/">MiniExtend</a></dd>
+                <dd><a target="_blank" href="https://kaikaibenkai.github.io/MiniExtendDoc/">Featured MiniExtend Document<!--{zh}特色MiniExtend文档--></a></dd>
+                <dd><a target="_blank" href="https://tatsukimengchen.github.io/devToolbox/">Dev-Tool Box<!--{zh}迷你开发者工具箱--></a></dd>
+                <dd><a target="_blank" href="https://www.geeksforgeeks.org/">GeeksforGeeks</a></dd>
+                <dd><a target="_blank" href="https://i.qq.com/?s_url=http%3A%2F%2Fuser.qzone.qq.com%2F3260922891">Anran's QQ Zone<!--{zh}安安的空间--></a></dd>
+            </dl>
+        </div>
+        <!-- media view -->
+        <div class="media_view make_clear">
+            <ul>
+                <li><a target="_blank" href="https://www.ixigua.com/home/1874031348815676/?source=pgc_author_profile&list_entrance=anyVideo"><img src="//sf1-cdn-tos.douyinstatic.com/obj/eden-cn/lpqpflo/ixigua_favicon.ico"/></a></li>
+                <li><a target="_blank" href="https://www.douyin.com/user/MS4wLjABAAAAl0WwP-4TG_uhKRX1Z0q2OllnQ3FU3cB1RpOLG-T2j2o"><img src="/image/tiktok.svg"/></a></li>
+                <li><a target="_blank" href="https://pd.qq.com/s/9xlc1hut2"><img src="/image/tencent-qq.svg"/></a></li>
+                <li><a target="_blank" href="https://github.com/Starlight-Dev-Team"><img src="/image/github.svg"/></a></li>
+            </ul>
+            <p class="make_clear">
+                &copy 2023 The Starlight Studio - For an encounter with stars!
+                <!--{zh}© 2023 星光工作室 - 期待与漫天繁星的相遇！-->
+            </p>
+        </div>
+    </footer>
+
+    <script src="https://cdn.bootcdn.net/ajax/libs/translater.js/1.0.12/translater.min.js"></script>
+    <script>
+        var translater = new Translater({
+            lang: GetCurLanguage()
+        })
+    </script>
+</body>
+</html>

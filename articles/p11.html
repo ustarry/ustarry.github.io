@@ -70,94 +70,230 @@
     <div class="container rough">        
         <!-- <script src="/js/prism.js"></script> -->
         <div id="info">
-        </div>
-        <div class="make_clear"></div>
-        <div id="info">
+            <h1 id="title">Loading...</h1>
+            <p>
+                Date: <span id="date">loading</span> Views: <span id="busuanzi_value_page_pv">loading</span>
+            </p>
+            <img src="" alt="Image Not Found" id="avator">
+            <div class="author">
+                <p id="name">unnamed</p>
+                <p id="intro">Hello! Guys!</p>
+            </div>
+            <div class="tags"></div>
         </div>
         <div class="make_clear"></div>
         <div class="content">
-            <p>年轻人应该如何制作自己的动态库和静态库呢？让我们一起来看看吧！</p>
-            <p>文章假设你已经配置好gcc的环境</p>
+            <p>让我们与星光探索者一起，探索Windows吧!</p>
+            <h2>探索Windows程序类型</h2>
+            <p>我们可以给Windows程序分类</p>
+            <ul>
+                <li>控制台程序Console
+                    <br>DOS程序，本身没有窗口，通过Windows DOS窗口执行。
+                    <br>在Windows通常为.exe文件，控制台程序的入口为main函数
+                </li>
+                <li>窗口程序
+                    <br>拥有自己的窗口，可以和用户交互
+                    <br>通常为.exe文件，情况下窗口程序的入口为WinMain函数
+                </li>
+                <li>库程序
+                    <br>存放代码，数据的程序，执行文件可以从中取出代码执行和获取数据
+                    <ul>
+                        <li>静态库程序：拓展名.lib。在链接阶段将代码放入可执行文件中，无入口函数</li>
+                        <li>动态库程序：拓展名.dll。在执行文件中执行时从中获得代码，入口函数为DllMain</li>
+                    </ul>
+                </li>
+            </ul>
 
-            <h2>制作静态库</h2>
-            <p>静态库的拓展名为.a。就拿mylib.cpp做成静态库为例</p>
-            <p>头文件mylib.h</p>
-            <pre><code class="language-cpp">#ifndef _MYLIB_H
-#define _MYLIB_H
+            <h2>编译工具</h2>
+            <p>通常编写Win32程序应该使用微软的工具，毕竟Windows是微软的。下面让我们一起探索Visual C++的编译工具吧！</p>
 
-int func(int a);
+            <ul>
+                <li>编译器cl.exe：将源代码(.c或.cpp)编译成目标代码.obj</li>
+                <li>链接器link.exe：将目标代码，资源，库等链接，生成最终文件</li>
+                <li>资源编译器rc.exe：将资源文件(.rc)将资源编译成.res文件，最终通过链接器写入最终文件</li>
+            </ul>
 
-#endif // !_MYLIB_H
-            </code></pre>
-            <p>源文件mylib.cpp</p>
-            <pre><code class="language-cpp">#include "mylib.h"
+            <p>如果你安装了Visual Studio，那么这些编译工具的路径可能为：
+                <br>
+                C:\Program Files\Microsoft Visual Studio\2022\Preview\VC\Tools\MSVC\14.34.31931\bin\Hostx64\x64\
+            </p>
 
-int func(int a)
+            <h2>Windows库和头文件</h2>
+
+            <p>下面只是列举部分库和对应的头文件，并不是全部内容</p>
+
+            <ul>
+                <li>kernel32.dll 提供了核心的API，如进程，线程，内存管理</li>
+                <li>user32.dll 提供了窗口，消息等用户常用的API</li>
+                <li>gdi32.dll 绘图相关的API</li>
+            </ul>
+            <p>路径： C:\Windows\System32\</p>
+
+            <p>Windows头文件</p>
+            <ul>
+                <li>windows.h 大部分Windows头文件的集合，包含了下列提到的头文件等文件</li>
+                <li>windef.h windows基本数据类型定义</li>
+                <li>winbase.h kernel32.dll 的API</li>
+                <li>wingdi.h gdi32.dll的API</li>
+                <li>winuser.h user32.dll的API</li>
+                <li>winnt.h UNICODE字符集的支持</li>
+            </ul>
+
+            <h2>第一个Win32程序</h2>
+            <p>首先先新建一个文件夹，并创建test.cpp源代码文件，在test.cpp文件书写这样的代码：</p>
+
+            <pre><code>#include &ltwindows.h&gt
+
+INT WINAPI WinMain(
+    HINSTANCE hInstance,      // 当前实例句柄
+    HINSTANCE hPrevInstance,  // 上一个实例句柄
+    LPSTR lpCmdLine,          // 运行程序的命令行
+    int nCmdShow              // 程序最初显示方式
+)
 {
-    return a;
-}
-            </code></pre>
-            <p>使用库的文件test.cpp</p>
-            <pre><code class="language-cpp">
-#include &ltiostream&gt
-#include "mylib.h" // 需要函数声明，头文件提供
-
-int main()
-{
-    std::cout &lt&lt func(0) &lt&lt std::endl;
+    MessageBox(NULL, TEXT("探索Windows!"), TEXT("星光探索者"), MB_OK);
     return 0;
 }
             </code></pre>
 
-            <p>首先要先生成目标文件，命令行输入 gcc mylib.cpp -o mylib
-                <br>这样会生成mylib.o目标文件
-                <br>然后使用lib.exe生成静态库，输入 lib mylib.obj即可生成静态库文件mylib.lib
-            </p>
+            <p>星光探索者非常喜欢探索，于是星光探索者在命令行调用Visual C++编译工具，输入了像这样的命令行<kbd>cl test.cpp</kbd>就可以编译这个Win32程序了。如果有的小伙伴提示错误信息unresolved symbol无法解析的外部符号，那么就需要手动链接相关的库了。MessageBox函数属于user32.dll，因此我们需要使用link指令：<kbd>cl test.cpp /link user32.lib</kbd></p>
 
-            <h2>制作动态库</h2>
-            <p>我们可以直接使用指令 cl mylib.cpp /LD 就可以生成动态库了</p>
-            <p>但是在生成动态库之前需要将需要的东西导出，要不然这个库是用不了的。我们只加上 __declspec(dllexport) 就可以导出了
-                <br>__declspec是微软专有的关键字，不在标准里面。我们需要修改源文件，改成：</p>
-            <pre><code class="language-cpp">#include "mylib.h"
+            <p>当然用MinGW也是可以的，只不过需要加上<kbd>-mwindows</kbd>参数，要不然MinGW不会认为是编译Win32程序，而是认为是控制台程序
 
-__declspec(dllexport) int func(int a)
-{
-    return a;
-}
+                运行这个程序，可以看到显示了一个消息框。</p>
 
+            <img src="https://s1.ax1x.com/2023/01/20/pS8osXD.png" alt="Image Not Found">
+
+            <h2>深入探索</h2>
+            <p>WinMain函数的结构如下：</p>
+
+            <pre><code>INT WINAPI WinMain(
+    HINSTANCE hInstance,      // 当前实例句柄
+    HINSTANCE hPrevInstance,  // 上一个实例句柄
+    LPSTR lpCmdLine,          // 运行程序的命令行
+    int nCmdShow              // 程序最初显示方式
+);
             </code></pre>
 
-            <p>这样，在进行动态库生成，就可以了。此次生成了动态库文件mylib.dll，以及导入库mylib.lib。导入库是用来提供导出函数信息的，动态库提供机器指令。而静态库整个文件都是机器指令</p>
-            <p>此外，对于Visual C++生成的动态库.dll文件，还有一个可选的DLLMain函数，DLLMain函数是动态库的入口，就像main函数是程序的入口一样
-                DLLMain函数长这样：
-            </p>
-            <pre><code class="language-cpp">BOOL APIENTRY DllMain(
-    HANDLE hModule,           // 指向自身的句柄
-    DWORD ul_reason_for_call, // 调用库的原因
-    LPVOID lpReserved )       // 隐式加载或显示加载
+            <ul>
+                <li><kbd>hInstance</kbd>为当前实例句柄。在Windows句柄的概念的随处可见</li>
+                <li><kbd>hPrevInstance</kbd>为上一个实例句柄。他在16位Windows系统使用，现在不使用，值总是为NULL(定义为0)</li>
+                <li><kbd>pCmdLine</kbd>包含命令行参数的字符串。如果需要获取整个命令行，请使用<a href="https://learn.microsoft.com/zh-cn/windows/win32/api/processenv/nf-processenv-getcommandlinew">GetCommandLine</a></li>
+                <li><kbd>nCmdShow</kbd>窗口的最初显示方式（最小化，正常，最大化）</li>
+            </ul>
+
+            <p>这个函数返回INT(定义为int)类型的值，操作系统不使用返回值，但可以传递给其他程序</p>
+
+            <p>WINAPI是Windows的函数调用约定，定义为__stdcall，使用<kbd>APIENTRY</kbd>也是相同的结果</p>
+
+            <p>上面那个简易的程序还调用了MessageBox函数，</p>
+
+            <pre><code>int MessageBox(
+    HWND hWnd,          //窗口句柄
+    LPCTSTR lpText,     //弹窗内容
+    LPCTSTR lpCaption,  //弹窗标题
+    UINT uType          //弹窗类型
+);
+            </code></pre>
+
+            <ul>
+                <li><kbd>hWnd</kbd>为显示消息框的窗口句柄，也就是消息框的父窗口，如果没有父窗口就传NULL，关于窗口的更多信息下期星光探索者继续探索。 HWND类型为handle of the windows的意思。</li>
+                <li><kbd>lpText</kbd>是一个TCHAR类型的字符串，为消息框的内容
+                <br>TCHAR是windows基本数据类型，是宏定义。如果使用多字节字符集的项目，TCHAR被定义为char；如果使用Unicode字符集的项目，TCHAR被定义为wchar_t。类型<kbd>LPCTSTR</kbd>为<kbd>const TCHAR*</kbd>，在下一期会深入探索。
+                <li><kbd>lpCaption</kbd>是一个TCHAR类型的字符串，为消息框的标题内容</li>
+                <li><kbd>uType</kbd>为消息框的显示按钮及消息框标题栏的图标，默认显示一个确定(OK)按钮。这个函数的返回值即为用户按下的按钮。
+                    <p>可选择的部分样式如下，消息框显示的按钮文本取决于系统的语言，想知道更多信息<a href="https://learn.microsoft.com/zh-CN/windows/win32/api/winuser/nf-winuser-messagebox">请点击我！</a></p>
+                    <p>消息框的按钮:</p>
+
+                    <table class="mytable">
+                        <tr>
+                            <th>按钮样式</th>
+                            <th>效果</th>
+                        </tr>
+                        <tr>
+                            <td>MB_OK</td>
+                            <td>消息框包含一个按钮确定，这是默认值</td>
+                        </tr>
+                        <tr>
+                            <td>MB_OKCANCEL</td>
+                            <td>消息框包含两个按钮，确定取消</td>
+                        </tr>
+                        <tr>
+                            <td>MB_YESNO</td>
+                            <td>消息框包含两个按钮，是和否</td>
+                        </tr>
+                        <tr>
+                            <td>MB_RETRYCANCEL</td>
+                            <td>消息框包含两个按钮，重试或取消</td>
+                        </tr>
+                    </table>
+
+                    <p>消息框的图标</p>
+
+                    <table class="mytable">
+                        <tr>
+                            <th>图标样式</th>
+                            <th>效果</th>
+                        </tr>
+                        <tr>
+                            <td>MB_ICONWARNING</td>
+                            <td>消息框中会显示一个感叹号图标</td>
+                        </tr>
+                        <tr>
+                            <td>MB_ICONQUESTION</td>
+                            <td>消息框会显示一个问号图标</td>
+                        </tr>
+                    </table>
+                    <p>等很多功能，但都以<kbd>MB_</kbd>开头，可根据字面意思猜测功能</p>
+                    
+
+                </li>
+            </li>
+            </ul>
+
+            <p>MessageBox的返回值为点击的按钮,都是以ID开头。例如IDOK(确认按钮)，IDCANCEL(取消按钮)</p>
+            <p>使用案例：</p>
+            <pre><code>#include &ltwindows.h&gt
+int main()
 {
-    switch (ul_reason_for_call)
+    while (MBCANCEL != MessageBox(NULL, TEXT("是否重试?"), TEXT("Error"), MB_YSENO))
     {
-        case DLL_PROCESS_ATTACHED: // 被进程加载时
-            break;
-        case DLL_THREAD_ATTACHED: // 被进程释放时
-            break;
-        case DLL_THREAD_DETACH: // 被线程加载
-            break;
-        case DLL_PROCESS_DETACH: // 被线程释放
-            break;
+    // 如果消息框想用多个效果，使用 | 运算符
+        MessageBox(NULL, 
+                   TEXT("正在重试"), 
+                   TEXT("fixing"), 
+                   MB_OK | MB_ICONINFOMATION | MB_DEFBUTTON1
+    );
     }
-    return TRUE;
+    return 0;
 }
             </code></pre>
 
-            <p>当入口点函数返回 FALSE(定义为0) 值时，如果你使用的是加载时动态链接，则应用程序不会启动。 如果你使用的是运行时动态链接，则只有个别 DLL 不会加载；返回TRUE(定义为1)则会被加载</p>
+            <p>还有一个TEXT是windows提供的一个宏函数，会根据当前使用的字符集将"..."这样的字符串转换成TCHAR类型的字符串。因为Windows的API要根据不同的字符集调不同的函数，对于要调API的字符串我们可以用TEXT宏来包裹
+                <br>
+                定义的效果如下：</p>
 
-            <h2>如何使用库</h2>
-            <p>在源文件添加一句 #program comment(lib, "mylib.lib")即可，或者使用命令行 cl test.cpp /link mylib.lib</p>
+            <pre><code>#ifdef UNICODE  // 如果使用UNICODE字符集
+#define TEXT(quote) L##quote
+#else
+#define TEXT(quote) quote
+#endif
+            </code></pre>
 
-            <P>以上就是Visual C++生成库的全部内容了，感谢您的阅读！</P>
-            <a href="/articles/p11.html">点我查看年轻人如何制作动态库静态库 gcc版！</a>
+            <p>刚才上文提到了项目使用的字符集，那个在哪里设置呢？</p>
+            <p>打开解决方案管理器(Solution Explorer)</p>
+            <img src="https://s1.ax1x.com/2023/01/20/pS8o6ne.png" alt="Image Not Found">
+
+            <p>对准你要设置字符集的项目按<strong>鼠标右键</strong>，看到菜单，然后点击 <strong>属性(Properties)</strong></p>
+            <img src="https://s1.ax1x.com/2023/01/20/pS8owfx.png" alt="Image Not Found">
+
+            <p>然后选择字符集(Character Set)，在这里就可以设置你项目使用的字符集了。</p>
+
+            <img src="https://s1.ax1x.com/2023/01/20/pS8oakR.png" alt="Image Not Found">
+
+            <p>本期到此结束，下期看星光探索者探索Windows常用基本数据类型和字符编码</p>
+            <p><a href="p12.html">下一篇：探索Windows:常用基本数据类型和字符编码</a></p>
+            
         </div>
     </div>
 
