@@ -6,15 +6,70 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="/tools/css/style_studyhall2.css">
     <script src="/js/main.js"></script>
+    <!-- <script src="https://cdn.bootcdn.net/ajax/libs/axios/1.2.3/axios.js"></script> -->
+        <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.0/dist/jquery.min.js"></script>
+    <script src="/tools/js/studyhall2.js"></script>
     <title>Self-Study Hall | Starlight Studio
         <!--{zh}星光自律室-->
     </title>
 </head>
 <body>
     <div class="container">
-        <img src="https://www.qwbk.net/api/bing" alt="Image Not Found" class="background_image">
-        <div class="timer">
-            <p></p>
+        <div id="background_manager">
+            <img src="https://www.qwbk.net/api/bing" alt="Image Not Found" class="background_image">
+            <div class="main glass" id="main">
+                <div class="view">
+                    <h1 id="status">Resting<!--{zh}休息中~--></h1>
+                    <p id="time">Learning Time: 0<!--{zh}已学习时间：0--></p>
+                    <p id="process">Learning Process：0/0<!--{zh}学习进度：0/0--></p>
+                    <p id="current">Next target: <!--{zh}待完成：--></p>
+                    <ul id="task_list">
+                    </ul>
+                    <div id="quick">
+                        <div style="margin: auto;width: fit-content;padding-bottom: 5px;">
+                            <span class="button" onclick="rest_or_continue(this)">Start Learning<!--{zh}开始学习--></span>
+                            <span class="button" onclick="add_task()">Add Task<!--{zh}添加任务--></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="menu_bar glass">
+            <ul id="menu_tabs">
+                <li onclick="pop_or_hide_menu(0)"><img src="/image/paperclip.svg"></li>
+                <li onclick="pop_or_hide_menu(1)"><img src="/image/music.svg"></li>
+                <li onclick="pop_or_hide_menu(2)"><img src="/image/cog.svg"></li>
+            </ul>
+        </div>
+
+        <div id="functions" class="hidden">
+            <div class="entertainment">
+                <h2>Starlight Saying</h2>
+                <p>I just wanna study, study, study, study to death.</p>
+            </div>
+            <div class="music">
+                <div class="search">
+                    <input id="search_content" type="text" placeholder="search something...">
+                    <span class="button glass" onclick="search_music()">Search</span>
+                </div>
+                <ul id="song_list">
+                </ul>
+                <div id="player"  style="overflow: hidden;">
+                    <div class="player_view">
+                        <span class="backward"></span>
+                        <span id="play_or_pause" class="play" onclick="play_or_pause()"></span>
+                        <span class="forward"></span>
+                    </div>
+                    <img src="/image/bluesky.jpg" alt="Image Not Found" id="song_cover">
+                    <div class="info_view">
+                        <p id="song_title">no song is playing</p>
+                        <input type="range" name="" id="music_range" min="1" max="100" value="0" step="any">
+                    </div>
+                </div>
+                <audio id="music_player" autoplay="autoplay" preload="preload">
+            </div>
+            <div class="setting">
+            </div>
         </div>
     </div>
 

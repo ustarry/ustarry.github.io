@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/tools/css/style_chat.css">
+    <script src="/js/main.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.0/dist/jquery.min.js"></script>
+    <script src="/tools/js/chat.js"></script>
+    <title>Starlight Partner | Starlight Studio
+        <!--{zh}星光陪伴者-->
+    </title>
+</head>
+<body>
+    <div class="container">
+        <div class="main">
+            <div class="content no_scroll_bar" id="content">
+            </div>
+
+            <div class="functions no_scroll_bar">
+                <span class="glass_button" onclick="yiyan()">每日一言</span>
+                <span class="glass_button" onclick="hot_comment()">网易云热评</span>
+                <span class="glass_button" onclick="love_articles()">爱情文案</span>
+                <span class="glass_button" onclick="dog()">舔狗日记</span>
+                <span class="glass_button" onclick="saohua()">骚话文案</span>
+                <span class="glass_button" onclick="comfort()">安慰文案</span>
+                <span class="glass_button" onclick="comfort()">毒鸡汤</span>
+                <span class="glass_button" onclick="view()">美丽风景</span>
+                <span class="glass_button" onclick="dmimg()">二次元壁纸</span>
+                <span class="glass_button" onclick="pengyouquan()">朋友圈精彩视频</span>
+                <span class="glass_button" onclick="beauty()">beauty</span>
+            </div>
+            <div class="chat">
+                <input type="text" placeholder="send to the xiaoai" id="edit" onkeydown="quick_message(event)">
+                <span class="glass_button" onclick="send_content()">send</span>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.bootcdn.net/ajax/libs/translater.js/1.0.12/translater.min.js"></script>
+    <script>
+        var translater = new Translater({
+            lang: GetCurLanguage()
+        })
+    </script>
+</body>
+</html>

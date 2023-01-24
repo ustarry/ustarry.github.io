@@ -130,7 +130,7 @@ function add_task()
     {
         return;
     }
-    if (task_msg != null || task_msg.length == 0)
+    if (task_msg != null || task_msg.length != 0)
     {
         ++all_task_count;
         update_process();

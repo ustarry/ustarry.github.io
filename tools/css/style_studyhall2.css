@@ -4,9 +4,16 @@
     padding: 0;
 }
 
+li
+{
+    list-style: none;
+}
+
 .container
 {
     position: relative;
+    width: 100%;
+    height: 100vh;
 }
 
 .background_image
@@ -15,4 +22,363 @@
     width: 100%;
     height: 100vh;
     object-fit: cover;
+}
+
+.glass
+{
+    background-color: rgba(255, 255, 255, 0.5);
+}
+
+.menu_bar
+{
+    display: block;
+    position: relative;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 50px;
+}
+
+.menu_bar ul
+{
+    width: fit-content;
+    margin: auto;
+}
+
+.menu_bar ul li
+{
+    display: block;
+    float: left;
+    color: white;
+    margin: 5px 0;
+    padding: 5px;
+    height: 30px;
+    line-height: 30px;
+    font-weight: bold;
+    cursor: pointer;
+    user-select: none;
+}
+
+.menu_bar ul li>img
+{
+    width: 100%;
+    height: 100%;
+}
+
+.menu_bar .selected
+{
+    background-color: rgba(255, 255, 255, 0.5);
+    border-radius: 15px;
+}
+
+.main
+{
+    position: absolute;
+    width: 50%;
+    min-width: 250px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    border-radius: 9px;
+}
+
+.main .view
+{
+    margin: 1em;
+    padding: 1em 0;
+}
+
+.main .view #current
+{
+    font-weight: bold;
+}
+
+.main .view ul
+{
+    min-height: 150px;
+    max-height: 200px;
+    overflow: scroll;
+    
+    text-align: left;
+    /* hide the scrollbar for IE */
+    -ms-overflow-style: none;
+    /* hide the scrollbar for FIREFOX */
+    overflow: -moz-scrollbars-none;
+}
+
+/* hide the scrollbar for CHROME */
+.main .view ul::-webkit-scrollbar
+{
+    width: 0;
+}
+
+.main .view ul li
+{
+    height: 25px;
+    line-height: 25px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    list-style: none;
+    cursor:grab;
+}
+
+.main .view #quick span
+{
+    display: block;
+    padding: 5px;
+    width: fit-content;
+    background-color: rgba(255, 255, 255, 0.5);
+    border-radius: 15px;
+    cursor: pointer;
+}
+
+.hidden
+{
+    display: none;
+}
+
+.showed
+{
+    display: block;
+}
+
+.filter
+{
+    display: block;
+    filter: blur(10px);
+    background-color: rgba(255, 255, 255, 0.5);
+    animation: start_filter 0.7s;
+}
+
+.no_filter
+{
+    animation: end_filter 0.7s;
+}
+
+
+@keyframes start_filter
+{
+    0%
+    {
+        filter: blur(1px);
+    }
+    100%
+    {
+        filter: blur(10px);
+    }
+}
+
+@keyframes end_filter
+{
+    0%
+    {
+        filter: blur(10px);
+    }
+    100%
+    {
+        filter: blur(1px);
+    }
+}
+
+.button
+{
+    display: block;
+    float: left;
+    margin-right: 5px;
+    padding: 5px;
+    height: 20px;
+    line-height: 20px;
+    border-radius: 9px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.finished::before
+{
+    content: "√ ";
+    color: rgb(34, 210, 28);
+}
+
+#functions
+{
+    position: absolute;
+    width: 100%;
+    height: calc(100vh - 50px);
+}
+
+
+#functions>div
+{
+    display: none;
+    margin: 1em auto;
+    width: calc(100% - 2em);
+    max-width: 700px;
+    height: calc(100% - 2em);
+}
+
+#functions .music .search
+{
+    height: 30px;
+}
+
+#functions .music .search span
+{
+    width: 60px;
+}
+
+#functions .music .search input
+{
+    float: left;
+    margin-right: 2px;
+    padding: 0 5px;
+    width: calc(100% - 90px);
+    height: 100%;
+    border: 0;
+    border-radius: 9px;
+}
+
+#functions .music .search input:focus
+{
+    outline: none;
+}
+
+#functions .music #song_list
+{
+    display: block;
+    height: calc(100% - 80px);
+}
+
+#functions .music #song_list div
+{
+    margin-top: 5px;
+    height: 20px;
+    line-height: 20px;
+}
+
+#functions .music #song_list div>*
+{
+    display: block;
+    float: left;
+    height: 100%;
+}
+
+#functions .music #song_list div>span
+{
+    width: 20px;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: 20px 20px;
+}
+
+#functions .music #song_list div>p
+{
+    width: calc(100% - 60px);
+    height: 20px;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+
+.add
+{
+    background-image: url(/image/plus.svg);
+}
+
+.play
+{
+    background-image: url(/image/play.svg);
+}
+
+.pause
+{
+    background-image: url(/image/pause.svg);
+}
+
+.backward
+{
+    background-image: url(/image/backward.svg);
+}
+.forward
+{
+    background-image: url(/image/forward.svg);
+}
+.download
+{
+    background-image: url(/image/download.svg);
+}
+
+.rolate
+{
+    animation: rolation 5s infinite linear;
+}
+
+
+@keyframes rolation 
+{
+    to
+    {
+        transform: rotate(1turn);
+    }
+}
+
+
+#functions .music #player
+{
+    height: 50px;
+}
+
+
+#functions .music #player .player_view>span
+{
+    display: block;
+    float: left;
+    margin: auto 0;
+    padding: 12.5px 0;
+    width: 25px;
+    height: 25px;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: 25px 25px;
+}
+
+#functions .music #player .player_view>span:last-child
+{
+    margin-right: 10px;
+}
+
+
+#functions .music #player img
+{
+    float: left;
+    width: 50px;
+    height: 50px;
+    overflow: hidden;
+    border-radius: 50px;
+}
+
+#functions .music #player .info_view
+{
+    float: left;
+    margin-left: 10px;
+    width: calc(100% - 155px);
+}
+
+#functions .music #player .info_view>*
+{
+    width: 100%;
+    float: left;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+#functions .music #player .info_view>p
+{
+    height: 30px;
+    line-height: 30px;
+}
+
+
+#functions .music #player .info_view>input
+{
+    height: 20px;
 }
