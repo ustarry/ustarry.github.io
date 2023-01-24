@@ -29,6 +29,11 @@ function GetCurLanguage()
     return localStorage.getItem("lang");
 }
 
+function IsZh()
+{
+    return GetCurLanguage() == "zh"
+}
+
 
 // function make_lantern()
 // {
