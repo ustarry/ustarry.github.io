@@ -106,7 +106,7 @@ const articles =
     {
         author: authors.StarlightStudio,
         link: "/articles/p18.html",
-        title: "Chinese New Year's Wishes from the Starlight Stuio!",
+        title: "Chinese New Year's Wishes from the Starlight Studio!",
         date: "1/13/23",
         intro: "How time flies!The Starlight Studio hopes we can have a good time on Chinese New Year.",
         tags: []
