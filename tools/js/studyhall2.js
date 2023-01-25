@@ -194,31 +194,41 @@ function play_song(index)
     music_player.src = `https://music.163.com/song/media/outer/url?id=${target.songid}`;
     current_song_name = `${target.author} - ${target.title}`
     music_player.load();
-    music_player.play();
     document.getElementById("play_or_pause").className = "pause";
     document.getElementById("song_title").innerText = current_song_name;
     document.getElementById("song_cover").src = target.pic;
+    play_music();
 }
 
 
 function play_or_pause()
 {
-    var btn = document.getElementById("play_or_pause");
-    var cd = document.getElementById("song_cover")
     if (music_player.paused)
     {
-        music_player.play();
-        btn.className = "pause";
-        cd.className = "rolate";
-
+        play_music();
     }
     else
     {
-        music_player.pause();
-        btn.className = "play";
-        cd.className = "";
+        pause_music();
     }
 }
+
+
+
+function pause_music()
+{
+    music_player.pause();
+    document.getElementById("play_or_pause").className = "play";
+    document.getElementById("song_cover").className = "";
+}
+
+function play_music()
+{
+    music_player.play();
+    document.getElementById("play_or_pause").className = "pause";
+    document.getElementById("song_cover").className = "rolate";
+}
+
 
 window.addEventListener("load", function()
 {
@@ -229,8 +239,19 @@ window.addEventListener("load", function()
         document.getElementById("music_range").value = 100 * (this.currentTime + 1) / this.duration;
         if (this.currentTime == this.duration)
         {
-            play_or_pause();
+            pause_music();
         }
+    }
+
+    music_player.onerror = function(ev)
+    {
+        pause_music();
+        alert(IsZh()? "此音乐资源无效，请播放其他音乐" : "This resource is invailed.Please try other music.");
+    }
+
+    music_player.onended = function(ev)
+    {
+        pause_music();
     }
     document.getElementById("music_range").oninput =
     function(ev)

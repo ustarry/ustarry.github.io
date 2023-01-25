@@ -56,6 +56,11 @@ function quick_message(ev)
     }
 }
 
+function clear_message()
+{
+    document.getElementById("content").innerHTML = ""
+}
+
 
 function yiyan()
 {
@@ -76,9 +81,9 @@ function hot_comment()
 }
 
 
-function love_article()
+function love_articles()
 {
-    $.get("https://api.gmit.vip/Docs/#/Doc/MD/Api/HotComments", 
+    $.get("https://v.api.aa1.cn/api/api-wenan-aiqing/index.php?type=text", 
     function(data)
     {
         content_back("[爱情文案]" + data)
@@ -119,19 +124,9 @@ function view()
     content_back(`<img src="https://api.gmit.vip/Docs/#/Doc/MD/Api/FjImg" alt="Image Not Found"/>`)
 }
 
-
-function beauty()
-{
-    content_back(`<img src="https://api.gmit.vip/Api/MvImg?format=image" alt="Image Not Found"/>`)
-}
-
 function dmimg()
 {
     content_back(`<img src="https://api.gmit.vip/Api/DmImg?format=image" alt="Image Not Found"/>`)
-}
-function pengyouquan()
-{
-    content_back(`<video src="https://v.api.aa1.cn/api/api-video-pyqshuqing/video/0180.mp4%20%E6%9C%8B%E5%8F%8B%E5%9C%88%E6%8A%92%E6%83%85%E8%A7%86%E9%A2%91%E9%9A%8F%E6%9C%BAAPI%20%E5%AE%98%E7%BD%91api.aa1.cn%20%E6%B0%B8%E4%B9%85%E5%85%8D%E8%B4%B9API.mp4" controls preload/>`)
 }
 
 function saohua()
@@ -147,6 +142,44 @@ function dujitang()
     $.get("https://v.api.aa1.cn/api/api-wenan-dujitang/index.php?aa1=text", 
     function(data)
     {
-        content_back("[骚话文案]" + data)
+        content_back("[毒鸡汤]" + data)
     })
+}
+
+
+var next_video_type = 1;
+
+
+function make_video()
+{
+    var target_url;
+    switch (next_video_type) 
+    {
+    case 1:
+        target_url = "https://v.api.aa1.cn/api/api-fj/index.php?aa1=url"
+        // content_back(`<iframe src="${target_url}"></iframe>`)
+        $.get(target_url, function (url) {
+            content_back(`<video src="${url}" autoplay controls/>`)
+        })
+        break;
+    case 2:
+        target_url = "https://v.api.aa1.cn/api/api-dy-girl/index.php?aa1=url&key=ajdu987hrjfw";
+        $.get(target_url,
+            function (url) {
+                content_back(`<video src="${url}" autoplay controls/>`)
+            })
+        break; 
+    case 3:
+        target_url = "https://v.api.aa1.cn/api/api-video-qinglvduihua/index.php?aa1=wwwaa1cn7yf58hyirjow8c5u";
+        content_back(`<video src="${target_url}" autoplay controls/>`)
+        break;
+        break; 
+    }
+    
+    if (next_video_type == 3)
+    {
+        next_video_type = 1;
+        return;
+    }
+    ++next_video_type;
 }
