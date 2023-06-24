@@ -1,0 +1,125 @@
+.container
+{
+    position: relative;
+    margin: 0 auto;
+    margin-top: 60px;
+    padding-bottom: 20px;
+    width: 98%;
+    max-width: 640px;
+    min-height: 100vh;
+    background-color: white;
+}
+
+.hljs-ln-numbers 
+{
+    text-align: center;
+    color: #707070;
+    border-right: 1px solid #999;
+    vertical-align: top;
+    padding-right: 5px;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+.hljs-ln-code
+{
+    text-indent: 5px;
+}
+
+.container #info
+{
+    padding: 10px 1em;
+    margin-bottom: 50px;
+}
+
+.container #info img
+{
+    float: left;
+    width: 50px;
+    height: 50px;
+    border-radius: 100%;
+    user-select: none;
+    overflow: hidden;
+}
+
+.container #info .author
+{
+    float: left;
+    width: calc(100% - 50px);
+    height: 50px;
+}
+
+.container #info #name
+{
+    font-weight: bolder;
+    color: var(--link-color);
+    height: 20px;
+}
+
+.container #info #intro
+{
+    height: 30px;
+}
+
+
+.content p, .content h1, .content h2, .content h3, .content h4,
+.content h5, .content h6, .content img, .content li, 
+.content iframe, .content .mytable
+{
+    margin-top: 1em;
+    margin-left: 1em;
+    margin-right: 1em;
+    text-indent: 0;
+    word-wrap:break-word;
+}
+
+.content .mytable
+{
+    border-collapse: collapse;
+    border-spacing: 0;
+}
+
+.content .mytable th, .content .mytable td
+{
+    border: 1px solid #dfe2e5;
+    padding: 6px 13px;
+}
+
+.content li
+{
+    margin-left: 2.5em;
+    list-style-type: disc;
+    list-style-position: outside;
+}
+
+.content kbd
+{    
+    -webkit-text-size-adjust: 100%;
+    color: #24292e;
+    line-height: 1.5;
+    word-wrap: break-word;
+    box-sizing: border-box;
+    font-family: SFMono-Regular,Consolas,Liberation Mono,Menlo,Courier,monospace;
+    background-color: rgba(27,31,35,.05);
+    border-radius: 3px;
+    font-size: 85%;
+    margin: 0;
+    padding: .2em .4em;
+}
+
+.content code
+{
+    margin-top: 1em;
+    font-family: SFMono-Regular,Consolas,Liberation Mono,Menlo,Courier,monospace;
+}
+
+.container img, .container iframe
+{
+    max-width: calc(100% - 2em);
+    border-radius: 9px;
+}
+
