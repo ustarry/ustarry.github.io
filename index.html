@@ -12,18 +12,22 @@
     <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
     <meta http-equiv="windows-Target" contect="_top">
     <meta name="robots" content="all">
+    <link rel="stylesheet" href="/css/style_common.css">
     <link rel="stylesheet" href="/css/style_index.css">
-    <script src="/js/index.js"></script>
+    <script src="/js/base.js"></script>
 </head>
-<body>
+<body class="no_scroll_bar">
     <nav id="nav" class="transparent_nav">
         <div class="left">
-            <img src="https://s1.ax1x.com/2023/01/13/pSKE2kT.png" alt="Logo Not Found">
+            <img src="https://pic.imgdb.cn/item/64e09e26661c6c8e54651839.png" alt="Logo Not Found">
         </div>
-        <ul class="right">
+        <ul class="right desktop_showed">
             <li><a href="javascript:">首页</a></li>
+            <li><a href="/about.html">关于</a></li>
+            <li><a href="/zones/">领地</a></li>
             <li><a href="/blogs/">博客</a></li>
         </ul>
+        <i class="bi bi-list mobile_showed" onclick="show_pop_up_menu(this.parentNode.children[1])"></i>
     </nav>
     <div class="main_cover">
         <div class="intro">
@@ -32,13 +36,13 @@
                 <p>星光工作室热衷于为迷你世界社区做贡献,做更多优质地图.星光工作室积累了丰富的管理和文创经验,地图玩法制作及编程技术探讨环境.</p>
                 <div>
                     <a href=""><span>加入我们</span></a> 
-                    <a href=""><span>了解更多</span> </a>
-                    <a href=""><span>周年庆活动</span></a>
+                    <a href="/about.html"><span>了解更多</span> </a>
+                    <a href="/celebration"><span>周年庆活动</span></a>
                 </div>
             </div>
         
             <div class="right">
-                <img src="https://s1.ax1x.com/2023/01/12/pSuJfij.jpg" alt="">
+                <img src="https://pic.imgdb.cn/item/64e09f06661c6c8e54679471.jpg" alt="">
             </div>
         </div>
     </div>
@@ -93,7 +97,7 @@
     <footer>
         <!-- studio view -->
         <div class="studio_view">
-            <a href="/index.html" id="logo"><img src="https://s1.ax1x.com/2023/01/13/pSKE2kT.png"></a>
+            <a href="/index.html" id="logo"><img src="https://pic.imgdb.cn/item/64e09e26661c6c8e54651839.png"></a>
             <h4>期待与漫天繁星的相遇！</h4>
         </div>
         <!-- link view -->
@@ -142,5 +146,38 @@
             </p>
         </div>
     </footer>
+
+    <script>
+        // 轮播图动效
+        document.getElementById("card_container_toggles").addEventListener("click", (e) =>
+        {
+            if (e.target.className == "bi bi-chevron-left")
+            {
+                ui_show_new_tab(--cur_tab);
+            }
+            else if (e.target.className == "bi bi-chevron-right")
+            {
+                ui_show_new_tab(++cur_tab);
+            }
+        })
+        setInterval(() =>
+        {
+            ui_show_new_tab(++cur_tab);
+        }, 3000)
+        // 导航栏变色
+        window.addEventListener("scroll", () =>
+        {
+            var nav = document.getElementById("nav");
+            if (window.scrollY < document.getElementById("container").offsetTop - 50)
+            {
+                nav.className = "transparent_nav";
+            }
+            else
+            {
+                nav.className = "colored_nav";
+            }
+        })
+
+    </script>
 </body>
 </html>
