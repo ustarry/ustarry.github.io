@@ -278,34 +278,6 @@ window.addEventListener('DOMContentLoaded', () => {
 
 
 function share_with_qq(title, desc, png_url) {
-    // 确保参数存在，设置默认值
-    const shareTitle = title || document.title;
-    const shareDesc = desc || '分享内容';
-    const shareImgUrl = png_url || '';
-    
-    // 获取当前页面URL作为分享链接
-    const shareUrl = window.location.href;
-    
-    // 构造QQ分享所需的参数
-    const params = new URLSearchParams({
-        title: shareTitle,
-        desc: shareDesc,
-        url: shareUrl,
-        img_url: shareImgUrl
-    });
-    
-    // 创建QQ分享协议链接
-    const qqShareUrl = `mqq://forward/?${params.toString()}`;
-    
-    // 创建并配置a标签
-    const a = document.createElement("a");
-    a.target = "_blank";
-    a.href = qqShareUrl; // 设置QQ分享链接
-    document.body.appendChild(a);
-    
-    // 触发点击并清理
-    a.click();
-    setTimeout(() => {
-        document.body.removeChild(a);
-    }, 100);
+    const shareUrl = `https://connect.qq.com/widget/shareqq/index.html?url=${encodeURIComponent(window.location.href)}&title=${encodeURIComponent(title)}&source=${encodeURIComponent('星光工作室')}&desc=${encodeURIComponent(desc)}&pics=${encodeURIComponent(png_url)}`;
+    window.open(shareUrl, '_blank', 'width=700,height=680');
 }
