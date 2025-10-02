@@ -277,7 +277,3 @@ window.addEventListener('DOMContentLoaded', () => {
 });
 
 
-function share_with_qq(title, desc, png_url) {
-    const shareUrl = `https://connect.qq.com/widget/shareqq/index.html?url=${encodeURIComponent(window.location.href)}&title=${encodeURIComponent(title)}&source=${encodeURIComponent('星光工作室')}&desc=${encodeURIComponent(desc)}&pics=${encodeURIComponent(png_url)}`;
-    window.open(shareUrl, '_blank', 'width=700,height=680');
-}
