@@ -60,18 +60,7 @@ function ui_show_new_tab(tab)
     children[cur_tab == children.length - 1 ? 0 : cur_tab + 1].className = "item next";
 }
 
-window.addEventListener("scroll", () =>
-{
-    var nav = document.getElementById("nav");
-    if (window.scrollY < document.getElementById("container").offsetTop - 50)
-    {
-        nav.className = "transparent_nav";
-    }
-    else
-    {
-        nav.className = "colored_nav";
-    }
-})
+
 
 window.addEventListener("DOMContentLoaded", ()=>
 {

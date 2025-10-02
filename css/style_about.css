@@ -66,8 +66,16 @@
 .timeline
 {
     margin-top: 18px;
-    height: 300px;
+    height: 400px;
     overflow: scroll;
+}
+
+@media (min-height: 800px)
+{
+    .timeline
+    {
+        height: 600px;
+    }
 }
 
 .timeline_content
