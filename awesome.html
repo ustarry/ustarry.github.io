@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>优秀成员 | 星光工作室</title>
+    <link href="https://cdn.bootcdn.net/ajax/libs/bootstrap-icons/1.10.4/font/bootstrap-icons.css" rel="stylesheet">
+    <!-- 引入Markdown解析库 -->
+    <meta name="description" content="星光工作室热衷于为迷你世界社区做贡献,做更多优质地图.星光工作室积累了丰富的管理和文创经验,地图玩法制作及编程技术探讨环境.">
+    <meta name="keywords" content="Starlight Studio,星光工作室,迷你世界社区,编程,文创">
+    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
+    <meta http-equiv="windows-Target" contect="_top">
+    <meta name="robots" content="all">
+    <link rel="stylesheet" href="/css/style_common.css">
+    <link rel="stylesheet" href="/css/style_awesome.css">
+
+    <script src="/js/base.js"></script>
+    <script type="module" src="/js/awesome.js"></script>
+</head>
+
+<body>
+    <nav id="nav" class="transparent_nav"></nav>
+
+    <main class="member-main">
+        <div class="glass-container">
+            <h2 class="section-title">优秀成员介绍(排名不分先后)</h2>
+            <div class="filter-container">
+                <select id="roleFilter" class="role-filter">
+                    <option value="all">全部成员</option>
+                </select>
+            </div>
+            <div class="members-grid" id="membersContainer"></div>
+        </div>
+    </main>
+
+    <!-- 毛玻璃对话框 -->
+    <div class="modal-overlay" id="memberModal">
+        <div class="modal">
+            <button class="modal-close" id="closeModal">
+                <i class="bi bi-x"></i>
+            </button>
+            <div class="modal-content" id="modalContent"></div>
+        </div>
+    </div>
+
+    <footer id="footer"></footer>
+
+    <script>
+        set_nav_info();
+        set_footer_info();
+        // 页面加载完成后渲染成员卡片
+        window.addEventListener('DOMContentLoaded', () => {
+            // 等待模块加载完成
+            if (window.renderMemberCards) {
+                window.renderMemberCards();
+            } else {
+                // 降级处理
+                setTimeout(() => window.renderMemberCards && window.renderMemberCards(), 100);
+            }
+        });
+    </script>
+</body>
+
+</html>

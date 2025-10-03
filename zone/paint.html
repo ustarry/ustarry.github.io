@@ -1,0 +1,1794 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>星光绘画板</title>
+  <!-- 引入外部资源 -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  
+  <!-- Tailwind 配置 -->
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: '#6366F1', // 主色调：靛蓝色
+            secondary: '#F43F5E', // 辅助色：粉色
+            dark: '#1E293B',
+            light: '#F8FAFC',
+          },
+          fontFamily: {
+            inter: ['Inter', 'system-ui', 'sans-serif'],
+          },
+        },
+      }
+    }
+  </script>
+  
+  <!-- 自定义工具类 -->
+  <style type="text/tailwindcss">
+    @layer utilities {
+      .content-auto {
+        content-visibility: auto;
+      }
+      .tool-active {
+        @apply bg-primary/10 text-primary border-primary;
+      }
+      .canvas-container {
+        @apply relative overflow-auto bg-gray-100 flex items-center justify-center;
+      }
+      .toolbar-item {
+        @apply flex items-center justify-center w-10 h-10 rounded-md border border-gray-300 hover:bg-gray-100 transition-all duration-200 cursor-pointer;
+      }
+      .btn-primary {
+        @apply bg-primary text-white px-4 py-2 rounded-md hover:bg-primary/90 transition-all duration-200;
+      }
+      .btn-secondary {
+        @apply bg-white text-dark px-4 py-2 rounded-md border border-gray-300 hover:bg-gray-100 transition-all duration-200;
+      }
+      .modal-backdrop {
+        @apply fixed inset-0 bg-black/50 flex items-center justify-center z-50 opacity-0 pointer-events-none transition-opacity duration-300;
+      }
+      .modal-backdrop.show {
+        @apply opacity-100 pointer-events-auto;
+      }
+      .modal-content {
+        @apply bg-white rounded-lg shadow-xl p-6 w-full max-w-md transform transition-all duration-300 scale-95 opacity-0;
+      }
+      .modal-backdrop.show .modal-content {
+        @apply scale-100 opacity-100;
+      }
+      .color-picker {
+        @apply transition-transform duration-200 hover:scale-110 relative cursor-pointer;
+      }
+      .color-picker.active::after {
+        content: '✓';
+        @apply absolute -bottom-1 -right-1 bg-primary text-white text-xs rounded-full w-4 h-4 flex items-center justify-center;
+      }
+      .layer-item {
+        @apply flex items-center gap-2 p-2 hover:bg-gray-100 rounded cursor-pointer transition-colors duration-200;
+      }
+      .layer-item.active {
+        @apply bg-primary/10 border border-primary/20;
+      }
+    }
+  </style>
+</head>
+<body class="font-inter bg-gray-50 text-dark h-screen flex flex-col overflow-hidden">
+  <!-- 顶部导航栏 -->
+  <header class="bg-white border-b border-gray-200 py-2 px-4 flex items-center justify-between z-10">
+    <div class="flex items-center gap-2">
+      <i class="fa fa-star text-primary text-2xl animate-pulse"></i>
+      <h1 class="text-xl font-bold">星光绘画板</h1>
+    </div>
+    
+    <div class="flex items-center gap-3">
+      <!-- 缩放控制 -->
+      <div class="flex items-center border border-gray-300 rounded-md overflow-hidden">
+        <button id="zoomOutBtn" class="w-8 h-8 flex items-center justify-center hover:bg-gray-100 transition-colors">
+          <i class="fa fa-minus text-sm"></i>
+        </button>
+        <div class="w-16 h-8 border-x border-gray-300 flex items-center justify-center text-sm">
+          <span id="zoomLevel">100%</span>
+        </div>
+        <button id="zoomInBtn" class="w-8 h-8 flex items-center justify-center hover:bg-gray-100 transition-colors">
+          <i class="fa fa-plus text-sm"></i>
+        </button>
+        <button id="resetZoomBtn" class="w-8 h-8 flex items-center justify-center hover:bg-gray-100 transition-colors">
+          <i class="fa fa-refresh text-sm"></i>
+        </button>
+      </div>
+      
+      <div class="h-6 w-px bg-gray-300 mx-1"></div>
+      
+      <div class="flex items-center gap-2">
+        <button id="newCanvasBtn" class="btn-secondary flex items-center gap-1">
+          <i class="fa fa-file-o"></i>
+          <span class="hidden sm:inline">新建</span>
+        </button>
+        <button id="openImageBtn" class="btn-secondary flex items-center gap-1">
+          <i class="fa fa-image"></i>
+          <span class="hidden sm:inline">打开</span>
+        </button>
+        <button id="saveBtn" class="btn-primary flex items-center gap-1">
+          <i class="fa fa-save"></i>
+          <span class="hidden sm:inline">保存</span>
+        </button>
+        <button id="canvasSettingsBtn" class="btn-secondary flex items-center gap-1">
+          <i class="fa fa-cog"></i>
+          <span class="hidden sm:inline">画布设置</span>
+        </button>
+      </div>
+    </div>
+  </header>
+  
+  <!-- 主内容区 -->
+  <main class="flex flex-1 overflow-hidden">
+    <!-- 左侧工具栏 -->
+    <aside class="bg-white border-r border-gray-200 w-14 md:w-16 flex flex-col items-center py-4 gap-3">
+      <!-- 绘图工具 -->
+      <div class="flex flex-col items-center gap-2 w-full px-1">
+        <button class="toolbar-item tool-active" title="铅笔" data-tool="pencil">
+          <i class="fa fa-pencil"></i>
+        </button>
+        <button class="toolbar-item" title="画笔" data-tool="brush">
+          <i class="fa fa-paint-brush"></i>
+        </button>
+        <button class="toolbar-item" title="橡皮擦" data-tool="eraser">
+          <i class="fa fa-eraser"></i>
+        </button>
+        <button class="toolbar-item" title="直线" data-tool="line">
+          <i class="fa fa-minus"></i>
+        </button>
+        <button class="toolbar-item" title="矩形" data-tool="rectangle">
+          <i class="fa fa-square-o"></i>
+        </button>
+        <button class="toolbar-item" title="圆形" data-tool="circle">
+          <i class="fa fa-circle-o"></i>
+        </button>
+        <button class="toolbar-item" title="文本" data-tool="text">
+          <i class="fa fa-font"></i>
+        </button>
+      </div>
+      
+      <div class="w-full h-px bg-gray-200 my-2"></div>
+      
+      <!-- 形状样式设置 -->
+      <div class="flex flex-col items-center gap-2 w-full px-1">
+        <div class="text-center text-xs text-gray-500 mb-1">形状样式</div>
+        <div class="flex flex-col items-center gap-1 w-full">
+          <button class="toolbar-item" title="仅轮廓" data-draw-mode="stroke">
+            <i class="fa fa-border text-xs"></i>
+          </button>
+          <button class="toolbar-item" title="仅填充" data-draw-mode="fill">
+            <i class="fa fa-square text-xs"></i>
+          </button>
+          <button class="toolbar-item tool-active" title="轮廓+填充" data-draw-mode="both">
+            <i class="fa fa-square text-xs" style="position: relative;">
+              <i class="fa fa-border text-xs absolute inset-0 flex items-center justify-center"></i>
+            </i>
+          </button>
+        </div>
+      </div>
+      
+      <div class="w-full h-px bg-gray-200 my-2"></div>
+      
+      <!-- 颜色选择器 -->
+      <div class="flex flex-col items-center gap-2 w-full px-1">
+        <div class="text-center text-xs text-gray-500 mb-1">颜色</div>
+        <div class="flex flex-wrap justify-center gap-1 w-full px-1" id="colorPalette">
+          <button class="w-6 h-6 rounded-full bg-black border-2 border-white shadow-sm color-picker active" data-index="0" data-color="#000000"></button>
+          <button class="w-6 h-6 rounded-full bg-red-500 border-2 border-white shadow-sm color-picker" data-index="1" data-color="#EF4444"></button>
+          <button class="w-6 h-6 rounded-full bg-yellow-500 border-2 border-white shadow-sm color-picker" data-index="2" data-color="#EAB308"></button>
+          <button class="w-6 h-6 rounded-full bg-green-500 border-2 border-white shadow-sm color-picker" data-index="3" data-color="#22C55E"></button>
+          <button class="w-6 h-6 rounded-full bg-blue-500 border-2 border-white shadow-sm color-picker" data-index="4" data-color="#3B82F6"></button>
+          <button class="w-6 h-6 rounded-full bg-purple-500 border-2 border-white shadow-sm color-picker" data-index="5" data-color="#A855F7"></button>
+          <button class="w-6 h-6 rounded-full bg-pink-500 border-2 border-white shadow-sm color-picker" data-index="6" data-color="#EC4899"></button>
+          <button class="w-6 h-6 rounded-full bg-white border-2 border-gray-300 shadow-sm color-picker" data-index="7" data-color="#FFFFFF"></button>
+        </div>
+        <button id="editColorsBtn" class="w-8 h-6 flex items-center justify-center text-xs text-primary hover:bg-primary/10 rounded mt-1">
+          编辑
+        </button>
+      </div>
+      
+      <div class="w-full h-px bg-gray-200 my-2"></div>
+      
+      <!-- 线条粗细 -->
+      <div class="flex flex-col items-center gap-2 w-full px-1">
+        <div class="text-center text-xs text-gray-500 mb-1">粗细</div>
+        <div class="flex flex-col items-center gap-1">
+          <button class="w-8 h-1 bg-black rounded-full line-width" data-width="1"></button>
+          <button class="w-8 h-3 bg-black rounded-full line-width active" data-width="3"></button>
+          <button class="w-8 h-5 bg-black rounded-full line-width" data-width="5"></button>
+          <button class="w-8 h-7 bg-black rounded-full line-width" data-width="7"></button>
+        </div>
+      </div>
+      
+      <div class="w-full h-px bg-gray-200 my-2"></div>
+      
+      <!-- 图片编辑工具 -->
+      <div class="flex flex-col items-center gap-2 w-full px-1 mt-auto">
+        <button class="toolbar-item" title="裁剪" data-tool="crop">
+          <i class="fa fa-crop"></i>
+        </button>
+        <button class="toolbar-item" title="旋转" data-tool="rotate">
+          <i class="fa fa-repeat"></i>
+        </button>
+        <button class="toolbar-item" title="缩放" data-tool="scale">
+          <i class="fa fa-search"></i>
+        </button>
+        <button class="toolbar-item" title="滤镜" data-tool="filter">
+          <i class="fa fa-magic"></i>
+        </button>
+      </div>
+    </aside>
+    
+    <!-- 画布区域 -->
+    <div class="canvas-container flex-1 relative" id="canvasContainer">
+      <div id="canvasWrapper" class="relative shadow-lg transform transition-transform duration-300 origin-top-left" style="transform: scale(1);">
+        <canvas id="drawingCanvas" class="bg-white"></canvas>
+      </div>
+      
+      <!-- 画布信息 -->
+      <div class="absolute bottom-4 left-4 bg-white/80 backdrop-blur-sm px-3 py-1.5 rounded-full text-sm shadow-md">
+        <span id="canvasDimensions">800 × 600 px</span>
+      </div>
+    </div>
+    
+    <!-- 右侧属性面板 - 仅在中等以上屏幕显示 -->
+    <aside class="hidden lg:block bg-white border-l border-gray-200 w-64 p-4 overflow-y-auto">
+      <h3 class="font-semibold text-lg mb-4">属性面板</h3>
+      
+      <!-- 当前工具属性 -->
+      <div class="mb-6">
+        <h4 class="font-medium text-gray-700 mb-3">工具设置</h4>
+        <div id="toolSettings">
+          <!-- 铅笔工具设置 -->
+          <div class="space-y-3" id="pencilSettings">
+            <div>
+              <label class="block text-sm text-gray-600 mb-1">笔触硬度</label>
+              <input type="range" min="0" max="100" value="100" class="w-full accent-primary" id="brushHardness">
+            </div>
+            <div>
+              <label class="block text-sm text-gray-600 mb-1">透明度</label>
+              <input type="range" min="0" max="100" value="100" class="w-full accent-primary" id="brushOpacity">
+            </div>
+          </div>
+          
+          <!-- 画笔工具设置 (默认隐藏) -->
+          <div class="space-y-3 hidden" id="brushSettings">
+            <div>
+              <label class="block text-sm text-gray-600 mb-1">笔触硬度</label>
+              <input type="range" min="0" max="100" value="50" class="w-full accent-primary" id="brushHardness2">
+            </div>
+            <div>
+              <label class="block text-sm text-gray-600 mb-1">透明度</label>
+              <input type="range" min="0" max="100" value="80" class="w-full accent-primary" id="brushOpacity2">
+            </div>
+            <div>
+              <label class="block text-sm text-gray-600 mb-1">笔触大小变化</label>
+              <input type="range" min="0" max="100" value="30" class="w-full accent-primary" id="brushVariation">
+            </div>
+          </div>
+          
+          <!-- 橡皮擦工具设置 (默认隐藏) -->
+          <div class="space-y-3 hidden" id="eraserSettings">
+            <div>
+              <label class="block text-sm text-gray-600 mb-1">橡皮擦大小</label>
+              <input type="range" min="1" max="50" value="10" class="w-full accent-primary" id="eraserSize">
+            </div>
+            <div>
+              <label class="block text-sm text-gray-600 mb-1">硬度</label>
+              <input type="range" min="0" max="100" value="100" class="w-full accent-primary" id="eraserHardness">
+            </div>
+          </div>
+          
+          <!-- 形状工具设置 (默认隐藏) -->
+          <div class="space-y-3 hidden" id="shapeSettings">
+            <div>
+              <label class="block text-sm text-gray-600 mb-1">轮廓颜色</label>
+              <div class="flex gap-2 items-center">
+                <input type="color" id="strokeColorPicker" class="w-8 h-8 p-0 border-0 rounded-md" value="#000000">
+                <input type="text" id="strokeColorText" class="flex-1 border border-gray-300 rounded-md px-3 py-2" value="#000000">
+              </div>
+            </div>
+            <div>
+              <label class="block text-sm text-gray-600 mb-1">填充颜色</label>
+              <div class="flex gap-2 items-center">
+                <input type="color" id="fillColorPicker" class="w-8 h-8 p-0 border-0 rounded-md" value="#3B82F6">
+                <input type="text" id="fillColorText" class="flex-1 border border-gray-300 rounded-md px-3 py-2" value="#3B82F6">
+              </div>
+            </div>
+            <div>
+              <label class="block text-sm text-gray-600 mb-1">线条宽度</label>
+              <input type="range" min="1" max="20" value="3" class="w-full accent-primary" id="shapeLineWidth">
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="h-px bg-gray-200 my-4"></div>
+      
+      <!-- 图层管理 -->
+      <div class="mb-6">
+        <div class="flex items-center justify-between mb-3">
+          <h4 class="font-medium text-gray-700">图层</h4>
+          <div class="flex gap-1">
+            <button id="addLayerBtn" class="w-6 h-6 flex items-center justify-center rounded hover:bg-gray-100" title="添加图层">
+              <i class="fa fa-plus text-sm"></i>
+            </button>
+            <button id="deleteLayerBtn" class="w-6 h-6 flex items-center justify-center rounded hover:bg-gray-100" title="删除图层">
+              <i class="fa fa-trash text-sm"></i>
+            </button>
+          </div>
+        </div>
+        <div class="space-y-2 max-h-60 overflow-y-auto pr-1" id="layersContainer">
+          <div class="layer-item active" data-index="0">
+            <i class="fa fa-eye text-sm layer-visibility"></i>
+            <span class="text-sm flex-1">背景图层</span>
+            <i class="fa fa-arrows text-xs text-gray-500"></i>
+          </div>
+        </div>
+      </div>
+      
+      <div class="h-px bg-gray-200 my-4"></div>
+      
+      <!-- 图片效果 -->
+      <div>
+        <h4 class="font-medium text-gray-700 mb-3">图片效果</h4>
+        <div class="space-y-3">
+          <div>
+            <label class="block text-sm text-gray-600 mb-1">亮度</label>
+            <input type="range" min="-100" max="100" value="0" class="w-full accent-primary" id="brightness">
+          </div>
+          <div>
+            <label class="block text-sm text-gray-600 mb-1">对比度</label>
+            <input type="range" min="-100" max="100" value="0" class="w-full accent-primary" id="contrast">
+          </div>
+          <div>
+            <label class="block text-sm text-gray-600 mb-1">饱和度</label>
+            <input type="range" min="-100" max="100" value="0" class="w-full accent-primary" id="saturation">
+          </div>
+          <div>
+            <label class="block text-sm text-gray-600 mb-1">色调</label>
+            <input type="range" min="0" max="360" value="0" class="w-full accent-primary" id="hue">
+          </div>
+        </div>
+      </div>
+    </aside>
+  </main>
+  
+  <!-- 颜色编辑对话框 -->
+  <div id="colorEditModal" class="modal-backdrop">
+    <div class="modal-content max-w-md">
+      <h3 class="text-lg font-semibold mb-4">编辑颜色面板</h3>
+      <p class="text-sm text-gray-500 mb-4">自定义您的8个快捷颜色</p>
+      
+      <div class="grid grid-cols-2 gap-4 mb-4">
+        <div class="space-y-3">
+          <!-- 颜色选择区域 -->
+          <div class="flex items-center gap-3">
+            <div id="colorPreview" class="w-16 h-16 rounded-md border border-gray-300" style="background-color: #000000;"></div>
+            <div class="flex-1">
+              <input type="color" id="editColorPicker" class="w-full h-10 p-0 border-0 rounded-md">
+              <input type="text" id="editColorText" class="w-full mt-2 border border-gray-300 rounded-md px-3 py-2" placeholder="#RRGGBB">
+            </div>
+          </div>
+          
+          <!-- RGB颜色输入 -->
+          <div class="space-y-2">
+            <h4 class="text-sm font-medium">RGB</h4>
+            <div class="grid grid-cols-3 gap-2">
+              <div>
+                <label class="block text-xs text-gray-500 mb-1">R</label>
+                <input type="number" id="rgbR" class="w-full border border-gray-300 rounded-md px-2 py-1 text-sm" min="0" max="255" value="0">
+              </div>
+              <div>
+                <label class="block text-xs text-gray-500 mb-1">G</label>
+                <input type="number" id="rgbG" class="w-full border border-gray-300 rounded-md px-2 py-1 text-sm" min="0" max="255" value="0">
+              </div>
+              <div>
+                <label class="block text-xs text-gray-500 mb-1">B</label>
+                <input type="number" id="rgbB" class="w-full border border-gray-300 rounded-md px-2 py-1 text-sm" min="0" max="255" value="0">
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- HSL颜色输入 -->
+        <div class="space-y-3">
+          <h4 class="text-sm font-medium">HSL</h4>
+          <div class="space-y-2">
+            <div>
+              <label class="block text-xs text-gray-500 mb-1">色相 (0-360)</label>
+              <input type="number" id="hslH" class="w-full border border-gray-300 rounded-md px-2 py-1 text-sm" min="0" max="360" value="0">
+            </div>
+            <div>
+              <label class="block text-xs text-gray-500 mb-1">饱和度 (0-100%)</label>
+              <input type="number" id="hslS" class="w-full border border-gray-300 rounded-md px-2 py-1 text-sm" min="0" max="100" value="0">
+            </div>
+            <div>
+              <label class="block text-xs text-gray-500 mb-1">亮度 (0-100%)</label>
+              <input type="number" id="hslL" class="w-full border border-gray-300 rounded-md px-2 py-1 text-sm" min="0" max="100" value="0">
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- 快捷颜色面板 -->
+      <div class="mb-4">
+        <h4 class="text-sm font-medium mb-2">快捷颜色</h4>
+        <div class="flex flex-wrap gap-2" id="editColorPalette">
+          <button class="w-8 h-8 rounded-full bg-black border-2 border-primary shadow-sm edit-color-item active" data-index="0"></button>
+          <button class="w-8 h-8 rounded-full bg-red-500 border-2 border-transparent shadow-sm edit-color-item" data-index="1"></button>
+          <button class="w-8 h-8 rounded-full bg-yellow-500 border-2 border-transparent shadow-sm edit-color-item" data-index="2"></button>
+          <button class="w-8 h-8 rounded-full bg-green-500 border-2 border-transparent shadow-sm edit-color-item" data-index="3"></button>
+          <button class="w-8 h-8 rounded-full bg-blue-500 border-2 border-transparent shadow-sm edit-color-item" data-index="4"></button>
+          <button class="w-8 h-8 rounded-full bg-purple-500 border-2 border-transparent shadow-sm edit-color-item" data-index="5"></button>
+          <button class="w-8 h-8 rounded-full bg-pink-500 border-2 border-transparent shadow-sm edit-color-item" data-index="6"></button>
+          <button class="w-8 h-8 rounded-full bg-white border-2 border-transparent shadow-sm edit-color-item" data-index="7"></button>
+        </div>
+      </div>
+      
+      <div class="flex justify-end gap-2">
+        <button id="resetColorsBtn" class="btn-secondary text-amber-600 border-amber-200">重置默认</button>
+        <button id="cancelColorEditBtn" class="btn-secondary">取消</button>
+        <button id="confirmColorEditBtn" class="btn-primary">确认</button>
+      </div>
+    </div>
+  </div>
+  
+  <!-- 打开图片对话框 -->
+  <div id="openImageModal" class="modal-backdrop">
+    <div class="modal-content">
+      <h3 class="text-lg font-semibold mb-4">打开图片</h3>
+      <div class="space-y-4">
+        <div class="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:bg-gray-50 transition-colors cursor-pointer" id="dropArea">
+          <i class="fa fa-cloud-upload text-3xl text-gray-400 mb-2"></i>
+          <p class="text-gray-500">拖放图片到此处，或<span class="text-primary">点击上传</span></p>
+          <input type="file" id="imageUpload" class="hidden" accept="image/*">
+        </div>
+        <div class="flex justify-end gap-2">
+          <button id="cancelOpenBtn" class="btn-secondary">取消</button>
+          <button id="confirmOpenBtn" class="btn-primary" disabled>打开</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- 画布设置对话框 -->
+  <div id="canvasSettingsModal" class="modal-backdrop">
+    <div class="modal-content">
+      <h3 class="text-lg font-semibold mb-4">画布设置</h3>
+      <div class="space-y-4">
+        <div class="grid grid-cols-2 gap-4">
+          <div>
+            <label class="block text-sm text-gray-600 mb-1">宽度 (px)</label>
+            <input type="number" id="canvasWidth" class="w-full border border-gray-300 rounded-md px-3 py-2" value="800" min="100" max="4000">
+          </div>
+          <div>
+            <label class="block text-sm text-gray-600 mb-1">高度 (px)</label>
+            <input type="number" id="canvasHeight" class="w-full border border-gray-300 rounded-md px-3 py-2" value="600" min="100" max="4000">
+          </div>
+        </div>
+        <div>
+          <label class="block text-sm text-gray-600 mb-1">背景颜色</label>
+          <div class="flex gap-2 items-center">
+            <input type="color" id="canvasBgColor" class="w-10 h-10 p-0 border-0 rounded-md" value="#FFFFFF">
+            <input type="text" id="canvasBgColorText" class="flex-1 border border-gray-300 rounded-md px-3 py-2" value="#FFFFFF">
+          </div>
+        </div>
+        <div class="flex justify-end gap-2">
+          <button id="cancelCanvasSettingsBtn" class="btn-secondary">取消</button>
+          <button id="confirmCanvasSettingsBtn" class="btn-primary">应用</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- 保存对话框 -->
+  <div id="saveModal" class="modal-backdrop">
+    <div class="modal-content">
+      <h3 class="text-lg font-semibold mb-4">保存图片</h3>
+      <div class="space-y-4">
+        <div>
+          <label class="block text-sm text-gray-600 mb-1">保存格式</label>
+          <select id="saveFormat" class="w-full border border-gray-300 rounded-md px-3 py-2">
+            <option value="png">PNG</option>
+            <option value="jpeg">JPEG</option>
+            <option value="webp">WebP</option>
+          </select>
+        </div>
+        <div>
+          <label class="block text-sm text-gray-600 mb-1">质量 (仅JPEG和WebP)</label>
+          <input type="range" id="saveQuality" min="0" max="100" value="90" class="w-full accent-primary">
+          <div class="flex justify-between text-xs text-gray-500 mt-1">
+            <span>低</span>
+            <span>高</span>
+          </div>
+        </div>
+        <div class="grid grid-cols-2 gap-4">
+          <div>
+            <label class="block text-sm text-gray-600 mb-1">宽度 (px)</label>
+            <input type="number" id="saveWidth" class="w-full border border-gray-300 rounded-md px-3 py-2" value="800" min="100" max="4000">
+          </div>
+          <div>
+            <label class="block text-sm text-gray-600 mb-1">高度 (px)</label>
+            <input type="number" id="saveHeight" class="w-full border border-gray-300 rounded-md px-3 py-2" value="600" min="100" max="4000">
+          </div>
+        </div>
+        <div>
+          <label class="flex items-center gap-2 cursor-pointer">
+            <input type="checkbox" id="preserveAspectRatio" class="accent-primary" checked>
+            <span class="text-sm text-gray-700">保持纵横比</span>
+          </label>
+        </div>
+        <div>
+          <label class="flex items-center gap-2 cursor-pointer">
+            <input type="checkbox" id="stretchImage" class="accent-primary">
+            <span class="text-sm text-gray-700">拉伸以适应尺寸</span>
+          </label>
+        </div>
+        <div class="flex justify-end gap-2">
+          <button id="cancelSaveBtn" class="btn-secondary">取消</button>
+          <button id="confirmSaveBtn" class="btn-primary">保存</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <script>
+    // 初始化画布
+    const canvas = document.getElementById('drawingCanvas');
+    const ctx = canvas.getContext('2d');
+    const canvasWrapper = document.getElementById('canvasWrapper');
+    const canvasContainer = document.getElementById('canvasContainer');
+    
+    // 设置初始画布尺寸
+    let canvasWidth = 800;
+    let canvasHeight = 600;
+    let canvasBackgroundColor = '#FFFFFF';
+    let zoomLevel = 100; // 百分比
+    
+    // 图层系统
+    class Layer {
+      constructor(id, name, visible = true) {
+        this.id = id;
+        this.name = name;
+        this.visible = visible;
+        this.canvas = document.createElement('canvas');
+        this.ctx = this.canvas.getContext('2d');
+        this.updateSize(canvasWidth, canvasHeight);
+      }
+      
+      updateSize(width, height) {
+        // 保存当前图层内容
+        const imageData = this.ctx.getImageData(0, 0, this.canvas.width, this.canvas.height);
+        
+        // 更新尺寸
+        this.canvas.width = width;
+        this.canvas.height = height;
+        
+        // 恢复内容
+        if (imageData) {
+          this.ctx.putImageData(imageData, 0, 0);
+        }
+      }
+      
+      clear() {
+        this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+      }
+    }
+    
+    // 图层管理
+    let layers = [];
+    let currentLayerIndex = 0;
+    
+    function initLayers() {
+      // 创建背景图层
+      const backgroundLayer = new Layer(0, '背景图层');
+      backgroundLayer.ctx.fillStyle = canvasBackgroundColor;
+      backgroundLayer.ctx.fillRect(0, 0, canvasWidth, canvasHeight);
+      layers.push(backgroundLayer);
+      
+      // 更新图层显示
+      updateLayerDisplay();
+    }
+    
+    function addLayer() {
+      const newId = layers.length;
+      const newLayer = new Layer(newId, `图层 ${newId}`);
+      layers.push(newLayer);
+      
+      // 切换到新图层
+      selectLayer(newId);
+      
+      // 更新图层显示
+      updateLayerDisplay();
+    }
+    
+    function deleteLayer(index) {
+      // 不能删除最后一个图层
+      if (layers.length <= 1) {
+        alert('至少保留一个图层');
+        return;
+      }
+      
+      // 移除图层
+      layers.splice(index, 1);
+      
+      // 重新编号
+      layers.forEach((layer, i) => {
+        layer.id = i;
+      });
+      
+      // 选择新的当前图层
+      currentLayerIndex = Math.min(currentLayerIndex, layers.length - 1);
+      if (currentLayerIndex < 0) currentLayerIndex = 0;
+      
+      // 更新图层显示
+      updateLayerDisplay();
+      
+      // 重绘画布
+      redrawCanvas();
+    }
+    
+    function toggleLayerVisibility(index) {
+      layers[index].visible = !layers[index].visible;
+      updateLayerDisplay();
+      redrawCanvas();
+    }
+    
+    function selectLayer(index) {
+      currentLayerIndex = index;
+      updateLayerDisplay();
+    }
+    
+    function updateLayerDisplay() {
+      const container = document.getElementById('layersContainer');
+      container.innerHTML = '';
+      
+      layers.forEach((layer, index) => {
+        const layerElement = document.createElement('div');
+        layerElement.className = `layer-item ${index === currentLayerIndex ? 'active' : ''}`;
+        layerElement.dataset.index = index;
+        
+        layerElement.innerHTML = `
+          <i class="fa ${layer.visible ? 'fa-eye' : 'fa-eye-slash'} text-sm layer-visibility"></i>
+          <span class="text-sm flex-1">${layer.name}</span>
+          <i class="fa fa-arrows text-xs text-gray-500"></i>
+        `;
+        
+        // 点击图层选择
+        layerElement.addEventListener('click', (e) => {
+          if (!e.target.classList.contains('layer-visibility')) {
+            selectLayer(index);
+          }
+        });
+        
+        // 点击可见性图标切换显示/隐藏
+        const visibilityIcon = layerElement.querySelector('.layer-visibility');
+        visibilityIcon.addEventListener('click', () => {
+          toggleLayerVisibility(index);
+        });
+        
+        container.appendChild(layerElement);
+      });
+    }
+    
+    function redrawCanvas() {
+      // 清除主画布
+      ctx.clearRect(0, 0, canvasWidth, canvasHeight);
+      
+      // 绘制所有可见图层
+      layers.forEach(layer => {
+        if (layer.visible) {
+          ctx.drawImage(layer.canvas, 0, 0);
+        }
+      });
+    }
+    
+    // 获取当前图层
+    function getCurrentLayer() {
+      return layers[currentLayerIndex];
+    }
+    
+    // 更新画布尺寸显示
+    function updateCanvasDimensions() {
+      document.getElementById('canvasDimensions').textContent = `${canvasWidth} × ${canvasHeight} px`;
+      document.getElementById('canvasWidth').value = canvasWidth;
+      document.getElementById('canvasHeight').value = canvasHeight;
+      document.getElementById('saveWidth').value = canvasWidth;
+      document.getElementById('saveHeight').value = canvasHeight;
+    }
+    
+    // 设置画布尺寸
+    function setCanvasSize(width, height, preserveContent = false) {
+      // 更新所有图层尺寸
+      layers.forEach(layer => {
+        layer.updateSize(width, height);
+      });
+      
+      // 更新画布尺寸
+      canvas.width = width;
+      canvas.height = height;
+      canvasWidth = width;
+      canvasHeight = height;
+      
+      // 如果不需要保留内容，清空背景图层
+      if (!preserveContent) {
+        const backgroundLayer = layers[0];
+        backgroundLayer.ctx.fillStyle = canvasBackgroundColor;
+        backgroundLayer.ctx.fillRect(0, 0, width, height);
+      }
+      
+      // 更新显示
+      updateCanvasDimensions();
+      redrawCanvas();
+    }
+    
+    // 缩放画布
+    function zoomCanvas(level) {
+      // 限制缩放范围
+      if (level < 10) level = 10;
+      if (level > 400) level = 400;
+      
+      zoomLevel = level;
+      const scale = level / 100;
+      
+      // 应用缩放变换
+      canvasWrapper.style.transform = `scale(${scale})`;
+      document.getElementById('zoomLevel').textContent = `${level}%`;
+    }
+    
+    // 初始化画布和图层
+    initLayers();
+    setCanvasSize(canvasWidth, canvasHeight);
+    
+    // 绘图状态变量
+    let isDrawing = false;
+    let startX = 0, startY = 0;
+    let lastX = 0, lastY = 0;
+    let currentTool = 'pencil';
+    let currentDrawMode = 'both'; // stroke, fill, both
+    let currentColor = '#000000';
+    let strokeColor = '#000000';
+    let fillColor = '#3B82F6';
+    let currentLineWidth = 3;
+    let eraserSize = 10;
+    let eraserHardness = 100;
+    
+    // 画笔特定设置
+    let pencilHardness = 100;
+    let pencilOpacity = 100;
+    let brushHardness = 50;
+    let brushOpacity = 80;
+    let brushVariation = 30;
+    
+    // 用于形状工具的临时画布
+    let tempCanvas = document.createElement('canvas');
+    let tempCtx = tempCanvas.getContext('2d');
+    
+    // 工具选择
+    document.querySelectorAll('[data-tool]').forEach(tool => {
+      tool.addEventListener('click', () => {
+        // 移除之前选中工具的active类
+        document.querySelectorAll('[data-tool]').forEach(t => t.classList.remove('tool-active'));
+        // 给当前选中的工具添加active类
+        tool.classList.add('tool-active');
+        // 更新当前工具
+        currentTool = tool.dataset.tool;
+        
+        // 显示对应工具的设置面板
+        document.querySelectorAll('#toolSettings > div').forEach(panel => {
+          panel.classList.add('hidden');
+        });
+        
+        let settingsPanel;
+        if (['rectangle', 'circle', 'line'].includes(currentTool)) {
+          settingsPanel = document.getElementById('shapeSettings');
+        } else {
+          settingsPanel = document.getElementById(`${currentTool}Settings`);
+        }
+        
+        if (settingsPanel) {
+          settingsPanel.classList.remove('hidden');
+        }
+      });
+    });
+    
+    // 绘制模式选择（轮廓/填充）
+    document.querySelectorAll('[data-draw-mode]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('[data-draw-mode]').forEach(b => b.classList.remove('tool-active'));
+        btn.classList.add('tool-active');
+        currentDrawMode = btn.dataset.drawMode;
+      });
+    });
+    
+    // 颜色选择器功能
+    function initColorPicker() {
+      // 颜色点击事件
+      document.querySelectorAll('.color-picker').forEach(picker => {
+        picker.addEventListener('click', () => {
+          document.querySelectorAll('.color-picker').forEach(p => p.classList.remove('active'));
+          picker.classList.add('active');
+          currentColor = picker.dataset.color;
+          strokeColor = currentColor;
+          document.getElementById('strokeColorPicker').value = currentColor;
+          document.getElementById('strokeColorText').value = currentColor;
+        });
+      });
+      
+      // 编辑颜色按钮
+      document.getElementById('editColorsBtn').addEventListener('click', () => {
+        showModal('colorEditModal');
+        updateColorEditPanel();
+      });
+      
+      // 颜色编辑面板项目点击
+      document.querySelectorAll('.edit-color-item').forEach(item => {
+        item.addEventListener('click', () => {
+          document.querySelectorAll('.edit-color-item').forEach(i => i.classList.remove('active'));
+          item.classList.add('active');
+          
+          // 加载选中颜色的数据
+          const index = parseInt(item.dataset.index);
+          const color = document.querySelector(`.color-picker[data-index="${index}"]`).dataset.color;
+          loadColorData(color);
+        });
+      });
+      
+      // 颜色编辑模态框事件
+      document.getElementById('cancelColorEditBtn').addEventListener('click', () => {
+        hideModal('colorEditModal');
+      });
+      
+      document.getElementById('confirmColorEditBtn').addEventListener('click', () => {
+        saveColorEdits();
+        hideModal('colorEditModal');
+      });
+      
+      document.getElementById('resetColorsBtn').addEventListener('click', () => {
+        if (confirm('确定要重置为默认颜色吗？')) {
+          resetDefaultColors();
+        }
+      });
+      
+      // 形状颜色设置
+      const strokeColorPicker = document.getElementById('strokeColorPicker');
+      const strokeColorText = document.getElementById('strokeColorText');
+      const fillColorPicker = document.getElementById('fillColorPicker');
+      const fillColorText = document.getElementById('fillColorText');
+      
+      strokeColorPicker.addEventListener('input', (e) => {
+        strokeColor = e.target.value;
+        strokeColorText.value = e.target.value;
+        currentColor = e.target.value;
+        
+        // 更新当前选中的颜色选择器
+        document.querySelectorAll('.color-picker').forEach(p => {
+          if (p.dataset.color === e.target.value) {
+            document.querySelectorAll('.color-picker').forEach(pp => pp.classList.remove('active'));
+            p.classList.add('active');
+          }
+        });
+      });
+      
+      strokeColorText.addEventListener('input', (e) => {
+        if (/^#[0-9A-F]{6}$/i.test(e.target.value)) {
+          strokeColor = e.target.value;
+          strokeColorPicker.value = e.target.value;
+          currentColor = e.target.value;
+        }
+      });
+      
+      fillColorPicker.addEventListener('input', (e) => {
+        fillColor = e.target.value;
+        fillColorText.value = e.target.value;
+      });
+      
+      fillColorText.addEventListener('input', (e) => {
+        if (/^#[0-9A-F]{6}$/i.test(e.target.value)) {
+          fillColor = e.target.value;
+          fillColorPicker.value = e.target.value;
+        }
+      });
+      
+      // 初始化颜色编辑面板的事件监听
+      initColorInputListeners();
+    }
+    
+    // 初始化颜色输入监听
+    function initColorInputListeners() {
+      const editColorPicker = document.getElementById('editColorPicker');
+      const editColorText = document.getElementById('editColorText');
+      const rgbR = document.getElementById('rgbR');
+      const rgbG = document.getElementById('rgbG');
+      const rgbB = document.getElementById('rgbB');
+      const hslH = document.getElementById('hslH');
+      const hslS = document.getElementById('hslS');
+      const hslL = document.getElementById('hslL');
+      
+      // 颜色选择器变化
+      editColorPicker.addEventListener('input', (e) => {
+        const color = e.target.value;
+        updateColorInputs(color);
+      });
+      
+      // 十六进制颜色输入
+      editColorText.addEventListener('input', (e) => {
+        if (/^#[0-9A-F]{6}$/i.test(e.target.value)) {
+          updateColorInputs(e.target.value);
+        }
+      });
+      
+      // RGB输入变化
+      function updateFromRGB() {
+        const r = parseInt(rgbR.value) || 0;
+        const g = parseInt(rgbG.value) || 0;
+        const b = parseInt(rgbB.value) || 0;
+        
+        // 限制值在0-255范围内
+        const clampedR = Math.max(0, Math.min(255, r));
+        const clampedG = Math.max(0, Math.min(255, g));
+        const clampedB = Math.max(0, Math.min(255, b));
+        
+        // 更新输入框显示正确的值
+        rgbR.value = clampedR;
+        rgbG.value = clampedG;
+        rgbB.value = clampedB;
+        
+        // 转换为十六进制
+        const hex = rgbToHex(clampedR, clampedG, clampedB);
+        updateColorInputs(hex);
+      }
+      
+      rgbR.addEventListener('input', updateFromRGB);
+      rgbG.addEventListener('input', updateFromRGB);
+      rgbB.addEventListener('input', updateFromRGB);
+      
+      // HSL输入变化
+      function updateFromHSL() {
+        const h = parseInt(hslH.value) || 0;
+        const s = parseInt(hslS.value) || 0;
+        const l = parseInt(hslL.value) || 0;
+        
+        // 限制值范围
+        const clampedH = Math.max(0, Math.min(360, h));
+        const clampedS = Math.max(0, Math.min(100, s));
+        const clampedL = Math.max(0, Math.min(100, l));
+        
+        // 更新输入框
+        hslH.value = clampedH;
+        hslS.value = clampedS;
+        hslL.value = clampedL;
+        
+        // 转换为十六进制
+        const hex = hslToHex(clampedH, clampedS, clampedL);
+        updateColorInputs(hex);
+      }
+      
+      hslH.addEventListener('input', updateFromHSL);
+      hslS.addEventListener('input', updateFromHSL);
+      hslL.addEventListener('input', updateFromHSL);
+    }
+    
+    // 更新颜色编辑面板输入
+    function updateColorInputs(hex) {
+      const editColorPicker = document.getElementById('editColorPicker');
+      const editColorText = document.getElementById('editColorText');
+      const colorPreview = document.getElementById('colorPreview');
+      
+      // 更新UI
+      editColorPicker.value = hex;
+      editColorText.value = hex;
+      colorPreview.style.backgroundColor = hex;
+      
+      // 转换为RGB并更新输入
+      const rgb = hexToRgb(hex);
+      document.getElementById('rgbR').value = rgb.r;
+      document.getElementById('rgbG').value = rgb.g;
+      document.getElementById('rgbB').value = rgb.b;
+      
+      // 转换为HSL并更新输入
+      const hsl = rgbToHsl(rgb.r, rgb.g, rgb.b);
+      document.getElementById('hslH').value = Math.round(hsl.h);
+      document.getElementById('hslS').value = Math.round(hsl.s * 100);
+      document.getElementById('hslL').value = Math.round(hsl.l * 100);
+    }
+    
+    // 加载颜色数据到编辑面板
+    function loadColorData(hex) {
+      updateColorInputs(hex);
+    }
+    
+    // 更新颜色编辑面板显示
+    function updateColorEditPanel() {
+      // 同步颜色面板
+      document.querySelectorAll('.color-picker').forEach((picker, index) => {
+        const editItem = document.querySelector(`.edit-color-item[data-index="${index}"]`);
+        if (editItem) {
+          editItem.style.backgroundColor = picker.dataset.color;
+        }
+      });
+      
+      // 选中第一个颜色
+      const firstItem = document.querySelector('.edit-color-item[data-index="0"]');
+      if (firstItem) {
+        firstItem.click();
+      }
+    }
+    
+    // 保存颜色编辑
+    function saveColorEdits() {
+      const activeItem = document.querySelector('.edit-color-item.active');
+      if (activeItem) {
+        const index = parseInt(activeItem.dataset.index);
+        const color = document.getElementById('editColorText').value;
+        
+        // 更新颜色选择器
+        const colorPicker = document.querySelector(`.color-picker[data-index="${index}"]`);
+        if (colorPicker && /^#[0-9A-F]{6}$/i.test(color)) {
+          colorPicker.dataset.color = color;
+          colorPicker.style.backgroundColor = color;
+          
+          // 更新编辑面板显示
+          activeItem.style.backgroundColor = color;
+          
+          // 如果这是当前选中的颜色，更新当前颜色
+          if (colorPicker.classList.contains('active')) {
+            currentColor = color;
+            strokeColor = color;
+            document.getElementById('strokeColorPicker').value = color;
+            document.getElementById('strokeColorText').value = color;
+          }
+        }
+      }
+    }
+    
+    // 重置默认颜色
+    function resetDefaultColors() {
+      const defaultColors = [
+        '#000000', // 黑色
+        '#EF4444', // 红色
+        '#EAB308', // 黄色
+        '#22C55E', // 绿色
+        '#3B82F6', // 蓝色
+        '#A855F7', // 紫色
+        '#EC4899', // 粉色
+        '#FFFFFF'  // 白色
+      ];
+      
+      // 更新颜色选择器
+      defaultColors.forEach((color, index) => {
+        const colorPicker = document.querySelector(`.color-picker[data-index="${index}"]`);
+        const editItem = document.querySelector(`.edit-color-item[data-index="${index}"]`);
+        
+        if (colorPicker) {
+          colorPicker.dataset.color = color;
+          colorPicker.style.backgroundColor = color;
+        }
+        
+        if (editItem) {
+          editItem.style.backgroundColor = color;
+        }
+      });
+      
+      // 更新当前颜色
+      currentColor = defaultColors[0];
+      strokeColor = defaultColors[0];
+      document.getElementById('strokeColorPicker').value = defaultColors[0];
+      document.getElementById('strokeColorText').value = defaultColors[0];
+      
+      // 更新编辑面板显示
+      updateColorEditPanel();
+    }
+    
+    // 颜色转换工具函数
+    function hexToRgb(hex) {
+      const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+      return result ? {
+        r: parseInt(result[1], 16),
+        g: parseInt(result[2], 16),
+        b: parseInt(result[3], 16)
+      } : null;
+    }
+    
+    function rgbToHex(r, g, b) {
+      return `#${((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1).toUpperCase()}`;
+    }
+    
+    function rgbToHsl(r, g, b) {
+      r /= 255;
+      g /= 255;
+      b /= 255;
+      
+      const max = Math.max(r, g, b);
+      const min = Math.min(r, g, b);
+      let h, s, l = (max + min) / 2;
+      
+      if (max === min) {
+        h = s = 0; // 灰色
+      } else {
+        const d = max - min;
+        s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+        
+        switch (max) {
+          case r: h = (g - b) / d + (g < b ? 6 : 0); break;
+          case g: h = (b - r) / d + 2; break;
+          case b: h = (r - g) / d + 4; break;
+        }
+        
+        h /= 6;
+      }
+      
+      return { h: h * 360, s, l };
+    }
+    
+    function hslToHex(h, s, l) {
+      h /= 360;
+      s /= 100;
+      l /= 100;
+      
+      let r, g, b;
+      
+      if (s === 0) {
+        r = g = b = l; // 灰色
+      } else {
+        const hue2rgb = (p, q, t) => {
+          if (t < 0) t += 1;
+          if (t > 1) t -= 1;
+          if (t < 1/6) return p + (q - p) * 6 * t;
+          if (t < 1/2) return q;
+          if (t < 2/3) return p + (q - p) * (2/3 - t) * 6;
+          return p;
+        };
+        
+        const q = l < 0.5 ? l * (1 + s) : l + s - l * s;
+        const p = 2 * l - q;
+        
+        r = hue2rgb(p, q, h + 1/3);
+        g = hue2rgb(p, q, h);
+        b = hue2rgb(p, q, h - 1/3);
+      }
+      
+      return rgbToHex(Math.round(r * 255), Math.round(g * 255), Math.round(b * 255));
+    }
+    
+    // 线条粗细选择
+    document.querySelectorAll('.line-width').forEach(width => {
+      width.addEventListener('click', () => {
+        document.querySelectorAll('.line-width').forEach(w => w.classList.remove('active'));
+        width.classList.add('active');
+        currentLineWidth = parseInt(width.dataset.width);
+        document.getElementById('shapeLineWidth').value = currentLineWidth;
+      });
+    });
+    
+    // 形状线条宽度设置
+    document.getElementById('shapeLineWidth').addEventListener('input', (e) => {
+      currentLineWidth = parseInt(e.target.value);
+      
+      // 更新线条宽度选择器
+      document.querySelectorAll('.line-width').forEach(w => {
+        w.classList.remove('active');
+        if (parseInt(w.dataset.width) === currentLineWidth) {
+          w.classList.add('active');
+        }
+      });
+    });
+    
+    // 画笔设置事件
+    document.getElementById('brushHardness').addEventListener('input', (e) => {
+      pencilHardness = parseInt(e.target.value);
+    });
+    
+    document.getElementById('brushOpacity').addEventListener('input', (e) => {
+      pencilOpacity = parseInt(e.target.value);
+    });
+    
+    document.getElementById('brushHardness2').addEventListener('input', (e) => {
+      brushHardness = parseInt(e.target.value);
+    });
+    
+    document.getElementById('brushOpacity2').addEventListener('input', (e) => {
+      brushOpacity = parseInt(e.target.value);
+    });
+    
+    document.getElementById('brushVariation').addEventListener('input', (e) => {
+      brushVariation = parseInt(e.target.value);
+    });
+    
+    // 橡皮擦设置事件
+    document.getElementById('eraserSize').addEventListener('input', (e) => {
+      eraserSize = parseInt(e.target.value);
+    });
+    
+    document.getElementById('eraserHardness').addEventListener('input', (e) => {
+      eraserHardness = parseInt(e.target.value);
+    });
+    
+    // 鼠标事件处理
+    canvas.addEventListener('mousedown', startDrawing);
+    canvas.addEventListener('mousemove', draw);
+    window.addEventListener('mouseup', stopDrawing);
+    canvas.addEventListener('mouseout', stopDrawing);
+    
+    // 触摸设备支持
+    canvas.addEventListener('touchstart', (e) => {
+      e.preventDefault();
+      const touch = e.touches[0];
+      const rect = canvas.getBoundingClientRect();
+      const scale = zoomLevel / 100;
+      const x = (touch.clientX - rect.left) / scale;
+      const y = (touch.clientY - rect.top) / scale;
+      startDrawing({ offsetX: x, offsetY: y });
+    });
+    
+    canvas.addEventListener('touchmove', (e) => {
+      e.preventDefault();
+      if (!isDrawing) return;
+      const touch = e.touches[0];
+      const rect = canvas.getBoundingClientRect();
+      const scale = zoomLevel / 100;
+      const x = (touch.clientX - rect.left) / scale;
+      const y = (touch.clientY - rect.top) / scale;
+      draw({ offsetX: x, offsetY: y });
+    });
+    
+    canvas.addEventListener('touchend', (e) => {
+      e.preventDefault();
+      stopDrawing();
+    });
+    
+    // 开始绘画
+    function startDrawing(e) {
+      isDrawing = true;
+      
+      // 计算缩放后的坐标
+      const scale = zoomLevel / 100;
+      startX = lastX = e.offsetX / scale;
+      startY = lastY = e.offsetY / scale;
+      
+      const currentLayer = getCurrentLayer();
+      
+      // 对于形状工具，初始化临时画布
+      if (['line', 'rectangle', 'circle'].includes(currentTool)) {
+        tempCanvas.width = canvasWidth;
+        tempCanvas.height = canvasHeight;
+        tempCtx = tempCanvas.getContext('2d');
+        // 复制当前图层内容作为基础
+        tempCtx.drawImage(currentLayer.canvas, 0, 0);
+      }
+      
+      // 对于橡皮擦，设置特殊的合成模式
+      if (currentTool === 'eraser') {
+        currentLayer.ctx.save();
+        currentLayer.ctx.globalCompositeOperation = 'destination-out';
+      }
+    }
+    
+    // 绘画中
+    function draw(e) {
+      if (!isDrawing) return;
+      
+      const currentLayer = getCurrentLayer();
+      const scale = zoomLevel / 100;
+      const x = e.offsetX / scale;
+      const y = e.offsetY / scale;
+      
+      // 根据工具类型选择不同的绘画方式
+      switch(currentTool) {
+        case 'pencil':
+          // 铅笔 - 硬边、均匀线条
+          currentLayer.ctx.strokeStyle = currentColor;
+          currentLayer.ctx.lineWidth = currentLineWidth;
+          currentLayer.ctx.globalAlpha = pencilOpacity / 100;
+          currentLayer.ctx.lineCap = 'round';
+          currentLayer.ctx.lineJoin = 'round';
+          
+          // 铅笔硬度模拟
+          currentLayer.ctx.shadowBlur = pencilHardness < 100 ? (100 - pencilHardness) / 10 : 0;
+          currentLayer.ctx.shadowColor = currentColor;
+          
+          currentLayer.ctx.beginPath();
+          currentLayer.ctx.moveTo(lastX, lastY);
+          currentLayer.ctx.lineTo(x, y);
+          currentLayer.ctx.stroke();
+          
+          // 重置阴影
+          currentLayer.ctx.shadowBlur = 0;
+          
+          [lastX, lastY] = [x, y];
+          redrawCanvas();
+          break;
+          
+        case 'brush':
+          // 画笔 - 软边、有变化的线条
+          // 基于速度的线条变化
+          const distance = Math.sqrt(Math.pow(x - lastX, 2) + Math.pow(y - lastY, 2));
+          const baseWidth = currentLineWidth;
+          const variationRange = baseWidth * (brushVariation / 100);
+          
+          // 随机变化的线条宽度
+          const variedWidth = baseWidth - variationRange / 2 + Math.random() * variationRange;
+          
+          currentLayer.ctx.strokeStyle = currentColor;
+          currentLayer.ctx.lineWidth = variedWidth;
+          currentLayer.ctx.globalAlpha = brushOpacity / 100;
+          currentLayer.ctx.lineCap = 'round';
+          currentLayer.ctx.lineJoin = 'round';
+          
+          // 画笔软硬度模拟
+          currentLayer.ctx.shadowBlur = brushHardness < 100 ? (100 - brushHardness) / 5 : 0;
+          currentLayer.ctx.shadowColor = currentColor;
+          
+          currentLayer.ctx.beginPath();
+          currentLayer.ctx.moveTo(lastX, lastY);
+          currentLayer.ctx.lineTo(x, y);
+          currentLayer.ctx.stroke();
+          
+          // 重置阴影
+          currentLayer.ctx.shadowBlur = 0;
+          
+          [lastX, lastY] = [x, y];
+          redrawCanvas();
+          break;
+          
+        case 'eraser':
+          // 橡皮擦工具
+          currentLayer.ctx.lineWidth = eraserSize;
+          currentLayer.ctx.lineCap = eraserHardness > 50 ? 'square' : 'round';
+          currentLayer.ctx.lineJoin = eraserHardness > 50 ? 'bevel' : 'round';
+          
+          // 橡皮擦硬度模拟
+          currentLayer.ctx.shadowBlur = eraserHardness < 100 ? (100 - eraserHardness) / 5 : 0;
+          currentLayer.ctx.shadowColor = '#000000';
+          
+          currentLayer.ctx.beginPath();
+          currentLayer.ctx.moveTo(lastX, lastY);
+          currentLayer.ctx.lineTo(x, y);
+          currentLayer.ctx.stroke();
+          
+          // 重置阴影
+          currentLayer.ctx.shadowBlur = 0;
+          
+          [lastX, lastY] = [x, y];
+          redrawCanvas();
+          break;
+          
+        case 'line':
+        case 'rectangle':
+        case 'circle':
+          // 清除临时画布并重新绘制当前图层内容
+          tempCtx.clearRect(0, 0, canvasWidth, canvasHeight);
+          tempCtx.drawImage(currentLayer.canvas, 0, 0);
+          
+          // 设置绘制样式
+          tempCtx.strokeStyle = strokeColor;
+          tempCtx.fillStyle = fillColor;
+          tempCtx.lineWidth = currentLineWidth;
+          tempCtx.lineCap = 'round';
+          tempCtx.lineJoin = 'round';
+          
+          // 开始绘制形状
+          tempCtx.beginPath();
+          
+          if (currentTool === 'line') {
+            tempCtx.moveTo(startX, startY);
+            tempCtx.lineTo(x, y);
+          } else if (currentTool === 'rectangle') {
+            tempCtx.rect(
+              Math.min(startX, x),
+              Math.min(startY, y),
+              Math.abs(x - startX),
+              Math.abs(y - startY)
+            );
+          } else if (currentTool === 'circle') {
+            const radius = Math.sqrt(
+              Math.pow((x - startX), 2) + 
+              Math.pow((y - startY), 2)
+            );
+            tempCtx.arc(startX, startY, radius, 0, Math.PI * 2);
+          }
+          
+          // 根据绘制模式绘制
+          if (currentDrawMode === 'stroke' || currentDrawMode === 'both') {
+            tempCtx.stroke();
+          }
+          if (currentDrawMode === 'fill' || currentDrawMode === 'both') {
+            tempCtx.fill();
+          }
+          
+          // 先保存当前图层内容
+          const tempImageData = currentLayer.ctx.getImageData(0, 0, canvasWidth, canvasHeight);
+          
+          // 绘制临时形状到当前图层
+          currentLayer.ctx.clearRect(0, 0, canvasWidth, canvasHeight);
+          currentLayer.ctx.drawImage(tempCanvas, 0, 0);
+          
+          // 重绘画布
+          redrawCanvas();
+          
+          // 恢复当前图层内容（只在预览时）
+          currentLayer.ctx.putImageData(tempImageData, 0, 0);
+          break;
+      }
+    }
+    
+    // 停止绘画
+    function stopDrawing() {
+      if (isDrawing) {
+        // 对于形状工具，完成绘制
+        if (['line', 'rectangle', 'circle'].includes(currentTool)) {
+          const currentLayer = getCurrentLayer();
+          // 将临时画布的内容绘制到当前图层
+          currentLayer.ctx.clearRect(0, 0, canvasWidth, canvasHeight);
+          currentLayer.ctx.drawImage(tempCanvas, 0, 0);
+          redrawCanvas();
+        }
+        
+        // 如果是橡皮擦，恢复合成模式
+        if (currentTool === 'eraser') {
+          const currentLayer = getCurrentLayer();
+          currentLayer.ctx.restore();
+        }
+      }
+      isDrawing = false;
+    }
+    
+    // 模态框控制函数
+    function showModal(modalId) {
+      const modal = document.getElementById(modalId);
+      modal.classList.add('show');
+      // 阻止背景滚动
+      document.body.style.overflow = 'hidden';
+    }
+    
+    function hideModal(modalId) {
+      const modal = document.getElementById(modalId);
+      modal.classList.remove('show');
+      // 恢复背景滚动
+      document.body.style.overflow = '';
+    }
+    
+    // 打开图片对话框控制
+    document.getElementById('openImageBtn').addEventListener('click', () => {
+      showModal('openImageModal');
+    });
+    
+    document.getElementById('cancelOpenBtn').addEventListener('click', () => {
+      hideModal('openImageModal');
+    });
+    
+    // 图片上传处理
+    const dropArea = document.getElementById('dropArea');
+    const imageUpload = document.getElementById('imageUpload');
+    const confirmOpenBtn = document.getElementById('confirmOpenBtn');
+    let selectedImage = null;
+    
+    // 点击上传区域触发文件选择
+    dropArea.addEventListener('click', () => {
+      imageUpload.click();
+    });
+    
+    // 处理文件选择
+    imageUpload.addEventListener('change', (e) => {
+      if (e.target.files && e.target.files[0]) {
+        handleImageUpload(e.target.files[0]);
+      }
+    });
+    
+    // 拖放功能
+    dropArea.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      dropArea.classList.add('bg-gray-100');
+    });
+    
+    dropArea.addEventListener('dragleave', () => {
+      dropArea.classList.remove('bg-gray-100');
+    });
+    
+    dropArea.addEventListener('drop', (e) => {
+      e.preventDefault();
+      dropArea.classList.remove('bg-gray-100');
+      
+      if (e.dataTransfer.files && e.dataTransfer.files[0]) {
+        handleImageUpload(e.dataTransfer.files[0]);
+      }
+    });
+    
+    // 处理图片上传
+    function handleImageUpload(file) {
+      if (!file.type.match('image.*')) {
+        alert('请上传图片文件');
+        return;
+      }
+      
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const img = new Image();
+        img.onload = () => {
+          selectedImage = img;
+          confirmOpenBtn.disabled = false;
+        };
+        img.src = e.target.result;
+      };
+      reader.readAsDataURL(file);
+    }
+    
+    // 确认打开图片 - 将画布尺寸调整为图片尺寸
+    confirmOpenBtn.addEventListener('click', () => {
+      if (selectedImage) {
+        // 将画布尺寸设置为图片尺寸
+        setCanvasSize(selectedImage.width, selectedImage.height, false);
+        
+        // 在背景图层绘制图片
+        const backgroundLayer = layers[0];
+        backgroundLayer.clear();
+        backgroundLayer.ctx.drawImage(selectedImage, 0, 0);
+        
+        // 重置缩放
+        zoomCanvas(100);
+        
+        // 关闭对话框
+        hideModal('openImageModal');
+        confirmOpenBtn.disabled = true;
+        selectedImage = null;
+        imageUpload.value = '';
+        
+        // 重绘画布
+        redrawCanvas();
+      }
+    });
+    
+    // 画布设置对话框控制
+    document.getElementById('canvasSettingsBtn').addEventListener('click', () => {
+      showModal('canvasSettingsModal');
+    });
+    
+    document.getElementById('cancelCanvasSettingsBtn').addEventListener('click', () => {
+      hideModal('canvasSettingsModal');
+    });
+    
+    // 画布背景颜色设置
+    const canvasBgColor = document.getElementById('canvasBgColor');
+    const canvasBgColorText = document.getElementById('canvasBgColorText');
+    
+    canvasBgColor.addEventListener('input', (e) => {
+      canvasBgColorText.value = e.target.value;
+      canvasBackgroundColor = e.target.value;
+      
+      // 更新背景图层
+      const backgroundLayer = layers[0];
+      const tempCanvas = document.createElement('canvas');
+      tempCanvas.width = canvasWidth;
+      tempCanvas.height = canvasHeight;
+      const tempCtx = tempCanvas.getContext('2d');
+      
+      // 先绘制背景色
+      tempCtx.fillStyle = canvasBackgroundColor;
+      tempCtx.fillRect(0, 0, canvasWidth, canvasHeight);
+      
+      // 再绘制原有内容
+      tempCtx.drawImage(backgroundLayer.canvas, 0, 0);
+      
+      // 更新背景图层
+      backgroundLayer.ctx.clearRect(0, 0, canvasWidth, canvasHeight);
+      backgroundLayer.ctx.drawImage(tempCanvas, 0, 0);
+      
+      redrawCanvas();
+    });
+    
+    canvasBgColorText.addEventListener('input', (e) => {
+      if (/^#[0-9A-F]{6}$/i.test(e.target.value)) {
+        canvasBgColor.value = e.target.value;
+        canvasBackgroundColor = e.target.value;
+        
+        // 更新背景图层
+        const backgroundLayer = layers[0];
+        const tempCanvas = document.createElement('canvas');
+        tempCanvas.width = canvasWidth;
+        tempCanvas.height = canvasHeight;
+        const tempCtx = tempCanvas.getContext('2d');
+        
+        // 先绘制背景色
+        tempCtx.fillStyle = canvasBackgroundColor;
+        tempCtx.fillRect(0, 0, canvasWidth, canvasHeight);
+        
+        // 再绘制原有内容
+        tempCtx.drawImage(backgroundLayer.canvas, 0, 0);
+        
+        // 更新背景图层
+        backgroundLayer.ctx.clearRect(0, 0, canvasWidth, canvasHeight);
+        backgroundLayer.ctx.drawImage(tempCanvas, 0, 0);
+        
+        redrawCanvas();
+      }
+    });
+    
+    // 确认画布设置
+    document.getElementById('confirmCanvasSettingsBtn').addEventListener('click', () => {
+      const newWidth = parseInt(document.getElementById('canvasWidth').value);
+      const newHeight = parseInt(document.getElementById('canvasHeight').value);
+      
+      if (newWidth && newHeight && newWidth >= 100 && newWidth <= 4000 && newHeight >= 100 && newHeight <= 4000) {
+        setCanvasSize(newWidth, newHeight, true);
+        hideModal('canvasSettingsModal');
+      } else {
+        alert('请输入有效的画布尺寸（100-4000像素）');
+      }
+    });
+    
+    // 保存对话框控制
+    document.getElementById('saveBtn').addEventListener('click', () => {
+      showModal('saveModal');
+    });
+    
+    document.getElementById('cancelSaveBtn').addEventListener('click', () => {
+      hideModal('saveModal');
+    });
+    
+    // 保持纵横比功能
+    const preserveAspectRatio = document.getElementById('preserveAspectRatio');
+    const saveWidth = document.getElementById('saveWidth');
+    const saveHeight = document.getElementById('saveHeight');
+    
+    saveWidth.addEventListener('input', () => {
+      if (preserveAspectRatio.checked) {
+        const ratio = canvasHeight / canvasWidth;
+        saveHeight.value = Math.round(saveWidth.value * ratio);
+      }
+    });
+    
+    saveHeight.addEventListener('input', () => {
+      if (preserveAspectRatio.checked) {
+        const ratio = canvasWidth / canvasHeight;
+        saveWidth.value = Math.round(saveHeight.value * ratio);
+      }
+    });
+    
+    // 确认保存
+    document.getElementById('confirmSaveBtn').addEventListener('click', () => {
+      const format = document.getElementById('saveFormat').value;
+      const quality = document.getElementById('saveQuality').value / 100;
+      const width = parseInt(saveWidth.value);
+      const height = parseInt(saveHeight.value);
+      const stretch = document.getElementById('stretchImage').checked;
+      
+      if (!width || !height || width < 100 || width > 4000 || height < 100 || height > 4000) {
+        alert('请输入有效的尺寸（100-4000像素）');
+        return;
+      }
+      
+      // 创建临时画布用于保存
+      const tempCanvas = document.createElement('canvas');
+      const tempCtx = tempCanvas.getContext('2d');
+      
+      tempCanvas.width = width;
+      tempCanvas.height = height;
+      
+      // 填充背景色
+      tempCtx.fillStyle = canvasBackgroundColor;
+      tempCtx.fillRect(0, 0, width, height);
+      
+      // 绘制所有可见图层到临时画布
+      const layersCanvas = document.createElement('canvas');
+      layersCanvas.width = canvasWidth;
+      layersCanvas.height = canvasHeight;
+      const layersCtx = layersCanvas.getContext('2d');
+      
+      layers.forEach(layer => {
+        if (layer.visible) {
+          layersCtx.drawImage(layer.canvas, 0, 0);
+        }
+      });
+      
+      // 计算绘制尺寸和位置
+      let drawWidth, drawHeight, x, y;
+      
+      if (stretch) {
+        // 拉伸以适应
+        drawWidth = width;
+        drawHeight = height;
+        x = 0;
+        y = 0;
+      } else {
+        // 保持比例
+        const ratio = canvas.width / canvas.height;
+        const newRatio = width / height;
+        
+        if (newRatio > ratio) {
+          // 新画布更宽
+          drawHeight = height;
+          drawWidth = height * ratio;
+        } else {
+          // 新画布更高
+          drawWidth = width;
+          drawHeight = width / ratio;
+        }
+        
+        // 居中绘制
+        x = (width - drawWidth) / 2;
+        y = (height - drawHeight) / 2;
+      }
+      
+      // 绘制图像
+      tempCtx.drawImage(layersCanvas, x, y, drawWidth, drawHeight);
+      
+      // 转换为数据URL并下载
+      let dataURL;
+      if (format === 'jpeg') {
+        dataURL = tempCanvas.toDataURL('image/jpeg', quality);
+      } else if (format === 'webp') {
+        dataURL = tempCanvas.toDataURL('image/webp', quality);
+      } else {
+        dataURL = tempCanvas.toDataURL('image/png');
+      }
+      
+      // 创建下载链接
+      const link = document.createElement('a');
+      link.download = `星光绘画-${new Date().getTime()}.${format}`;
+      link.href = dataURL;
+      link.click();
+      
+      // 关闭对话框
+      hideModal('saveModal');
+    });
+    
+    // 新建画布
+    document.getElementById('newCanvasBtn').addEventListener('click', () => {
+      if (confirm('确定要新建画布吗？当前内容将会丢失。')) {
+        // 重置图层
+        layers = [];
+        initLayers();
+        
+        setCanvasSize(800, 600, false);
+        canvasBackgroundColor = '#FFFFFF';
+        canvasBgColor.value = '#FFFFFF';
+        canvasBgColorText.value = '#FFFFFF';
+        
+        // 重置缩放
+        zoomCanvas(100);
+      }
+    });
+    
+    // 图层按钮事件
+    document.getElementById('addLayerBtn').addEventListener('click', addLayer);
+    document.getElementById('deleteLayerBtn').addEventListener('click', () => {
+      deleteLayer(currentLayerIndex);
+    });
+    
+    // 缩放控制事件
+    document.getElementById('zoomInBtn').addEventListener('click', () => {
+      zoomCanvas(zoomLevel + 10);
+    });
+    
+    document.getElementById('zoomOutBtn').addEventListener('click', () => {
+      zoomCanvas(zoomLevel - 10);
+    });
+    
+    document.getElementById('resetZoomBtn').addEventListener('click', () => {
+      zoomCanvas(100);
+    });
+    
+    // 支持鼠标滚轮缩放
+    canvasContainer.addEventListener('wheel', (e) => {
+      e.preventDefault();
+      if (e.deltaY < 0) {
+        // 向上滚动，放大
+        zoomCanvas(zoomLevel + 10);
+      } else {
+        // 向下滚动，缩小
+        zoomCanvas(zoomLevel - 10);
+      }
+    });
+    
+    // 初始化颜色选择器
+    initColorPicker();
+  </script>
+</body>
+</html>

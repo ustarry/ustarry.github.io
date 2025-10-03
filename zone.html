@@ -1,27 +1,44 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>领地 | 星光工作室</title>    
+    <title>领地 | 星光工作室</title>
     <link href="https://cdn.bootcdn.net/ajax/libs/bootstrap-icons/1.10.4/font/bootstrap-icons.css" rel="stylesheet">
-    <!-- <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.0/dist/jquery.min.js"></script> -->
     <meta name="description" content="星光工作室热衷于为迷你世界社区做贡献,做更多优质地图.星光工作室积累了丰富的管理和文创经验,地图玩法制作及编程技术探讨环境.">
     <meta name="keywords" content="Starlight Studio,星光工作室,迷你世界社区,编程,文创">
     <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
     <meta http-equiv="windows-Target" contect="_top">
     <meta name="robots" content="all">
     <link rel="stylesheet" href="/css/style_common.css">
-    <link rel="stylesheet" href="/css/style_index.css">
+    <link rel="stylesheet" href="/css/style_zone.css">
     <script src="/js/base.js"></script>
 </head>
+
 <body>
-<nav id="nav" class="transparent_nav"></nav>
+    <nav id="nav" class="transparent_nav"></nav>
+
+    <div class="container">
+        <main>
+            <div class="notice_container">
+                <h1>领地公告</h1>
+                <p>欢迎来到星光领地，这里有多种多样的娱乐玩法<br>领地访问次数:<span id="busuanzi_site_pv">加载中...</span>.</p>
+            </div>
+            <div class="entertainment_container">
+                <!-- 内容将通过JavaScript动态生成 -->
+            </div>
+        </main>
+    </div>
+
     <footer id="footer"></footer>
+
+    <script src="/js/zone.js"></script>
     <script>
         set_nav_info();
         set_footer_info();
     </script>
 </body>
+
 </html>

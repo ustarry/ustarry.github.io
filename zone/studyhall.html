@@ -1,0 +1,1468 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>星光自习室 | 星光工作室</title>    
+    <link href="https://cdn.bootcdn.net/ajax/libs/bootstrap-icons/1.10.4/font/bootstrap-icons.css" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.8/dist/chart.umd.min.js"></script>
+    <!-- 使用指定的html2canvas CDN -->
+    <script src="https://cdn.bootcdn.net/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <meta name="description" content="星光工作室自习室，集成番茄钟、TODO列表和学习记录功能">
+    <meta name="keywords" content="星光自习室,番茄钟,TODO列表,学习记录,星光工作室">
+    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
+    
+    <!-- Tailwind配置 -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#6366f1', // 主色调：靛蓝色
+                        secondary: '#f59e0b', // 辅助色：金色（星光）
+                        dark: '#1e293b',
+                        light: '#f8fafc'
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
+
+    <style>
+        *
+        {
+            user-select: none;
+        }
+    </style>
+    
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .glass {
+                background: rgba(255, 255, 255, 0.15);
+                backdrop-filter: blur(12px);
+                -webkit-backdrop-filter: blur(12px);
+                border: 1px solid rgba(255, 255, 255, 0.2);
+            }
+            .glass-dark {
+                background: rgba(15, 23, 42, 0.65);
+                backdrop-filter: blur(12px);
+                -webkit-backdrop-filter: blur(12px);
+                border: 1px solid rgba(255, 255, 255, 0.1);
+            }
+            .glass-light {
+                background: rgba(255, 255, 255, 0.7);
+                backdrop-filter: blur(12px);
+                -webkit-backdrop-filter: blur(12px);
+                border: 1px solid rgba(0, 0, 0, 0.1);
+            }
+            .text-shadow {
+                text-shadow: 0 2px 10px rgba(99, 102, 241, 0.3);
+            }
+            .star-pulse {
+                animation: starPulse 4s infinite ease-in-out;
+            }
+            .animate-float {
+                animation: float 6s ease-in-out infinite;
+            }
+            .btn-hover {
+                transition: all 0.3s ease;
+            }
+            .btn-hover:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 10px 25px -5px rgba(99, 102, 241, 0.2);
+            }
+            @keyframes float {
+                0% { transform: translateY(0px); }
+                50% { transform: translateY(-15px); }
+                100% { transform: scale(1); }
+            }
+            @keyframes starPulse {
+                0%, 100% { opacity: 0.6; transform: scale(1); }
+                50% { opacity: 1; transform: scale(1.2); }
+            }
+            .pomodoro-complete {
+                animation: pomodoroComplete 0.5s ease-in-out;
+            }
+            @keyframes pomodoroComplete {
+                0% { transform: scale(1); }
+                50% { transform: scale(1.1); }
+                100% { transform: scale(1); }
+            }
+            .share-card {
+                background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+                width: 300px;
+                max-width: 90vw;
+                color: white;
+                overflow: hidden;
+            }
+            .share-card-light {
+                background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+                color: #1e293b;
+            }
+            .badge {
+                display: inline-block;
+                padding: 0.25rem 0.75rem;
+                border-radius: 999px;
+                font-size: 0.75rem;
+                font-weight: 600;
+            }
+            /* 加载动画 */
+            .loader {
+                width: 48px;
+                height: 48px;
+                border: 5px solid rgba(255, 255, 255, 0.1);
+                border-bottom-color: #6366f1;
+                border-radius: 50%;
+                animation: rotation 1s linear infinite;
+            }
+            @keyframes rotation {
+                0% { transform: rotate(0deg); }
+                100% { transform: rotate(360deg); }
+            }
+            /* 加载页面过渡 */
+            .fade-out {
+                animation: fadeOut 0.5s ease-out forwards;
+            }
+            @keyframes fadeOut {
+                from { opacity: 1; visibility: visible; }
+                to { opacity: 0; visibility: hidden; }
+            }
+            /* 主题切换相关样式 */
+            .theme-transition {
+                transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+            }
+        }
+    </style>
+</head>
+<body class="min-h-screen bg-gradient-to-br from-dark to-slate-900 text-light overflow-x-hidden theme-transition" id="app-body">
+    <!-- 加载提示页面 -->
+    <div id="loading-screen" class="fixed inset-0 z-50 flex flex-col items-center justify-center bg-dark theme-transition">
+        <div class="loader mb-6"></div>
+        <div class="text-center">
+            <h2 class="text-xl font-bold mb-2 text-transparent bg-clip-text bg-gradient-to-r from-primary to-secondary">星光自习室</h2>
+            <p class="text-slate-400" id="loading-message">正在加载资源...</p>
+        </div>
+        <div class="absolute bottom-8 text-xs text-slate-500">
+            专注当下，点亮未来
+        </div>
+    </div>
+
+    <!-- 动态背景星星装饰 -->
+    <div class="fixed inset-0 z-0 overflow-hidden pointer-events-none" id="stars-container"></div>
+
+    <nav id="nav" class="glass-dark fixed top-0 left-0 right-0 z-40 transition-all duration-300 theme-transition">
+        <div class="container mx-auto px-4 py-4 flex justify-between items-center">
+            <a href="#" class="flex items-center gap-2">
+                <i class="bi bi-star-fill text-secondary text-xl animate-pulse"></i>
+                <span class="font-bold text-lg">星光自习室</span>
+            </a>
+            <div class="flex gap-6">
+                <!-- 首页按钮跳转到根目录 -->
+                <a href="/" class="hover:text-secondary transition-colors flex items-center gap-1">
+                    <i class="bi bi-house"></i>
+                    <span class="hidden sm:inline">首页</span>
+                </a>
+                <!-- 已删除帮助按钮 -->
+                <button id="theme-toggle" class="hover:text-secondary transition-colors">
+                    <i class="bi bi-moon" id="theme-icon"></i>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <main class="container mx-auto px-4 pt-24 pb-16 relative z-10 opacity-0 transition-opacity duration-500" id="main-content">
+        <header class="text-center mb-12">
+            <h1 class="text-[clamp(2rem,5vw,3.5rem)] font-bold text-transparent bg-clip-text bg-gradient-to-r from-primary to-secondary mb-4 text-shadow">星光自习室</h1>
+            <p class="text-slate-300 max-w-2xl mx-auto theme-transition" id="main-subtitle">专注当下，点亮未来 | 记录每一刻的学习时光</p>
+            
+            <!-- 日期和欢迎信息 -->
+            <div class="mt-6 text-slate-400 theme-transition">
+                <span id="current-date"></span> · <span id="welcome-message">欢迎回来，开始你的学习之旅吧</span>
+            </div>
+        </header>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <!-- 番茄钟部分 -->
+            <div class="glass rounded-2xl p-6 shadow-xl transform transition-all hover:scale-[1.02] duration-300 theme-transition">
+                <h2 class="text-xl font-semibold mb-6 flex items-center theme-transition">
+                    <i class="bi bi-clock text-secondary mr-2"></i>番茄钟
+                </h2>
+                
+                <div class="text-center mb-8">
+                    <div class="text-[clamp(2.5rem,8vw,4rem)] font-bold text-primary mb-2 transition-all duration-300 theme-transition" id="timer-display">25:00</div>
+                    
+                    <!-- 进度环 -->
+                    <div class="relative w-48 h-48 mx-auto mb-6">
+                        <svg class="w-full h-full" viewBox="0 0 100 100">
+                            <circle cx="50" cy="50" r="45" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="4" class="theme-transition"/>
+                            <circle id="progress-ring" cx="50" cy="50" r="45" fill="none" stroke="#6366f1" stroke-width="4" 
+                                    stroke-dasharray="283" stroke-dashoffset="0" transform="rotate(-90 50 50)" 
+                                    stroke-linecap="round" class="transition-all duration-1000"/>
+                        </svg>
+                        <div class="absolute inset-0 flex items-center justify-center">
+                            <i class="bi bi-star text-secondary text-2xl opacity-70 animate-float"></i>
+                        </div>
+                    </div>
+                    
+                    <div class="flex justify-center gap-3 mb-4 flex-wrap">
+                        <button class="timer-mode-btn px-4 py-1 rounded-full glass-dark active btn-hover theme-transition" data-mode="work">工作</button>
+                        <button class="timer-mode-btn px-4 py-1 rounded-full glass-dark btn-hover theme-transition" data-mode="short">短休息</button>
+                        <button class="timer-mode-btn px-4 py-1 rounded-full glass-dark btn-hover theme-transition" data-mode="long">长休息</button>
+                    </div>
+                    
+                    <div class="flex justify-center gap-4">
+                        <button id="start-btn" class="p-3 rounded-full glass-dark hover:bg-primary/30 transition-all btn-hover theme-transition">
+                            <i class="bi bi-play text-xl"></i>
+                        </button>
+                        <button id="pause-btn" class="p-3 rounded-full glass-dark hover:bg-primary/30 transition-all hidden btn-hover theme-transition">
+                            <i class="bi bi-pause text-xl"></i>
+                        </button>
+                        <button id="reset-btn" class="p-3 rounded-full glass-dark hover:bg-primary/30 transition-all btn-hover theme-transition">
+                            <i class="bi bi-arrow-clockwise text-xl"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="flex justify-between items-center border-t border-slate-700 pt-4 mt-4 theme-transition">
+                    <div>
+                        <p class="text-sm text-slate-400 theme-transition">今日完成</p>
+                        <p class="text-2xl font-bold text-secondary theme-transition" id="today-completed">0</p>
+                    </div>
+                    <div>
+                        <p class="text-sm text-slate-400 theme-transition">总时长</p>
+                        <p class="text-2xl font-bold text-primary theme-transition" id="total-duration">0小时</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TODO列表部分 -->
+            <div class="glass rounded-2xl p-6 shadow-xl transform transition-all hover:scale-[1.02] duration-300 theme-transition">
+                <h2 class="text-xl font-semibold mb-6 flex items-center theme-transition">
+                    <i class="bi bi-list-task text-secondary mr-2"></i>待办事项
+                </h2>
+                
+                <div class="mb-4">
+                    <div class="flex gap-2">
+                        <input type="text" id="todo-input" placeholder="添加新任务..." 
+                               class="flex-1 px-4 py-2 rounded-lg bg-transparent border border-slate-600 focus:outline-none focus:border-primary transition-all theme-transition"/>
+                        <button id="add-todo" class="p-2 rounded-lg glass-dark hover:bg-primary/30 transition-all btn-hover theme-transition">
+                            <i class="bi bi-plus"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- 任务统计 -->
+                <div class="flex justify-between text-sm text-slate-400 mb-3 theme-transition">
+                    <span>全部任务: <span id="total-todos">0</span></span>
+                    <span>已完成: <span id="completed-todos">0</span></span>
+                </div>
+                
+                <div class="max-h-[350px] overflow-y-auto pr-2 scrollbar-thin scrollbar-thumb-slate-700 scrollbar-track-transparent theme-transition" id="todo-list">
+                    <!-- TODO项目将在这里动态生成 -->
+                    <div class="text-slate-400 text-center py-8 theme-transition">
+                        <i class="bi bi-clipboard-check text-4xl mb-2 block"></i>
+                        <p>添加你的第一个任务吧</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 学习记录部分 -->
+            <div class="glass rounded-2xl p-6 shadow-xl transform transition-all hover:scale-[1.02] duration-300 theme-transition">
+                <h2 class="text-xl font-semibold mb-6 flex items-center theme-transition">
+                    <i class="bi bi-graph-up text-secondary mr-2"></i>学习记录
+                </h2>
+                
+                <div class="mb-6">
+                    <canvas id="study-chart" height="200"></canvas>
+                </div>
+                
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="text-lg font-medium theme-transition">最近记录</h3>
+                    <div class="flex gap-2">
+                        <button id="share-records" class="text-xs text-primary hover:text-primary/80 transition-colors flex items-center gap-1 btn-hover theme-transition">
+                            <i class="bi bi-share"></i> 分享记录
+                        </button>
+                        <button id="clear-records" class="text-xs text-slate-400 hover:text-red-400 transition-colors theme-transition">
+                            清除记录
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="max-h-[200px] overflow-y-auto pr-2 scrollbar-thin scrollbar-thumb-slate-700 scrollbar-track-transparent theme-transition" id="recent-records">
+                    <!-- 最近记录将在这里动态生成 -->
+                    <div class="text-slate-400 text-center py-4 theme-transition">
+                        <p>暂无学习记录</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 学习成就卡片 -->
+        <div class="mt-10 glass rounded-2xl p-6 shadow-xl theme-transition">
+            <h2 class="text-xl font-semibold mb-6 flex items-center theme-transition">
+                <i class="bi bi-trophy text-secondary mr-2"></i>学习成就
+            </h2>
+            
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <div class="glass-dark rounded-xl p-4 text-center transform transition-all hover:scale-105 theme-transition">
+                    <div class="text-secondary text-3xl mb-2">
+                        <i class="bi bi-fire"></i>
+                    </div>
+                    <p class="text-sm text-slate-400 theme-transition">连续学习</p>
+                    <p class="text-xl font-bold theme-transition" id="streak-days">0天</p>
+                </div>
+                
+                <div class="glass-dark rounded-xl p-4 text-center transform transition-all hover:scale-105 theme-transition">
+                    <div class="text-primary text-3xl mb-2">
+                        <i class="bi bi-hourglass-bottom"></i>
+                    </div>
+                    <p class="text-sm text-slate-400 theme-transition">总学习</p>
+                    <p class="text-xl font-bold theme-transition" id="all-time-hours">0小时</p>
+                </div>
+                
+                <div class="glass-dark rounded-xl p-4 text-center transform transition-all hover:scale-105 theme-transition">
+                    <div class="text-green-400 text-3xl mb-2">
+                        <i class="bi bi-check-circle"></i>
+                    </div>
+                    <p class="text-sm text-slate-400 theme-transition">完成任务</p>
+                    <p class="text-xl font-bold theme-transition" id="completed-tasks">0</p>
+                </div>
+                
+                <div class="glass-dark rounded-xl p-4 text-center transform transition-all hover:scale-105 theme-transition">
+                    <div class="text-purple-400 text-3xl mb-2">
+                        <i class="bi bi-star"></i>
+                    </div>
+                    <p class="text-sm text-slate-400 theme-transition">番茄总数</p>
+                    <p class="text-xl font-bold theme-transition" id="total-pomodoros">0</p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="glass-dark py-6 text-center text-slate-400 text-sm relative z-10 theme-transition">
+        <p>© 2023 星光工作室 | 星光自习室</p>
+        <p class="mt-1">专注提升学习效率的工具</p>
+    </footer>
+
+    <!-- 完成提示弹窗 -->
+    <div id="completion-modal" class="fixed inset-0 bg-black/50 flex items-center justify-center z-50 hidden theme-transition">
+        <div class="glass rounded-2xl p-8 max-w-md w-full mx-4 text-center transform transition-all scale-95 opacity-0 theme-transition" id="modal-content">
+            <div class="text-secondary text-5xl mb-4">
+                <i class="bi bi-star-fill"></i>
+            </div>
+            <h3 class="text-2xl font-bold mb-2 theme-transition">太棒了！</h3>
+            <p class="text-slate-300 mb-6 theme-transition">你已完成一个番茄钟的学习</p>
+            <button id="modal-close" class="px-6 py-2 bg-primary/80 hover:bg-primary rounded-lg transition-all btn-hover theme-transition">
+                继续学习
+            </button>
+        </div>
+    </div>
+
+    <!-- 分享学习记录弹窗 -->
+    <div id="share-modal" class="fixed inset-0 bg-black/70 flex items-center justify-center z-50 hidden theme-transition">
+        <div class="glass rounded-2xl p-6 max-w-2xl w-full mx-4 transform transition-all scale-95 opacity-0 theme-transition" id="share-modal-content">
+            <div class="flex justify-between items-center mb-6">
+                <h3 class="text-xl font-bold theme-transition">分享我的学习记录</h3>
+                <button id="close-share-modal" class="text-slate-400 hover:text-white transition-colors theme-transition">
+                    <i class="bi bi-x-lg"></i>
+                </button>
+            </div>
+            
+            <!-- 分享内容预览 - 已修正倾斜问题 -->
+            <div class="flex justify-center mb-6">
+                <div id="share-card-container" class="shadow-2xl transform transition-all hover:scale-105 duration-300">
+                    <!-- 分享卡片内容（将被转换为图片） -->
+                    <div id="share-card" class="share-card rounded-xl overflow-hidden theme-transition">
+                        <div class="p-6 border-b border-slate-700 bg-gradient-to-r from-primary/20 to-secondary/20 theme-transition">
+                            <div class="flex justify-center mb-4">
+                                <i class="bi bi-star-fill text-secondary text-4xl"></i>
+                            </div>
+                            <h3 class="text-center text-xl font-bold mb-1 theme-transition">星光自习室学习记录</h3>
+                            <p class="text-center text-sm text-slate-300 theme-transition">见证每一刻的成长</p>
+                        </div>
+                        
+                        <div class="p-5">
+                            <div class="mb-4">
+                                <p class="text-sm text-slate-300 mb-1 theme-transition">学习时间段</p>
+                                <p class="font-medium theme-transition" id="share-date-range">从 2023-01-01 到 2023-01-10</p>
+                            </div>
+                            
+                            <div class="mb-4">
+                                <p class="text-sm text-slate-300 mb-1 theme-transition">坚持学习</p>
+                                <div class="flex items-center">
+                                    <p class="font-medium text-lg mr-2 theme-transition" id="share-days-count">10 天</p>
+                                    <span class="badge bg-secondary/20 text-secondary theme-transition" id="share-evaluation">毅力可嘉！</span>
+                                </div>
+                            </div>
+                            
+                            <div class="grid grid-cols-2 gap-4 mb-4">
+                                <div class="bg-slate-800/50 rounded-lg p-3 theme-transition">
+                                    <p class="text-xs text-slate-300 mb-1 theme-transition">总学习时长</p>
+                                    <p class="font-bold theme-transition" id="share-total-hours">25.5 小时</p>
+                                </div>
+                                <div class="bg-slate-800/50 rounded-lg p-3 theme-transition">
+                                    <p class="text-xs text-slate-300 mb-1 theme-transition">完成番茄数</p>
+                                    <p class="font-bold theme-transition" id="share-pomodoros">51 个</p>
+                                </div>
+                            </div>
+                            
+                            <div class="mb-4">
+                                <p class="text-xs text-slate-300 mb-2 theme-transition">学习趋势</p>
+                                <div id="share-chart-container" class="h-32 bg-slate-800/50 rounded-lg p-2 theme-transition">
+                                    <canvas id="share-chart"></canvas>
+                                </div>
+                            </div>
+                            
+                            <div class="bg-primary/10 rounded-lg p-3 text-center text-sm theme-transition">
+                                <p>继续加油，星光不负赶路人！</p>
+                            </div>
+                        </div>
+                        
+                        <div class="p-4 bg-slate-800/30 text-center text-xs text-slate-400 theme-transition">
+                            生成于 星光自习室
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="text-center">
+                <button id="download-share-image" class="px-6 py-2 bg-primary hover:bg-primary/80 rounded-lg transition-all btn-hover text-white font-medium theme-transition">
+                    <i class="bi bi-download mr-1"></i> 分享我的学习历程
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 分享成功提示 -->
+    <div id="share-success-toast" class="fixed bottom-6 left-1/2 transform -translate-x-1/2 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg z-50 hidden opacity-0 transition-all duration-300 theme-transition">
+        已下载学习记录，分享给其他好友吧!
+    </div>
+
+    <script>
+        // 主题管理
+        let isDarkMode = true; // 默认深色模式
+        
+        // 加载状态管理
+        const loadingScreen = document.getElementById('loading-screen');
+        const loadingMessage = document.getElementById('loading-message');
+        const mainContent = document.getElementById('main-content');
+        const appBody = document.getElementById('app-body');
+        const nav = document.getElementById('nav');
+        const themeToggle = document.getElementById('theme-toggle');
+        const themeIcon = document.getElementById('theme-icon');
+        const starsContainer = document.getElementById('stars-container');
+        const shareCard = document.getElementById('share-card');
+        
+        // 初始化主题
+        function initTheme() {
+            // 从localStorage获取保存的主题偏好
+            const savedTheme = localStorage.getItem('starry_studyhall_theme');
+            if (savedTheme === 'light') {
+                switchToLightMode();
+            } else {
+                // 默认深色模式
+                switchToDarkMode();
+            }
+            
+            // 添加主题切换事件监听
+            themeToggle.addEventListener('click', toggleTheme);
+        }
+        
+        // 切换到深色模式
+        function switchToDarkMode() {
+            isDarkMode = true;
+            
+            // 更新主题图标
+            themeIcon.classList.remove('bi-sun');
+            themeIcon.classList.add('bi-moon');
+            
+            // 更新背景和文本颜色
+            appBody.classList.remove('bg-gradient-to-br', 'from-light', 'to-slate-200', 'text-dark');
+            appBody.classList.add('bg-gradient-to-br', 'from-dark', 'to-slate-900', 'text-light');
+            
+            // 更新导航栏样式
+            nav.classList.remove('glass-light');
+            nav.classList.add('glass-dark');
+            
+            // 更新分享卡片样式
+            shareCard.classList.remove('share-card-light');
+            
+            // 显示星星背景
+            starsContainer.classList.remove('hidden');
+            
+            // 更新图表颜色
+            updateChartsTheme();
+            
+            // 保存主题偏好
+            localStorage.setItem('starry_studyhall_theme', 'dark');
+        }
+        
+        // 切换到浅色模式
+        function switchToLightMode() {
+            isDarkMode = false;
+            
+            // 更新主题图标
+            themeIcon.classList.remove('bi-moon');
+            themeIcon.classList.add('bi-sun');
+            
+            // 更新背景和文本颜色
+            appBody.classList.remove('bg-gradient-to-br', 'from-dark', 'to-slate-900', 'text-light');
+            appBody.classList.add('bg-gradient-to-br', 'from-light', 'to-slate-200', 'text-dark');
+            
+            // 更新导航栏样式
+            nav.classList.remove('glass-dark');
+            nav.classList.add('glass-light');
+            
+            // 更新分享卡片样式
+            shareCard.classList.add('share-card-light');
+            
+            // 隐藏星星背景
+            starsContainer.classList.add('hidden');
+            
+            // 更新图表颜色
+            updateChartsTheme();
+            
+            // 保存主题偏好
+            localStorage.setItem('starry_studyhall_theme', 'light');
+        }
+        
+        // 切换主题
+        function toggleTheme() {
+            if (isDarkMode) {
+                switchToLightMode();
+            } else {
+                switchToDarkMode();
+            }
+            
+            // 更新TODO列表样式
+            renderTodos();
+        }
+        
+        // 更新图表主题
+        function updateChartsTheme() {
+            const textColor = isDarkMode ? 'rgba(255, 255, 255, 0.7)' : 'rgba(0, 0, 0, 0.7)';
+            const gridColor = isDarkMode ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)';
+            const tooltipBg = isDarkMode ? 'rgba(15, 23, 42, 0.8)' : 'rgba(255, 255, 255, 0.8)';
+            
+            // 更新主图表
+            if (window.studyChart) {
+                window.studyChart.options.scales.y.ticks.color = textColor;
+                window.studyChart.options.scales.x.ticks.color = textColor;
+                window.studyChart.options.scales.y.grid.color = gridColor;
+                window.studyChart.options.scales.x.grid.color = gridColor;
+                window.studyChart.options.plugins.tooltip.backgroundColor = tooltipBg;
+                window.studyChart.update();
+            }
+            
+            // 更新分享图表
+            if (window.shareChart) {
+                window.shareChart.data.datasets[0].borderColor = isDarkMode ? 'rgba(99, 102, 241, 1)' : 'rgba(99, 102, 241, 1)';
+                window.shareChart.data.datasets[0].backgroundColor = isDarkMode ? 'rgba(99, 102, 241, 0.2)' : 'rgba(99, 102, 241, 0.2)';
+                window.shareChart.update();
+            }
+        }
+        
+        // 更新加载信息
+        function updateLoadingMessage(message) {
+            loadingMessage.textContent = message;
+        }
+
+        // 生成随机星星背景
+        function createStars() {
+            updateLoadingMessage("正在生成背景效果...");
+            const container = document.getElementById('stars-container');
+            const starCount = 50;
+            
+            // 清空现有星星
+            container.innerHTML = '';
+            
+            for (let i = 0; i < starCount; i++) {
+                const star = document.createElement('div');
+                const size = Math.random() * 3 + 1;
+                const opacity = Math.random() * 0.8 + 0.2;
+                const isSpecial = Math.random() > 0.8; // 20%的概率是特殊星星
+                
+                star.className = `absolute rounded-full ${isSpecial ? 'star-pulse' : ''}`;
+                star.style.width = `${size}px`;
+                star.style.height = `${size}px`;
+                star.style.left = `${Math.random() * 100}%`;
+                star.style.top = `${Math.random() * 100}%`;
+                star.style.opacity = opacity;
+                star.style.backgroundColor = isSpecial ? '#f59e0b' : 'white';
+                star.style.animationDelay = `${Math.random() * 5}s`;
+                
+                container.appendChild(star);
+            }
+        }
+
+        // 显示当前日期
+        function displayCurrentDate() {
+            const dateElement = document.getElementById('current-date');
+            const now = new Date();
+            const options = { year: 'numeric', month: 'long', day: 'numeric', weekday: 'long' };
+            dateElement.textContent = now.toLocaleDateString('zh-CN', options);
+        }
+
+        // 更新欢迎信息
+        function updateWelcomeMessage() {
+            const messageElement = document.getElementById('welcome-message');
+            const hour = new Date().getHours();
+            
+            let greeting = '';
+            if (hour < 6) greeting = '凌晨好，早睡早起精神好';
+            else if (hour < 9) greeting = '早上好，新的一天开始了';
+            else if (hour < 12) greeting = '上午好，适合专注学习的时光';
+            else if (hour < 14) greeting = '中午好，适当休息再继续吧';
+            else if (hour < 18) greeting = '下午好，保持专注，收获满满';
+            else if (hour < 22) greeting = '晚上好，合理安排时间，不要熬夜哦';
+            else greeting = '夜深了，注意休息，明天继续加油';
+            
+            messageElement.textContent = greeting;
+        }
+
+        // 初始化数据结构
+        function initData() {
+            updateLoadingMessage("正在加载你的学习数据...");
+            const defaultData = {
+                todos: [],
+                records: [],
+                settings: {
+                    workTime: 25 * 60,     // 25分钟工作
+                    shortBreak: 5 * 60,    // 5分钟短休息
+                    longBreak: 15 * 60,    // 15分钟长休息
+                    completedPomodoros: 0,
+                    totalDuration: 0,      // 总学习秒数
+                    streakDays: 0,         // 连续学习天数
+                    lastStudyDate: null,   // 最后学习日期
+                    completedTasks: 0,     // 完成的任务总数
+                    firstStudyDate: null   // 首次学习日期
+                }
+            };
+
+            const existingData = localStorage.getItem('starry_studyhall');
+            if (!existingData) {
+                localStorage.setItem('starry_studyhall', JSON.stringify(defaultData));
+                return defaultData;
+            }
+            
+            // 检查是否需要更新数据结构（兼容旧版本）
+            const data = JSON.parse(existingData);
+            if (!data.settings.streakDays) data.settings.streakDays = 0;
+            if (!data.settings.lastStudyDate) data.settings.lastStudyDate = null;
+            if (!data.settings.completedTasks) data.settings.completedTasks = 0;
+            if (!data.settings.firstStudyDate) {
+                // 如果是首次使用新版，设置首次学习日期为最后学习日期或当前日期
+                data.settings.firstStudyDate = data.settings.lastStudyDate || new Date().toISOString().split('T')[0];
+            }
+            
+            saveData(data);
+            return data;
+        }
+
+        // 保存数据到localStorage
+        function saveData(data) {
+            localStorage.setItem('starry_studyhall', JSON.stringify(data));
+        }
+
+        // 检查连续学习天数
+        function checkStudyStreak(data) {
+            const today = new Date().toISOString().split('T')[0];
+            
+            // 如果今天已经学习过，不需要更新
+            if (data.settings.lastStudyDate === today) {
+                return;
+            }
+            
+            // 设置首次学习日期
+            if (!data.settings.firstStudyDate) {
+                data.settings.firstStudyDate = today;
+            }
+            
+            const yesterday = new Date();
+            yesterday.setDate(yesterday.getDate() - 1);
+            const yesterdayStr = yesterday.toISOString().split('T')[0];
+            
+            // 如果最后学习是昨天，连续天数+1
+            if (data.settings.lastStudyDate === yesterdayStr) {
+                data.settings.streakDays++;
+            } 
+            // 如果最后学习不是昨天且有记录，连续天数重置为1
+            else if (data.settings.lastStudyDate !== null) {
+                data.settings.streakDays = 1;
+            }
+            // 第一次学习
+            else {
+                data.settings.streakDays = 1;
+            }
+            
+            data.settings.lastStudyDate = today;
+            saveData(data);
+        }
+
+        // 更新成就统计
+        function updateAchievements() {
+            const data = initData();
+            
+            document.getElementById('streak-days').textContent = `${data.settings.streakDays}天`;
+            document.getElementById('all-time-hours').textContent = `${(data.settings.totalDuration / 3600).toFixed(1)}小时`;
+            document.getElementById('completed-tasks').textContent = data.settings.completedTasks;
+            document.getElementById('total-pomodoros').textContent = data.settings.completedPomodoros;
+            
+            // 计算当前任务完成情况
+            const completedTodos = data.todos.filter(todo => todo.completed).length;
+            document.getElementById('total-todos').textContent = data.todos.length;
+            document.getElementById('completed-todos').textContent = completedTodos;
+        }
+
+        // 番茄钟功能实现
+        function initPomodoro() {
+            updateLoadingMessage("正在初始化番茄钟...");
+            const data = initData();
+            const timerDisplay = document.getElementById('timer-display');
+            const startBtn = document.getElementById('start-btn');
+            const pauseBtn = document.getElementById('pause-btn');
+            const resetBtn = document.getElementById('reset-btn');
+            const modeBtns = document.querySelectorAll('.timer-mode-btn');
+            const todayCompletedEl = document.getElementById('today-completed');
+            const totalDurationEl = document.getElementById('total-duration');
+            const progressRing = document.getElementById('progress-ring');
+            const completionModal = document.getElementById('completion-modal');
+            const modalContent = document.getElementById('modal-content');
+            const modalClose = document.getElementById('modal-close');
+            
+            // 圆环周长 (2 * π * r)，r为45
+            const circumference = 283;
+            progressRing.style.strokeDasharray = `${circumference} ${circumference}`;
+
+            // 更新显示
+            todayCompletedEl.textContent = data.settings.completedPomodoros;
+            totalDurationEl.textContent = `${(data.settings.totalDuration / 3600).toFixed(1)}小时`;
+
+            let currentMode = 'work';
+            let timeLeft = data.settings.workTime;
+            let totalTime = data.settings.workTime;
+            let timer = null;
+            let isRunning = false;
+
+            // 格式化时间显示
+            function formatTime(seconds) {
+                const mins = Math.floor(seconds / 60);
+                const secs = seconds % 60;
+                return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+            }
+
+            // 更新计时器显示
+            function updateDisplay() {
+                timerDisplay.textContent = formatTime(timeLeft);
+                
+                // 更新进度环
+                const progress = timeLeft / totalTime;
+                const offset = circumference - (progress * circumference);
+                progressRing.style.strokeDashoffset = offset;
+            }
+
+            // 切换模式
+            modeBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    if (isRunning) return;
+                    
+                    modeBtns.forEach(b => b.classList.remove('active', 'bg-primary/30'));
+                    btn.classList.add('active', 'bg-primary/30');
+                    
+                    currentMode = btn.dataset.mode;
+                    switch(currentMode) {
+                        case 'work':
+                            totalTime = data.settings.workTime;
+                            break;
+                        case 'short':
+                            totalTime = data.settings.shortBreak;
+                            break;
+                        case 'long':
+                            totalTime = data.settings.longBreak;
+                            break;
+                    }
+                    timeLeft = totalTime;
+                    updateDisplay();
+                });
+            });
+
+            // 显示完成弹窗
+            function showCompletionModal() {
+                completionModal.classList.remove('hidden');
+                // 触发动画
+                setTimeout(() => {
+                    modalContent.classList.remove('scale-95', 'opacity-0');
+                    modalContent.classList.add('scale-100', 'opacity-100');
+                }, 10);
+            }
+
+            // 隐藏完成弹窗
+            function hideCompletionModal() {
+                modalContent.classList.remove('scale-100', 'opacity-100');
+                modalContent.classList.add('scale-95', 'opacity-0');
+                // 延迟隐藏背景，等待动画完成
+                setTimeout(() => {
+                    completionModal.classList.add('hidden');
+                }, 300);
+            }
+
+            // 开始计时
+            startBtn.addEventListener('click', () => {
+                if (isRunning) return;
+                
+                isRunning = true;
+                startBtn.classList.add('hidden');
+                pauseBtn.classList.remove('hidden');
+                
+                timer = setInterval(() => {
+                    timeLeft--;
+                    updateDisplay();
+                    
+                    if (timeLeft <= 0) {
+                        clearInterval(timer);
+                        isRunning = false;
+                        startBtn.classList.remove('hidden');
+                        pauseBtn.classList.add('hidden');
+                        
+                        // 工作模式完成后记录
+                        if (currentMode === 'work') {
+                            data.settings.completedPomodoros++;
+                            data.settings.totalDuration += data.settings.workTime;
+                            
+                            // 检查连续学习天数
+                            checkStudyStreak(data);
+                            
+                            // 添加记录
+                            const now = new Date();
+                            const dateStr = `${now.getFullYear()}-${(now.getMonth()+1).toString().padStart(2, '0')}-${now.getDate().toString().padStart(2, '0')}`;
+                            const timeStr = `${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}`;
+                            
+                            data.records.unshift({
+                                date: dateStr,
+                                time: timeStr,
+                                duration: data.settings.workTime
+                            });
+                            
+                            // 只保留最近30条记录
+                            if (data.records.length > 30) {
+                                data.records.pop();
+                            }
+                            
+                            saveData(data);
+                            todayCompletedEl.textContent = data.settings.completedPomodoros;
+                            totalDurationEl.textContent = `${(data.settings.totalDuration / 3600).toFixed(1)}小时`;
+                            updateRecentRecords();
+                            updateChart();
+                            updateAchievements();
+                            
+                            // 动画效果
+                            timerDisplay.classList.add('pomodoro-complete');
+                            setTimeout(() => {
+                                timerDisplay.classList.remove('pomodoro-complete');
+                            }, 500);
+                            
+                            // 提示音和弹窗
+                            const audio = new Audio('https://assets.mixkit.co/sfx/preview/mixkit-alarm-digital-clock-beep-989.mp3');
+                            audio.play();
+                            showCompletionModal();
+                        }
+                        
+                        // 自动切换到休息模式或工作模式
+                        if (currentMode === 'work') {
+                            modeBtns.forEach(b => b.classList.remove('active', 'bg-primary/30'));
+                            document.querySelector('[data-mode="short"]').classList.add('active', 'bg-primary/30');
+                            currentMode = 'short';
+                            totalTime = data.settings.shortBreak;
+                        } else {
+                            modeBtns.forEach(b => b.classList.remove('active', 'bg-primary/30'));
+                            document.querySelector('[data-mode="work"]').classList.add('active', 'bg-primary/30');
+                            currentMode = 'work';
+                            totalTime = data.settings.workTime;
+                        }
+                        timeLeft = totalTime;
+                        updateDisplay();
+                    }
+                }, 1000);
+            });
+
+            // 暂停计时
+            pauseBtn.addEventListener('click', () => {
+                clearInterval(timer);
+                isRunning = false;
+                startBtn.classList.remove('hidden');
+                pauseBtn.classList.add('hidden');
+            });
+
+            // 重置计时
+            resetBtn.addEventListener('click', () => {
+                clearInterval(timer);
+                isRunning = false;
+                startBtn.classList.remove('hidden');
+                pauseBtn.classList.add('hidden');
+                
+                switch(currentMode) {
+                    case 'work':
+                        totalTime = data.settings.workTime;
+                        break;
+                    case 'short':
+                        totalTime = data.settings.shortBreak;
+                        break;
+                    case 'long':
+                        totalTime = data.settings.longBreak;
+                        break;
+                }
+                timeLeft = totalTime;
+                updateDisplay();
+            });
+
+            // 关闭弹窗
+            modalClose.addEventListener('click', hideCompletionModal);
+            
+            // 点击弹窗背景关闭
+            completionModal.addEventListener('click', (e) => {
+                if (e.target === completionModal) {
+                    hideCompletionModal();
+                }
+            });
+
+            // 初始化显示
+            updateDisplay();
+            document.querySelector('[data-mode="work"]').classList.add('bg-primary/30');
+        }
+
+        // TODO列表功能实现
+        function initTodoList() {
+            updateLoadingMessage("正在加载待办事项...");
+            const data = initData();
+            const todoInput = document.getElementById('todo-input');
+            const addTodoBtn = document.getElementById('add-todo');
+            const todoListEl = document.getElementById('todo-list');
+
+            // 渲染TODO列表
+            window.renderTodos = function() {
+                if (data.todos.length === 0) {
+                    todoListEl.innerHTML = `
+                        <div class="text-slate-400 text-center py-8 theme-transition">
+                            <i class="bi bi-clipboard-check text-4xl mb-2 block"></i>
+                            <p>添加你的第一个任务吧</p>
+                        </div>
+                    `;
+                    updateAchievements();
+                    return;
+                }
+
+                todoListEl.innerHTML = '';
+                data.todos.forEach((todo, index) => {
+                    const todoItem = document.createElement('div');
+                    // 根据主题模式设置不同的样式
+                    const bgClass = isDarkMode ? 'glass-dark' : 'glass-light';
+                    const textColorClass = isDarkMode ? '' : 'text-dark';
+                    const completedColorClass = isDarkMode ? 'text-slate-500' : 'text-slate-400';
+                    
+                    todoItem.className = `flex items-center gap-3 p-3 mb-2 rounded-lg ${todo.completed ? 'bg-slate-700/50' : bgClass} transition-all theme-transition ${textColorClass}`;
+                    
+                    todoItem.innerHTML = `
+                        <button class="toggle-todo p-1 rounded-full ${todo.completed ? 'text-secondary' : 'text-slate-400'}" data-index="${index}">
+                            <i class="bi ${todo.completed ? 'bi-check-circle-fill' : 'bi-circle'}"></i>
+                        </button>
+                        <span class="flex-1 ${todo.completed ? `line-through ${completedColorClass}` : ''}">${todo.text}</span>
+                        <button class="delete-todo p-1 rounded-full text-slate-400 hover:text-red-400 transition-colors" data-index="${index}">
+                            <i class="bi bi-trash"></i>
+                        </button>
+                    `;
+                    
+                    todoListEl.appendChild(todoItem);
+                });
+
+                // 添加事件监听
+                document.querySelectorAll('.toggle-todo').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        const index = parseInt(e.currentTarget.dataset.index);
+                        const wasCompleted = data.todos[index].completed;
+                        data.todos[index].completed = !data.todos[index].completed;
+                        
+                        // 如果是从未完成变为完成，增加完成任务计数
+                        if (!wasCompleted && data.todos[index].completed) {
+                            data.settings.completedTasks++;
+                        }
+                        
+                        saveData(data);
+                        renderTodos();
+                        updateAchievements();
+                    });
+                });
+
+                document.querySelectorAll('.delete-todo').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        const index = parseInt(e.currentTarget.dataset.index);
+                        // 如果删除的是已完成任务，减少完成任务计数
+                        if (data.todos[index].completed) {
+                            data.settings.completedTasks--;
+                            if (data.settings.completedTasks < 0) data.settings.completedTasks = 0;
+                        }
+                        data.todos.splice(index, 1);
+                        saveData(data);
+                        renderTodos();
+                        updateAchievements();
+                    });
+                });
+                
+                updateAchievements();
+            }
+
+            // 添加新TODO
+            function addTodo() {
+                const text = todoInput.value.trim();
+                if (text) {
+                    data.todos.push({
+                        text: text,
+                        completed: false,
+                        createdAt: new Date().toISOString()
+                    });
+                    todoInput.value = '';
+                    saveData(data);
+                    renderTodos();
+                }
+            }
+
+            addTodoBtn.addEventListener('click', addTodo);
+            todoInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') addTodo();
+            });
+
+            // 初始化渲染
+            renderTodos();
+        }
+
+        // 更新最近记录
+        function updateRecentRecords() {
+            const data = initData();
+            const recordsEl = document.getElementById('recent-records');
+            const clearBtn = document.getElementById('clear-records');
+
+            if (data.records.length === 0) {
+                recordsEl.innerHTML = `
+                    <div class="text-slate-400 text-center py-4 theme-transition">
+                        <p>暂无学习记录</p>
+                    </div>
+                `;
+                clearBtn.disabled = true;
+                clearBtn.classList.add('opacity-50', 'cursor-not-allowed');
+                return;
+            }
+
+            clearBtn.disabled = false;
+            clearBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+            
+            recordsEl.innerHTML = '';
+            data.records.slice(0, 5).forEach(record => {
+                const recordItem = document.createElement('div');
+                const borderColor = isDarkMode ? 'border-slate-700' : 'border-slate-300';
+                const hoverBg = isDarkMode ? 'bg-slate-800/30' : 'bg-slate-200/30';
+                
+                recordItem.className = `flex justify-between items-center p-2 border-b ${borderColor} last:border-0 hover:${hoverBg} rounded transition-colors theme-transition`;
+                
+                const minutes = Math.floor(record.duration / 60);
+                recordItem.innerHTML = `
+                    <div>
+                        <p class="text-sm">${record.date} ${record.time}</p>
+                    </div>
+                    <p class="font-medium">${minutes}分钟</p>
+                `;
+                
+                recordsEl.appendChild(recordItem);
+            });
+            
+            // 清除记录按钮
+            clearBtn.addEventListener('click', () => {
+                if (confirm('确定要清除所有学习记录吗？此操作不可恢复。')) {
+                    data.records = [];
+                    data.settings.completedPomodoros = 0;
+                    data.settings.totalDuration = 0;
+                    data.settings.streakDays = 0;
+                    data.settings.lastStudyDate = null;
+                    saveData(data);
+                    updateRecentRecords();
+                    updateChart();
+                    document.getElementById('today-completed').textContent = '0';
+                    document.getElementById('total-duration').textContent = '0小时';
+                    updateAchievements();
+                    updateShareCard();
+                }
+            });
+        }
+
+        // 初始化学习记录图表
+        function initStudyChart() {
+            updateLoadingMessage("正在生成学习图表...");
+            const ctx = document.getElementById('study-chart').getContext('2d');
+            
+            // 准备过去7天的数据
+            const data = initData();
+            const chartData = prepareChartData(data.records);
+            
+            // 创建图表
+            window.studyChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: chartData.labels,
+                    datasets: [{
+                        label: '学习分钟',
+                        data: chartData.values,
+                        backgroundColor: 'rgba(99, 102, 241, 0.6)',
+                        borderColor: 'rgba(99, 102, 241, 1)',
+                        borderWidth: 1,
+                        borderRadius: 6,
+                        hoverBackgroundColor: 'rgba(245, 158, 11, 0.6)',
+                        hoverBorderColor: 'rgba(245, 158, 11, 1)',
+                        transition: 'all 0.3s ease'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            grid: {
+                                color: isDarkMode ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)'
+                            },
+                            ticks: {
+                                color: isDarkMode ? 'rgba(255, 255, 255, 0.7)' : 'rgba(0, 0, 0, 0.7)'
+                            }
+                        },
+                        x: {
+                            grid: {
+                                color: isDarkMode ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)'
+                            },
+                            ticks: {
+                                color: isDarkMode ? 'rgba(255, 255, 255, 0.7)' : 'rgba(0, 0, 0, 0.7)'
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        tooltip: {
+                            backgroundColor: isDarkMode ? 'rgba(15, 23, 42, 0.8)' : 'rgba(255, 255, 255, 0.8)',
+                            titleColor: isDarkMode ? 'rgba(255, 255, 255, 0.9)' : 'rgba(0, 0, 0, 0.9)',
+                            bodyColor: isDarkMode ? 'rgba(255, 255, 255, 0.7)' : 'rgba(0, 0, 0, 0.7)',
+                            borderColor: isDarkMode ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)',
+                            borderWidth: 1,
+                            padding: 10,
+                            cornerRadius: 6,
+                            displayColors: false,
+                            callbacks: {
+                                label: function(context) {
+                                    return `学习了 ${context.raw} 分钟`;
+                                }
+                            }
+                        }
+                    },
+                    animation: {
+                        duration: 1000,
+                        easing: 'easeOutQuart'
+                    }
+                }
+            });
+        }
+
+        // 准备图表数据
+        function prepareChartData(records) {
+            const labels = [];
+            const values = [];
+            
+            // 获取过去7天的日期
+            for (let i = 6; i >= 0; i--) {
+                const date = new Date();
+                date.setDate(date.getDate() - i);
+                const dateStr = `${date.getMonth()+1}/${date.getDate()}`;
+                labels.push(dateStr);
+                
+                // 计算当天的学习总分钟
+                const fullDateStr = `${date.getFullYear()}-${(date.getMonth()+1).toString().padStart(2, '0')}-${date.getDate().toString().padStart(2, '0')}`;
+                const dayRecords = records.filter(r => r.date === fullDateStr);
+                const totalMinutes = dayRecords.reduce((sum, r) => sum + Math.floor(r.duration / 60), 0);
+                values.push(totalMinutes);
+            }
+            
+            return { labels, values };
+        }
+
+        // 更新图表数据
+        function updateChart() {
+            if (window.studyChart) {
+                const data = initData();
+                const chartData = prepareChartData(data.records);
+                window.studyChart.data.labels = chartData.labels;
+                window.studyChart.data.datasets[0].data = chartData.values;
+                window.studyChart.update();
+            }
+        }
+
+        // 初始化分享卡片图表
+        function initShareChart() {
+            const ctx = document.getElementById('share-chart').getContext('2d');
+            const data = initData();
+            const chartData = prepareChartData(data.records);
+            
+            window.shareChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: chartData.labels,
+                    datasets: [{
+                        label: '学习分钟',
+                        data: chartData.values,
+                        backgroundColor: 'rgba(99, 102, 241, 0.2)',
+                        borderColor: 'rgba(99, 102, 241, 1)',
+                        tension: 0.4,
+                        fill: true,
+                        pointBackgroundColor: '#f59e0b',
+                        pointBorderColor: '#fff',
+                        pointBorderWidth: 2,
+                        pointRadius: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            display: false
+                        },
+                        x: {
+                            display: false
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        tooltip: {
+                            enabled: false
+                        }
+                    },
+                    animation: {
+                        duration: 0
+                    }
+                }
+            });
+        }
+
+        // 更新分享卡片内容
+        function updateShareCard() {
+            const data = initData();
+            const today = new Date().toISOString().split('T')[0];
+            let firstDate = data.settings.firstStudyDate || today;
+            
+            // 格式化日期显示
+            function formatDate(dateStr) {
+                const date = new Date(dateStr);
+                return `${date.getFullYear()}-${(date.getMonth()+1).toString().padStart(2, '0')}-${date.getDate().toString().padStart(2, '0')}`;
+            }
+            
+            // 更新日期范围
+            document.getElementById('share-date-range').textContent = `从 ${formatDate(firstDate)} 到 ${formatDate(today)}`;
+            
+            // 计算总学习天数（去重）
+            const studyDates = new Set();
+            data.records.forEach(record => studyDates.add(record.date));
+            const studyDaysCount = studyDates.size || 0;
+            document.getElementById('share-days-count').textContent = `${studyDaysCount} 天`;
+            
+            // 更新评价
+            let evaluation = "开始你的学习之旅吧！";
+            if (studyDaysCount > 0) {
+                evaluation = studyDaysCount < 3 ? "刚刚开始，继续加油！" :
+                             studyDaysCount < 7 ? "已经养成初步习惯，很棒！" :
+                             studyDaysCount < 14 ? "坚持两周了，毅力可嘉！" :
+                             studyDaysCount < 30 ? "快一个月了，习惯正在养成！" :
+                             studyDaysCount < 60 ? "两个月了，你真的很自律！" :
+                             studyDaysCount < 100 ? "百日修行，必有大成！" : "太厉害了，学习已经成为你的生活方式！";
+            }
+            document.getElementById('share-evaluation').textContent = evaluation;
+            
+            // 更新总时长和番茄数
+            document.getElementById('share-total-hours').textContent = `${(data.settings.totalDuration / 3600).toFixed(1)} 小时`;
+            document.getElementById('share-pomodoros').textContent = `${data.settings.completedPomodoros} 个`;
+            
+            // 更新分享图表
+            if (window.shareChart) {
+                const chartData = prepareChartData(data.records);
+                window.shareChart.data.labels = chartData.labels;
+                window.shareChart.data.datasets[0].data = chartData.values;
+                window.shareChart.update();
+            }
+        }
+
+        // 初始化分享功能
+        function initShareFunctionality() {
+            updateLoadingMessage("正在准备分享功能...");
+            const shareBtn = document.getElementById('share-records');
+            const shareModal = document.getElementById('share-modal');
+            const shareModalContent = document.getElementById('share-modal-content');
+            const closeShareModal = document.getElementById('close-share-modal');
+            const downloadBtn = document.getElementById('download-share-image');
+            const successToast = document.getElementById('share-success-toast');
+            const shareCardContainer = document.getElementById('share-card-container');
+            
+            // 显示分享弹窗
+            function showShareModal() {
+                updateShareCard();
+                shareModal.classList.remove('hidden');
+                // 移除卡片容器的倾斜效果
+                shareCardContainer.classList.remove('rotate-1', 'rotate-[-1deg]');
+                shareCardContainer.classList.add('rotate-0');
+                
+                setTimeout(() => {
+                    shareModalContent.classList.remove('scale-95', 'opacity-0');
+                    shareModalContent.classList.add('scale-100', 'opacity-100');
+                }, 10);
+            }
+            
+            // 隐藏分享弹窗
+            function hideShareModal() {
+                shareModalContent.classList.remove('scale-100', 'opacity-100');
+                shareModalContent.classList.add('scale-95', 'opacity-0');
+                setTimeout(() => {
+                    shareModal.classList.add('hidden');
+                }, 300);
+            }
+            
+            // 显示成功提示
+            function showSuccessToast() {
+                successToast.classList.remove('hidden');
+                setTimeout(() => {
+                    successToast.classList.add('opacity-100');
+                }, 10);
+                
+                // 3秒后隐藏
+                setTimeout(() => {
+                    successToast.classList.remove('opacity-100');
+                    setTimeout(() => {
+                        successToast.classList.add('hidden');
+                    }, 300);
+                }, 3000);
+            }
+            
+            // 下载分享图片
+            function downloadShareImage() {
+                // 显示加载状态
+                const originalText = downloadBtn.innerHTML;
+                downloadBtn.disabled = true;
+                downloadBtn.innerHTML = '<i class="bi bi-spinner bi-spin mr-1"></i> 正在生成图片...';
+                
+                const card = document.getElementById('share-card');
+                
+                // 使用html2canvas将卡片转换为图片
+                html2canvas(card, {
+                    backgroundColor: null,
+                    scale: 2 // 提高分辨率
+                }).then(canvas => {
+                    // 恢复按钮状态
+                    downloadBtn.disabled = false;
+                    downloadBtn.innerHTML = originalText;
+                    
+                    // 创建下载链接
+                    const link = document.createElement('a');
+                    link.download = '我的学习记录.png';
+                    link.href = canvas.toDataURL('image/png');
+                    link.click();
+                    
+                    // 显示成功提示
+                    showSuccessToast();
+                }).catch(error => {
+                    // 处理错误
+                    downloadBtn.disabled = false;
+                    downloadBtn.innerHTML = originalText;
+                    alert('生成图片失败，请重试');
+                    console.error('html2canvas error:', error);
+                });
+            }
+            
+            // 事件监听
+            shareBtn.addEventListener('click', showShareModal);
+            closeShareModal.addEventListener('click', hideShareModal);
+            shareModal.addEventListener('click', (e) => {
+                if (e.target === shareModal) {
+                    hideShareModal();
+                }
+            });
+            downloadBtn.addEventListener('click', downloadShareImage);
+            
+            // 初始化分享图表
+            initShareChart();
+        }
+
+        // 隐藏加载页面，显示主内容
+        function hideLoadingScreen() {
+            updateLoadingMessage("准备就绪，正在进入...");
+            setTimeout(() => {
+                loadingScreen.classList.add('fade-out');
+                // 显示主内容并添加淡入效果
+                setTimeout(() => {
+                    mainContent.style.opacity = '1';
+                }, 300);
+            }, 500);
+        }
+
+        // 页面加载完成后初始化
+        window.addEventListener('DOMContentLoaded', () => {
+            // 初始化主题模式
+            initTheme();
+            
+            // 按顺序初始化各组件，带加载提示
+            createStars();
+            displayCurrentDate();
+            updateWelcomeMessage();
+            
+            // 使用Promise链式调用确保加载顺序和状态更新
+            new Promise(resolve => {
+                initData();
+                resolve();
+            }).then(() => {
+                return new Promise(resolve => {
+                    initPomodoro();
+                    resolve();
+                });
+            }).then(() => {
+                return new Promise(resolve => {
+                    initTodoList();
+                    resolve();
+                });
+            }).then(() => {
+                return new Promise(resolve => {
+                    updateRecentRecords();
+                    resolve();
+                });
+            }).then(() => {
+                return new Promise(resolve => {
+                    initStudyChart();
+                    resolve();
+                });
+            }).then(() => {
+                return new Promise(resolve => {
+                    updateAchievements();
+                    resolve();
+                });
+            }).then(() => {
+                return new Promise(resolve => {
+                    initShareFunctionality();
+                    resolve();
+                });
+            }).then(() => {
+                // 所有初始化完成，隐藏加载页面
+                hideLoadingScreen();
+            });
+        });
+    </script>
+</body>
+</html>
+    
